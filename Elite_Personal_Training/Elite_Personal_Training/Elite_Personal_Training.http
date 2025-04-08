@@ -1,0 +1,6 @@
+@Elite_Personal_Training_HostAddress = http://localhost:5150
+
+GET {{Elite_Personal_Training_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

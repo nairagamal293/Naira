@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Elite Studio</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-2 sidebar">
+                <h3><i class="fas fa-user-shield me-2"></i> Admin</h3>
+                <ul>
+                    <li><a href="#" onclick="loadDashboard()" class="active"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a></li>
+                    <li><a href="#" onclick="loadUsers()"><i class="fas fa-users"></i> <span>Users</span></a></li>
+                    <li><a href="#" onclick="loadMemberships()"><i class="fas fa-id-card"></i> <span>Memberships</span></a></li>
+                    <li><a href="#" onclick="loadClasses()"><i class="fas fa-dumbbell"></i> <span>Classes</span></a></li>
+                    <li><a href="#" onclick="loadOnlineSessions()"><i class="fas fa-video"></i> <span>Online Sessions</span></a></li>
+                    <li><a href="#" onclick="loadTrainers()"><i class="fas fa-user-tie"></i> <span>Trainers</span></a></li>
+                    <li><a href="#" onclick="loadSchedules()"><i class="fas fa-calendar-alt"></i> <span>Schedules</span></a></li>
+                    <li><a href="#" onclick="loadBookings()"><i class="fas fa-calendar-alt"></i> <span>Bookings</span></a></li>
+                    <li><a href="#" onclick="loadContactInquiries()"><i class="fas fa-envelope"></i> <span>Inquiries</span></a></li>
+                    <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a></li>
+                </ul>
+                
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-10 main-content">
+                <h2 id="dashboard-title">Dashboard Overview</h2>
+                <div class="row" id="dashboard-cards">
+                    <!-- Analytics Cards -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card">
+                            <div class="card-header"><i class="fas fa-users me-2"></i> Total Users</div>
+                            <div class="card-body"><h3 id="total-users">Loading...</h3></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card">
+                            <div class="card-header"><i class="fas fa-id-card me-2"></i> Active Memberships</div>
+                            <div class="card-body"><h3 id="active-memberships">Loading...</h3></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card">
+                            <div class="card-header"><i class="fas fa-calendar-check me-2"></i> Total Bookings</div>
+                            <div class="card-body"><h3 id="total-bookings">Loading...</h3></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card">
+                            <div class="card-header"><i class="fas fa-dollar-sign me-2"></i> Revenue</div>
+                            <div class="card-body"><h3 id="revenue">Loading...</h3></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Content -->
+                <div id="admin-content" class="mt-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard.js"></script>
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

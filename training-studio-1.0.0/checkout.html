@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Elite Studio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: rgb(156, 13, 13);
+            --secondary-color: #f8f9fa;
+        }
+        
+        body {
+            background-color: #f7f7f7;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .checkout-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 15px;
+        }
+        
+        .checkout-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .checkout-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .checkout-header h2 {
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .checkout-body {
+            padding: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .booking-summary {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .payment-form {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-total {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .payment-method {
+            margin-bottom: 20px;
+        }
+        
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-option:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .payment-option.active {
+            border-color: var(--primary-color);
+            background-color: rgba(156, 13, 13, 0.05);
+        }
+        
+        .payment-option input {
+            margin-right: 10px;
+        }
+        
+        .payment-option img {
+            height: 30px;
+            margin-left: auto;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .card-element {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+        }
+        
+        .btn-pay {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        
+        .btn-pay:hover {
+            background-color: rgba(156, 13, 13, 0.9);
+        }
+        
+        .secure-payment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .secure-payment i {
+            color: #28a745;
+            margin-right: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .checkout-body {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header-area header-sticky">
+    <div class="container">
+        <nav class="main-nav">
+            <a href="index.html" class="logo">Elite<em> Studio</em></a>
+            <ul class="nav auth-links"></ul>
+        </nav>
+    </div>
+</header>
+
+<div class="checkout-container">
+    <div class="checkout-card">
+        <div class="checkout-header">
+            <h2>Complete Your Payment</h2>
+        </div>
+        
+        <div class="checkout-body">
+            <!-- Booking Summary Section -->
+            <div class="booking-summary">
+                <h3><i class="fas fa-receipt"></i> Booking Summary</h3>
+                
+                <div class="summary-item">
+                    <span>Booking Type:</span>
+                    <span id="summary-type">Online Session</span>
+                </div>
+                
+                <div class="summary-item">
+                    <span>Session:</span>
+                    <span id="summary-session">Personal Training with John</span>
+                </div>
+                
+                <div class="summary-item">
+                    <span>Date & Time:</span>
+                    <span id="summary-datetime">June 15, 2023 at 2:00 PM</span>
+                </div>
+                
+                <div class="summary-item">
+                    <span>Subtotal:</span>
+                    <span id="summary-subtotal">$50.00</span>
+                </div>
+                
+                <div class="summary-item">
+                    <span>Tax:</span>
+                    <span id="summary-tax">$2.50</span>
+                </div>
+                
+                <div class="summary-item summary-total">
+                    <span>Total:</span>
+                    <span id="summary-total">$52.50</span>
+                </div>
+            </div>
+            
+            <!-- Payment Form Section -->
+            <div class="payment-form">
+                <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+                
+                <div class="payment-method">
+                    <div class="payment-option active" data-method="credit">
+                        <input type="radio" name="paymentMethod" id="credit-card" checked>
+                        <label for="credit-card">Credit/Debit Card</label>
+                        <div class="card-icons">
+                            <i class="fab fa-cc-visa"></i>
+                            <i class="fab fa-cc-mastercard"></i>
+                            <i class="fab fa-cc-amex"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-option" data-method="tabby">
+                        <input type="radio" name="paymentMethod" id="tabby">
+                        <label for="tabby">Pay with Tabby</label>
+                        <img src="https://tabby.ai/images/tabby-logo.svg" alt="Tabby">
+                    </div>
+                    
+                    <div class="payment-option" data-method="tamara">
+                        <input type="radio" name="paymentMethod" id="tamara">
+                        <label for="tamara">Pay with Tamara</label>
+                        <img src="https://www.tamara.co/assets/images/tamara-logo.svg" alt="Tamara">
+                    </div>
+                    
+                    <div class="payment-option" data-method="mada">
+                        <input type="radio" name="paymentMethod" id="mada">
+                        <label for="mada">Mada</label>
+                        <img src="https://mada.com.sa/wp-content/uploads/2020/06/mada-logo.svg" alt="Mada">
+                    </div>
+                </div>
+                
+                <!-- Credit Card Form (shown by default) -->
+                <div id="credit-card-form">
+                    <div class="form-group">
+                        <label for="card-number">Card Number</label>
+                        <input type="text" id="card-number" class="form-control" placeholder="1234 5678 9012 3456">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="card-name">Name on Card</label>
+                        <input type="text" id="card-name" class="form-control" placeholder="John Smith">
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="card-expiry">Expiry Date</label>
+                            <input type="text" id="card-expiry" class="form-control" placeholder="MM/YY">
+                        </div>
+                        
+                        <div class="form-group" style="flex: 1;">
+                            <label for="card-cvc">CVC</label>
+                            <input type="text" id="card-cvc" class="form-control" placeholder="123">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabby/Tamara/Mada forms would be shown here when selected -->
+                
+                <button id="complete-payment" class="btn-pay">
+                    <i class="fas fa-lock"></i> Complete Payment
+                </button>
+                
+                <div class="secure-payment">
+                    <i class="fas fa-lock"></i> Secure SSL Encryption
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <p style="text-align: center;">&copy; 2025 Elite Studio. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Get booking details from localStorage
+    const bookingDetails = JSON.parse(localStorage.getItem("bookingDetails"));
+    
+    if (!bookingDetails) {
+        alert("No booking details found!");
+        window.location.href = "booking.html";
+        return;
+    }
+
+    // Populate booking summary
+    document.getElementById("summary-type").textContent = bookingDetails.type;
+    document.getElementById("summary-session").textContent = bookingDetails.option;
+    document.getElementById("summary-datetime").textContent = bookingDetails.dateTime;
+    document.getElementById("summary-subtotal").textContent = `$${bookingDetails.price}`;
+    document.getElementById("summary-tax").textContent = `$${(bookingDetails.price * 0.05).toFixed(2)}`; // 5% tax
+    document.getElementById("summary-total").textContent = `$${(bookingDetails.price * 1.05).toFixed(2)}`;
+
+    // Payment method selection
+    const paymentOptions = document.querySelectorAll(".payment-option");
+    paymentOptions.forEach(option => {
+        option.addEventListener("click", function() {
+            paymentOptions.forEach(opt => opt.classList.remove("active"));
+            this.classList.add("active");
+            // Here you would show/hide different payment forms based on selection
+        });
+    });
+
+    // Handle payment submission
+    document.getElementById("complete-payment").addEventListener("click", async function() {
+        const paymentMethod = document.querySelector(".payment-option.active").dataset.method;
+        const paymentData = {
+            bookingId: bookingDetails.id,
+            amount: (bookingDetails.price * 1.05).toFixed(2),
+            paymentMethod: paymentMethod,
+            // Add other payment details as needed
+        };
+
+        try {
+            // Simulate payment processing
+            const response = await fetch("https://localhost:7020/api/Payment", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(paymentData)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                alert("Payment Successful!");
+                localStorage.removeItem("bookingDetails");
+                window.location.href = "confirmation.html";
+            } else {
+                alert("Payment failed. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while processing your payment.");
+        }
+    });
+});
+</script>
+
+</body>
+</html>
