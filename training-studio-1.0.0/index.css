@@ -1,4 +1,418 @@
 /* Disabled booking buttons */
+/* ==================== Membership Section ==================== */
+#membership {
+    padding: 100px 0;
+    background: #f8f9fa;
+    position: relative;
+    overflow: hidden;
+}
+
+.membership-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.membership-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.05);
+    padding: 40px 30px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.membership-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #9c0d0d, #d4a017);
+}
+
+.membership-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+.membership-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center;
+}
+
+.membership-card .price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #9c0d0d;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.membership-card .price span {
+    font-size: 1rem;
+    color: #777;
+    font-weight: normal;
+}
+
+.membership-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 30px;
+}
+
+.membership-card ul li {
+    padding: 10px 0;
+    font-size: 1rem;
+    color: #555;
+    border-bottom: 1px dashed #eee;
+    display: flex;
+    align-items: center;
+}
+
+.membership-card ul li::before {
+    content: '✓';
+    color: #d4a017;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.membership-card .btn-main {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #9c0d0d, #c21818);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.membership-card .btn-main:hover {
+    background: linear-gradient(90deg, #c21818, #9c0d0d);
+    transform: translateY(-2px);
+}
+
+/* Featured Membership Card */
+.membership-card.featured {
+    border: 2px solid #d4a017;
+    transform: scale(1.02);
+}
+
+.membership-card.featured::after {
+    content: 'MOST POPULAR';
+    position: absolute;
+    top: 20px;
+    right: -30px;
+    background: #d4a017;
+    color: white;
+    padding: 5px 30px;
+    transform: rotate(45deg);
+    font-size: 0.7rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.membership-card.featured .btn-main {
+    background: linear-gradient(90deg, #d4a017, #f1c40f);
+}
+
+.membership-card.featured .btn-main:hover {
+    background: linear-gradient(90deg, #f1c40f, #d4a017);
+}
+
+/* ==================== Trainers Section ==================== */
+#trainers {
+    padding: 100px 0;
+    background: #fff;
+}
+
+.trainer-item {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.trainer-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+.trainer-image {
+    height: 300px;
+    overflow: hidden;
+    position: relative;
+}
+
+.trainer-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.trainer-item:hover .trainer-image img {
+    transform: scale(1.05);
+}
+
+.trainer-content {
+    padding: 25px;
+    text-align: center;
+}
+
+.trainer-content h4 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.trainer-content p {
+    color: #777;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.trainer-social {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.trainer-social a {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f5f5f5;
+    color: #9c0d0d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.trainer-social a:hover {
+    background: #9c0d0d;
+    color: white;
+    transform: translateY(-3px);
+}
+
+.trainer-badge {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #9c0d0d;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 2;
+}
+
+/* ==================== Classes Section ==================== */
+#our-classes {
+    padding: 100px 0;
+    background: #f8f9fa;
+}
+
+.class-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.class-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+.class-image {
+    height: 200px;
+    overflow: hidden;
+}
+
+.class-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.class-card:hover .class-image img {
+    transform: scale(1.05);
+}
+
+.class-content {
+    padding: 25px;
+}
+
+.class-content h4 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.class-content p {
+    color: #777;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.class-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.class-meta span {
+    display: flex;
+    align-items: center;
+}
+
+.class-meta i {
+    margin-right: 5px;
+    color: #9c0d0d;
+}
+
+.class-card .btn-main {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    font-size: 0.95rem;
+}
+
+/* ==================== Online Sessions Section ==================== */
+#online-sessions {
+    padding: 100px 0;
+    background: white;
+}
+
+.session-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.session-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+.session-image {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+
+.session-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.session-card:hover .session-image img {
+    transform: scale(1.05);
+}
+
+.session-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: #9c0d0d;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    z-index: 2;
+}
+
+.session-content {
+    padding: 25px;
+}
+
+.session-content h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.session-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.session-meta span {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.session-meta i {
+    margin-right: 5px;
+    color: #9c0d0d;
+}
+
+.session-card .btn-main {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    font-size: 0.95rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .membership-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .membership-card.featured {
+        transform: none;
+    }
+}
+
+@media (max-width: 768px) {
+    #membership,
+    #trainers,
+    #our-classes,
+    #online-sessions {
+        padding: 70px 0;
+    }
+}
 .booking-btn.disabled,
 .join-btn.disabled {
   opacity: 0.7;

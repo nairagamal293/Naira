@@ -1,10 +1,10 @@
 ﻿using Elite_Personal_Training.Models;
 
-public enum BookingStatus
+public enum BookingType
 {
-    Pending,
-    Confirmed,
-    Cancelled
+    Membership = 1,
+    Class = 2,
+    OnlineSession = 3
 }
 
 public class Booking
@@ -23,15 +23,26 @@ public class Booking
     public int? OnlineSessionId { get; set; }
     public OnlineSession OnlineSession { get; set; }
 
-    public DateTime BookingDate { get; set; } = DateTime.UtcNow;
+    public DateTime? BookingDate { get; set; } = DateTime.UtcNow;
 
-    public decimal Price { get; set; } // 💰 Store the price
-    public string Status { get; set; } = "Pending"; // Default: Pending
-    public string PaymentStatus { get; set; } = "Unpaid"; // Default: Unpaid
+    public decimal Price { get; set; }
 
-    public string PaymentMethod { get; set; } // 💳 Payment method (Tabby, Tamara, Mada)
-    public string PaymentReference { get; set; } // 🔗 Transaction reference from payment gateway
+    public string Status { get; set; } = "Pending";
+    public string PaymentStatus { get; set; } = "Unpaid";
 
-    // 🔹 Add Payment Navigation Property
+    public string PaymentMethod { get; set; }
+    public string PaymentReference { get; set; }
+
     public List<Payment> Payments { get; set; } = new List<Payment>();
+
+    public string? Notes { get; set; }
+
+    // ✅ Contact details
+    public string Phone { get; set; }
+    public string Name { get; set; }
+    public string Email { get; set; }
+
+    // ✅ Add this field (required)
+    public BookingType BookingType { get; set; }
 }
+

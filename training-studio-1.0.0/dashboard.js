@@ -123,7 +123,7 @@ async function loadUsers() {
                                 <td>${user.email}</td>
                                 <td>
                                     <button class="btn btn-sm btn-warning me-2" onclick="promoteUser('${user.id}')">
-                                        <i class="fas fa-level-up-alt"></i> Promote
+                                        <i class="fas fa-level-up-alt"></i> Edit
                                     </button>
                                     <button class="btn btn-sm btn-danger" onclick="deleteUser('${user.id}')">
                                         <i class="fas fa-trash"></i> Delete

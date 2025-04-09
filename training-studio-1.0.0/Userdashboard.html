@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard | Elite Studio</title>
+    <!-- Use your existing CSS links -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.css">
+    <link rel="stylesheet" href="assets/css/templatemo-training-studio.css">
+    <style>
+        .dashboard-card {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .upcoming-session {
+            border-left: 4px solid #f5a425;
+        }
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Reuse your existing header -->
+    <header class="header-area header-sticky">
+        <!-- Your existing header content -->
+    </header>
+
+    <!-- Dashboard Content -->
+    <section class="section dashboard-section">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-12">
+                    <h1>My Dashboard</h1>
+                    <p class="text-muted">Welcome back, <span id="userGreeting"></span>!</p>
+                </div>
+            </div>
+
+            <!-- Stats Row -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="dashboard-card stat-card bg-white">
+                        <h3>Active Bookings</h3>
+                        <div class="stat-number text-primary" id="activeBookingsCount">0</div>
+                        <p>Upcoming sessions</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="dashboard-card stat-card bg-white">
+                        <h3>Membership</h3>
+                        <div class="stat-number text-success" id="membershipStatus">-</div>
+                        <p id="membershipExpiry">Expires: -</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="dashboard-card stat-card bg-white">
+                        <h3>Total Spent</h3>
+                        <div class="stat-number text-info" id="totalSpent">$0</div>
+                        <p>This month</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Row -->
+            <div class="row">
+                <!-- Left Column -->
+                <div class="col-lg-8">
+                    <!-- Upcoming Bookings -->
+                    <div class="dashboard-card bg-white p-4 mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h2>Upcoming Bookings</h2>
+                            <a href="my-bookings.html" class="btn btn-sm btn-outline-primary">View All</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Class/Session</th>
+                                        <th>Trainer</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="upcomingBookings">
+                                    <!-- Will be populated by JavaScript -->
+                                    <tr>
+                                        <td colspan="6" class="text-center">Loading bookings...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Recent Payments -->
+                    <div class="dashboard-card bg-white p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h2>Recent Payments</h2>
+                            <a href="payment-history.html" class="btn btn-sm btn-outline-primary">View All</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Description</th>
+                                        <th>Status</th>
+                                        <th>Receipt</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentPayments">
+                                    <!-- Will be populated by JavaScript -->
+                                    <tr>
+                                        <td colspan="5" class="text-center">Loading payments...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="col-lg-4">
+                    <!-- Profile Summary -->
+                    <div class="dashboard-card bg-white p-4 mb-4 text-center">
+                        <div class="mb-3">
+                            <img src="assets/images/profile-placeholder.jpg" alt="Profile" class="profile-img" id="profileImage">
+                        </div>
+                        <h3 id="userFullName">User Name</h3>
+                        <p class="text-muted" id="userEmail">user@example.com</p>
+                        <div class="d-grid gap-2">
+                            <a href="profile.html" class="btn btn-primary">Edit Profile</a>
+                            <a href="change-password.html" class="btn btn-outline-secondary">Change Password</a>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="dashboard-card bg-white p-4 mb-4">
+                        <h2 class="mb-3">Quick Actions</h2>
+                        <div class="d-grid gap-2">
+                            <a href="booking.html" class="btn btn-outline-primary">Book a Class</a>
+                            <a href="membership.html" class="btn btn-outline-success">Upgrade Membership</a>
+                            <a href="online-sessions.html" class="btn btn-outline-info">Join Online Session</a>
+                        </div>
+                    </div>
+
+                    <!-- Next Session -->
+                    <div class="dashboard-card bg-white p-4 upcoming-session">
+                        <h2 class="mb-3">Next Session</h2>
+                        <div id="nextSession">
+                            <p class="text-muted">No upcoming sessions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reuse your existing footer -->
+    <footer>
+        <!-- Your existing footer content -->
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="assets/js/jquery-2.1.0.min.js"></script>
+    <script src="assets/js/popper.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="userdashboard.js"></script>
+</body>
+</html>

@@ -266,6 +266,7 @@ D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Tra
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\Elite_Personal_Training.csproj.CoreCompileInputs.cache
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\Elite_Personal_Training.MvcApplicationPartsAssemblyInfo.cs
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\Elite_Personal_Training.MvcApplicationPartsAssemblyInfo.cache
+D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\Elite_Personal_Training.sourcelink.json
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\scopedcss\bundle\Elite_Personal_Training.styles.css
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\staticwebassets.build.json
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\staticwebassets.development.json
@@ -276,10 +277,10 @@ D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Tra
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.Elite_Personal_Training.props
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.Elite_Personal_Training.props
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\staticwebassets.pack.json
-D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\Elite_Pe.7FE68C2C.Up2Date
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\Elite_Personal_Training.dll
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\refint\Elite_Personal_Training.dll
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\Elite_Personal_Training.pdb
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\Elite_Personal_Training.genruntimeconfig.cache
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\ref\Elite_Personal_Training.dll
+D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
