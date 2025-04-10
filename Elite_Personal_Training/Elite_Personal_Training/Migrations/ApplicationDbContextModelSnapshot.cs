@@ -33,9 +33,8 @@ namespace Elite_Personal_Training.Migrations
                     b.Property<DateTime?>("BookingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("BookingType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("BookingType")
+                        .HasColumnType("int");
 
                     b.Property<int?>("ClassId")
                         .HasColumnType("int");

@@ -2,6 +2,7 @@
 using Elite_Personal_Training.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
 
 namespace Elite_Personal_Training.Controllers
@@ -17,8 +18,9 @@ namespace Elite_Personal_Training.Controllers
             _context = context;
         }
 
-        // ✅ Get all classes with Trainer names
+        // ✅ Allow public access to get all classes
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetClasses()
         {
             var classes = await _context.Classes
@@ -30,20 +32,20 @@ namespace Elite_Personal_Training.Controllers
                     c.Description,
                     c.Capacity,
                     c.Date,
-                    StartTime = DateTime.Today.Add(c.StartTime).ToString("hh:mm tt"), // ✅ Convert TimeSpan to DateTime first
+                    StartTime = DateTime.Today.Add(c.StartTime).ToString("hh:mm tt"),
                     EndTime = DateTime.Today.Add(c.EndTime).ToString("hh:mm tt"),
                     c.DaysOfWeek,
                     TrainerName = c.Trainer.Name,
-                    c.Price // 💰 Include price
+                    c.Price
                 })
                 .ToListAsync();
 
             return Ok(classes);
         }
 
-
-        // ✅ Get a single class by ID
+        // ✅ Allow public access to get a single class by ID
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetClass(int id)
         {
             var classModel = await _context.Classes
@@ -51,11 +53,8 @@ namespace Elite_Personal_Training.Controllers
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (classModel == null)
-            {
                 return NotFound();
-            }
 
-            // Ensure proper time formatting
             var result = new
             {
                 classModel.Id,
@@ -74,7 +73,7 @@ namespace Elite_Personal_Training.Controllers
             return Ok(result);
         }
 
-        // ✅ Create a new class
+        // ✅ Protected - requires authentication
         [HttpPost]
         public async Task<IActionResult> CreateClass([FromBody] ClassFormModel classModel)
         {
@@ -101,7 +100,42 @@ namespace Elite_Personal_Training.Controllers
             return CreatedAtAction(nameof(GetClass), new { id = newClass.Id }, newClass);
         }
 
-        // Add this model at the top of your controller file
+        // ✅ Protected - requires authentication
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateClass(int id, [FromBody] ClassFormModel updatedClass)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var existingClass = await _context.Classes.FindAsync(id);
+            if (existingClass == null) return NotFound();
+
+            existingClass.Name = updatedClass.Name;
+            existingClass.Description = updatedClass.Description;
+            existingClass.Capacity = updatedClass.Capacity;
+            existingClass.DaysOfWeek = updatedClass.DaysOfWeek;
+            existingClass.StartTime = TimeSpan.Parse(updatedClass.StartTime);
+            existingClass.EndTime = TimeSpan.Parse(updatedClass.EndTime);
+            existingClass.Price = updatedClass.Price;
+            existingClass.TrainerId = updatedClass.TrainerId;
+            existingClass.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        // ✅ Protected - requires authentication
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteClass(int id)
+        {
+            var classModel = await _context.Classes.FindAsync(id);
+            if (classModel == null) return NotFound();
+
+            _context.Classes.Remove(classModel);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        // ✅ Form model used for creation and updates
         public class ClassFormModel
         {
             [Required]
@@ -134,42 +168,6 @@ namespace Elite_Personal_Training.Controllers
             public int TrainerId { get; set; }
 
             public DateTime? Date { get; set; }
-        }
-
-        // ✅ Update an existing class
-        // ✅ Update an existing class
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateClass(int id, [FromBody] ClassFormModel updatedClass)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var existingClass = await _context.Classes.FindAsync(id);
-            if (existingClass == null) return NotFound();
-
-            existingClass.Name = updatedClass.Name;
-            existingClass.Description = updatedClass.Description;
-            existingClass.Capacity = updatedClass.Capacity;
-            existingClass.DaysOfWeek = updatedClass.DaysOfWeek;
-            existingClass.StartTime = TimeSpan.Parse(updatedClass.StartTime);
-            existingClass.EndTime = TimeSpan.Parse(updatedClass.EndTime);
-            existingClass.Price = updatedClass.Price;
-            existingClass.TrainerId = updatedClass.TrainerId;
-            existingClass.UpdatedAt = DateTime.UtcNow;
-
-            await _context.SaveChangesAsync();
-            return NoContent();
-        }
-
-        // ✅ Delete a class
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteClass(int id)
-        {
-            var classModel = await _context.Classes.FindAsync(id);
-            if (classModel == null) return NotFound();
-
-            _context.Classes.Remove(classModel);
-            await _context.SaveChangesAsync();
-            return NoContent();
         }
     }
 }

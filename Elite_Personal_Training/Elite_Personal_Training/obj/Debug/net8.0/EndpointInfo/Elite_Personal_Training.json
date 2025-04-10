@@ -1787,7 +1787,7 @@
           },
           "userId": {
             "type": "string",
-            "nullable": true
+            "format": "uuid"
           },
           "user": {
             "$ref": "#/components/schemas/User"
@@ -1833,11 +1833,11 @@
             "type": "string",
             "nullable": true
           },
-          "paymentMethod": {
+          "paymentReference": {
             "type": "string",
             "nullable": true
           },
-          "paymentReference": {
+          "paymentMethod": {
             "type": "string",
             "nullable": true
           },

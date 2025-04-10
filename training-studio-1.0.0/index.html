@@ -21,12 +21,16 @@ https://templatemo.com/tm-548-training-studio
     <!-- Additional CSS Files -->
     <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="index.css">
+
     <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
+
     <link rel="stylesheet" href="assets/css/templatemo-training-studio.css">
+
     
     </head>
     
     <body>
+    
     <!-- ***** Preloader Start ***** -->
     <div id="js-preloader" class="js-preloader">
       <div class="preloader-inner">
@@ -86,12 +90,12 @@ https://templatemo.com/tm-548-training-studio
                 <h2>easy with our <em>gym</em></h2>
                 <div class="main-button scroll-to-section">
                     <a href="booking.html" class="main-button booking-btn">Become a Member</a>
-                    
                 </div>
             </div>
         </div>
     </div>
     <!-- ***** Main Banner Area End ***** -->
+
 <!-- ***** Features Item Start ***** -->
 <section class="section" id="features">
     <div class="container">
@@ -161,88 +165,7 @@ https://templatemo.com/tm-548-training-studio
     </div>
 </section>
 <!-- ***** Features Item End ***** -->
-<!-- Booking Modal -->
-<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content">
-        <form id="bookingForm">
-          <div class="modal-header">
-            <h5 class="modal-title" id="bookingModalLabel">Complete Your Booking</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-  
-          <div class="modal-body">
-            <div class="row">
-              <div class="col-md-6">
-                <h6>User Info</h6>
-                <div class="mb-2">
-                  <input type="text" id="bookingFullName" class="form-control" placeholder="Full Name" disabled>
-                </div>
-                <div class="mb-2">
-                  <input type="email" id="bookingEmail" class="form-control" placeholder="Email" disabled>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <h6>Booking Details</h6>
-                <div class="mb-2">
-                  <input type="text" id="bookingType" class="form-control" placeholder="Type" disabled>
-                </div>
-                <div class="mb-2">
-                  <input type="text" id="bookingItem" class="form-control" placeholder="Item" disabled>
-                </div>
-                <div class="mb-2">
-                  <input type="number" id="bookingPrice" class="form-control" placeholder="Price" disabled>
-                </div>
-                <input type="hidden" id="bookingItemId">
-              </div>
-            </div>
-  
-            <hr>
-  
-            <h6>Choose Payment Method</h6>
-<div class="mb-3">
-  <select id="paymentMethod" class="form-select">
-    <option value="credit">Credit Card</option>
-    <option value="mada">Mada</option>
-    <option value="tabby">Tabby</option>
-    <option value="tamara">Tamara</option>
-  </select>
-</div>
 
-<!-- Credit Card Fields -->
-<div id="creditCardFields">
-  <div class="mb-2">
-    <input type="text" id="cardNumber" class="form-control" placeholder="Card Number">
-  </div>
-  <div class="mb-2">
-    <input type="text" id="cardName" class="form-control" placeholder="Cardholder Name">
-  </div>
-  <div class="row">
-    <div class="col">
-      <input type="text" class="form-control" placeholder="MM/YY">
-    </div>
-    <div class="col">
-      <input type="text" class="form-control" placeholder="CVV">
-    </div>
-  </div>
-</div>
-
-<!-- Placeholder for Tabby / Tamara / Mada -->
-<div id="alternativeMessage" class="text-muted mt-2" style="display: none;">
-  You'll be redirected to complete payment via <span id="selectedMethod"></span>.
-</div>
-
-          </div>
-  
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary w-100">Confirm & Pay</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-  
-  
     <!-- ***** Call to Action Start ***** -->
     <section class="section" id="call-to-action">
         <div class="container">
@@ -253,6 +176,7 @@ https://templatemo.com/tm-548-training-studio
                         <p>Ut consectetur, metus sit amet aliquet placerat, enim est ultricies ligula, sit amet dapibus odio augue eget libero. Morbi tempus mauris a nisi luctus imperdiet.</p>
                         <div class="main-button scroll-to-section">
                             <a href="booking.html?type=membership" class="btn btn-primary booking-btn">Become a Member</a>
+
                         </div>
                     </div>
                 </div>
@@ -277,6 +201,9 @@ https://templatemo.com/tm-548-training-studio
         </div>
     </div>
 </section>
+<style>
+   
+</style>
 
     <!-- ***** Our Classes End ***** -->
     
@@ -404,8 +331,6 @@ https://templatemo.com/tm-548-training-studio
 </section>
 <!-- ***** Online Sessions Section Ends ***** -->
 
-
-
     <!-- ***** Testimonials Starts ***** -->
     <section class="section" id="trainers">
         <div class="container">
@@ -426,6 +351,60 @@ https://templatemo.com/tm-548-training-studio
 
     <!-- ***** Testimonials Ends ***** -->
     
+
+
+    <!-- Booking Modal -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="bookingForm" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="bookingModalLabel">Complete Your Booking</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="bookingType" name="bookingType">
+          <input type="hidden" id="itemId" name="itemId">
+  
+          <div class="mb-3">
+            <label for="name" class="form-label">Full Name</label>
+            <input type="text" id="name" name="name" class="form-control" required />
+          </div>
+  
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" class="form-control" required />
+          </div>
+  
+          <div class="mb-3">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="text" id="phone" name="phone" class="form-control" required />
+          </div>
+  
+          <div class="mb-3">
+            <label for="paymentMethod" class="form-label">Payment Method</label>
+            <select id="paymentMethod" name="paymentMethod" class="form-select">
+              <option value="Credit Card">Credit Card</option>
+              <option value="Mada">Mada</option>
+              <option value="Tabby">Tabby</option>
+              <option value="Tamara">Tamara</option>
+            </select>
+          </div>
+  
+          <div class="mb-3">
+            <label for="notes" class="form-label">Notes</label>
+            <textarea id="notes" name="notes" class="form-control" rows="3"></textarea>
+          </div>
+  
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-success" onclick="postBooking()">Confirm Booking</button>
+            
+        </div>
+      </form>
+    </div>
+  </div>
+
+  
     <!-- ***** Contact Us Area Starts ***** -->
 <section class="section" id="contact-us">
     <div class="container-fluid">
@@ -470,7 +449,9 @@ https://templatemo.com/tm-548-training-studio
         </div>
     </div>
 </section>
-<!-- ***** Contact Us Area Ends ***** -->    
+<!-- ***** Contact Us Area Ends ***** -->
+
+    
     <!-- ***** Footer Start ***** -->
    <!-- ***** Footer Start ***** -->
 <footer>
@@ -530,8 +511,10 @@ https://templatemo.com/tm-548-training-studio
             </div>
         </div>
 
+      
 </footer>
 <!-- ***** Footer Ends ***** -->
+
     <script>
     document.addEventListener("DOMContentLoaded", function () {
         var dropdownToggle = document.querySelector('#userDropdown');

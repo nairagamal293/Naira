@@ -3,6 +3,7 @@
 
 namespace Elite_Personal_Training.DTOs
 {
+    using global::Elite_Personal_Training.Models;
     using System.Text.Json.Serialization;
 
     namespace Elite_Personal_Training.DTOs

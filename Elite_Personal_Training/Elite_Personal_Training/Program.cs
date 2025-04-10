@@ -68,13 +68,20 @@ builder.Services.AddCors(options =>
 
 //builder.Services.AddControllers().AddJsonOptions(options =>
 //{
-  //  options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-   // options.JsonSerializerOptions.WriteIndented = true;
+//  options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+// options.JsonSerializerOptions.WriteIndented = true;
 //});
 
 
 // ✅ Add Controllers & API Documentation
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

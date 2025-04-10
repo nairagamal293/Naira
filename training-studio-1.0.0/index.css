@@ -10,7 +10,7 @@
 .membership-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
+    gap: 50px;
     margin-top: 50px;
 }
 
@@ -86,7 +86,7 @@
 
 .membership-card .btn-main {
     display: block;
-    width: 100%;
+    width: 50%;
     text-align: center;
     padding: 15px;
     font-size: 1rem;
@@ -1012,3 +1012,9 @@ footer {
 .copyright a:hover {
     text-decoration: underline;
 }
+.alert {
+    z-index: 9999;
+    width: auto;
+    max-width: 300px;
+  }
+  

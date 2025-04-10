@@ -1622,7 +1622,38 @@ function truncateText(text, maxLength) {
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
 }
 
+//
+function loadBookings() {
+    document.getElementById("new-booking-badge").style.display = "none";
+    setActiveSidebar('Bookings');
+    document.getElementById("dashboard-title").textContent = "Manage Bookings";
 
+    document.getElementById("admin-content").innerHTML = `
+        <div class="table-responsive">
+            <table class="table table-bordered" id="bookingsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>User</th>
+                        <th>Type</th>
+                        <th>Item</th>
+                        <th>Status</th>
+                        <th>Payment</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    `;
+
+    fetchBookings();
+}
+
+
+
+//
 // ✅ Load Schedules
 async function loadSchedules() {
     document.getElementById("dashboard-title").innerText = "Class Schedules";
@@ -1929,3 +1960,124 @@ function logout() {
     localStorage.removeItem("userData");
     window.location.href = "login.html";
 }
+
+
+
+
+let lastBookingId = localStorage.getItem("lastBookingId");
+
+// Polling function to check for new bookings
+function checkNewBookings() {
+    fetch("https://localhost:7020/api/Booking/filter")
+        .then(res => res.json())
+        .then(bookings => {
+            if (!bookings || bookings.length === 0) return;
+
+            const latest = bookings[0].id;
+
+            // First time or if no local data
+            if (!lastBookingId) {
+                lastBookingId = latest;
+                localStorage.setItem("lastBookingId", latest);
+                return;
+            }
+
+            // Check if there's a new booking
+            if (latest > lastBookingId) {
+                lastBookingId = latest;
+                localStorage.setItem("lastBookingId", latest);
+
+                // 🔔 Show badge next to "Bookings" in sidebar
+                const badge = document.getElementById("new-booking-badge");
+                if (badge) {
+                    badge.style.display = "inline-block";
+                }
+
+                // 🔔 Optional toast-like alert
+                showBookingNotification();
+            }
+        })
+        .catch(err => console.error("Booking check failed:", err));
+}
+
+// Call check every 30 seconds
+setInterval(checkNewBookings, 30000);
+
+// Show alert function
+function showBookingNotification() {
+    const notif = document.createElement("div");
+    notif.className = "alert alert-info position-fixed top-0 end-0 m-3 shadow";
+    notif.style.zIndex = 9999;
+    notif.innerHTML = `
+        <strong>New Booking!</strong> A new booking has been added.
+        <button type="button" class="btn-close float-end" onclick="this.parentElement.remove()"></button>
+    `;
+    document.body.appendChild(notif);
+    setTimeout(() => notif.remove(), 6000);
+}
+
+
+function fetchBookings() {
+    fetch("https://localhost:7020/api/Booking/filter")
+        .then(res => res.json())
+        .then(bookings => {
+            const tbody = document.querySelector("#bookingsTable tbody");
+            tbody.innerHTML = "";
+            bookings.forEach(b => {
+                const itemName = b.membership?.name || b.class?.title || b.onlineSession?.title || "-";
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${b.id}</td>
+                        <td>${b.name}<br><small>${b.email}</small></td>
+                        <td>${b.bookingType}</td>
+                        <td>${itemName}</td>
+                        <td>${b.status}</td>
+                        <td>${b.paymentStatus} (${b.paymentMethod})</td>
+                        <td>${new Date(b.bookingDate).toLocaleString()}</td>
+                        <td>
+                            <button class="btn btn-success btn-sm" onclick="confirmBooking(${b.id})">Confirm</button>
+                            <button class="btn btn-warning btn-sm" onclick="cancelBooking(${b.id})">Cancel</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteBooking(${b.id})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        })
+        .catch(err => console.error("Error fetching bookings:", err));
+}
+
+
+function confirmBooking(id) {
+    fetch(`https://localhost:7020/api/Booking/confirm/${id}`, {
+        method: "POST"
+    })
+    .then(() => fetchBookings())
+    .catch(err => alert("Failed to confirm booking"));
+}
+
+function cancelBooking(id) {
+    fetch(`https://localhost:7020/api/Booking/cancel/${id}`, {
+        method: "POST"
+    })
+    .then(() => fetchBookings())
+    .catch(err => alert("Failed to cancel booking"));
+}
+
+function deleteBooking(id) {
+    if (!confirm("Are you sure you want to delete this booking?")) return;
+    fetch(`https://localhost:7020/api/Booking/${id}`, {
+        method: "DELETE"
+    })
+    .then(() => fetchBookings())
+    .catch(err => alert("Failed to delete booking"));
+}
+function setActiveSidebar(name) {
+    document.querySelectorAll(".sidebar ul li a").forEach(link => {
+        link.classList.remove("active");
+        if (link.textContent.trim() === name) {
+            link.classList.add("active");
+        }
+    });
+}
+
+

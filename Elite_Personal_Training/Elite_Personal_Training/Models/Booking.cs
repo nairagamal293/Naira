@@ -1,48 +1,49 @@
-﻿using Elite_Personal_Training.Models;
+﻿using System;
+using System.Collections.Generic;
 
-public enum BookingType
+namespace Elite_Personal_Training.Models
 {
-    Membership = 1,
-    Class = 2,
-    OnlineSession = 3
+    public enum BookingType
+    {
+        Membership = 1,
+        Class = 2,
+        OnlineSession = 3
+    }
+
+    public class Booking
+    {
+        public int Id { get; set; }
+
+        public Guid UserId { get; set; } // ✅ changed from string to Guid
+        public User? User { get; set; }
+
+        public int? MembershipId { get; set; }
+        public Membership? Membership { get; set; }
+
+        public int? ClassId { get; set; }
+        public Class? Class { get; set; }
+
+        public int? OnlineSessionId { get; set; }
+        public OnlineSession? OnlineSession { get; set; }
+
+        public DateTime? BookingDate { get; set; } = DateTime.UtcNow;
+
+        public decimal Price { get; set; }
+
+        public string Status { get; set; } = "Pending";
+        public string PaymentStatus { get; set; } = "Unpaid";
+
+        public string? PaymentReference { get; set; }
+        public string? PaymentMethod { get; set; }
+
+        public List<Payment> Payments { get; set; } = new List<Payment>();
+
+        public string? Notes { get; set; }
+
+        public string Phone { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+
+        public BookingType BookingType { get; set; }
+    }
 }
-
-public class Booking
-{
-    public int Id { get; set; }
-
-    public string UserId { get; set; }
-    public User User { get; set; }
-
-    public int? MembershipId { get; set; }
-    public Membership Membership { get; set; }
-
-    public int? ClassId { get; set; }
-    public Class Class { get; set; }
-
-    public int? OnlineSessionId { get; set; }
-    public OnlineSession OnlineSession { get; set; }
-
-    public DateTime? BookingDate { get; set; } = DateTime.UtcNow;
-
-    public decimal Price { get; set; }
-
-    public string Status { get; set; } = "Pending";
-    public string PaymentStatus { get; set; } = "Unpaid";
-
-    public string PaymentMethod { get; set; }
-    public string PaymentReference { get; set; }
-
-    public List<Payment> Payments { get; set; } = new List<Payment>();
-
-    public string? Notes { get; set; }
-
-    // ✅ Contact details
-    public string Phone { get; set; }
-    public string Name { get; set; }
-    public string Email { get; set; }
-
-    // ✅ Add this field (required)
-    public BookingType BookingType { get; set; }
-}
-

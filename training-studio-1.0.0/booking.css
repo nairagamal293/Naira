@@ -1,0 +1,35 @@
+/* booking.css */
+.booking-section {
+    padding: 50px 0;
+    background: #f9f9f9;
+  }
+  
+  .booking-section .container {
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  
+  .booking-section input,
+  .booking-section select,
+  .booking-section textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+  
+  .booking-section button {
+    background-color: #f55858;
+    color: white;
+    border: none;
+    padding: 14px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  #bookingMessage {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+  

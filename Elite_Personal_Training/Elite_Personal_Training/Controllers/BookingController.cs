@@ -1,11 +1,10 @@
-﻿// Enhanced BookingController.cs with booking validation, status tracking, and basic user/payment checks
-
-using Elite_Personal_Training.Data;
+﻿using Elite_Personal_Training.Data;
 using Elite_Personal_Training.DTOs;
 using Elite_Personal_Training.DTOs.Elite_Personal_Training.DTOs;
 using Elite_Personal_Training.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,13 +35,14 @@ namespace Elite_Personal_Training.Controllers
             return Ok(booking);
         }
 
-
-
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetBookingsByUser(string userId)
         {
+            if (!Guid.TryParse(userId, out Guid userGuid))
+                return BadRequest("Invalid UserId format.");
+
             var bookings = await _context.Bookings
-                .Where(b => b.UserId == userId)
+                .Where(b => b.UserId == userGuid)
                 .Include(b => b.Membership)
                 .Include(b => b.Class)
                 .Include(b => b.OnlineSession)
@@ -52,17 +52,17 @@ namespace Elite_Personal_Training.Controllers
             return Ok(bookings);
         }
 
-
-
-
         [HttpPost]
         public async Task<IActionResult> CreateBooking([FromBody] BookingRequest request)
         {
             if (request == null || string.IsNullOrEmpty(request.UserId))
                 return BadRequest("Invalid booking data.");
 
+            if (!Guid.TryParse(request.UserId, out Guid userGuid))
+                return BadRequest("Invalid UserId format.");
+
             bool alreadyBooked = await _context.Bookings.AnyAsync(b =>
-                b.UserId == request.UserId &&
+                b.UserId == userGuid &&
                 (
                     (request.MembershipId != null && b.MembershipId == request.MembershipId) ||
                     (request.ClassId != null && b.ClassId == request.ClassId) ||
@@ -83,7 +83,7 @@ namespace Elite_Personal_Training.Controllers
 
             var booking = new Booking
             {
-                UserId = request.UserId,
+                UserId = userGuid,
                 MembershipId = request.MembershipId,
                 ClassId = request.ClassId,
                 OnlineSessionId = request.OnlineSessionId,
@@ -91,24 +91,17 @@ namespace Elite_Personal_Training.Controllers
                 PaymentMethod = request.PaymentMethod,
                 Notes = request.Notes,
                 BookingDate = DateTime.UtcNow,
-
                 Phone = request.Phone,
                 Name = request.Name,
                 Email = request.Email,
-
-                // ✅ Set the BookingType
                 BookingType = request.BookingType
             };
-
-
 
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetBooking), new { id = booking.Id }, booking);
         }
-
-
 
         [HttpPost("confirm/{id}")]
         public async Task<IActionResult> ConfirmBooking(int id)
@@ -136,7 +129,7 @@ namespace Elite_Personal_Training.Controllers
                 return BadRequest("Booking is already cancelled.");
 
             booking.Status = "Cancelled";
-            booking.PaymentStatus = "Refunded"; // optionally update
+            booking.PaymentStatus = "Refunded";
             await _context.SaveChangesAsync();
 
             return Ok(booking);
@@ -162,7 +155,6 @@ namespace Elite_Personal_Training.Controllers
             return Ok(bookings);
         }
 
-
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBooking(int id, [FromBody] BookingRequest request)
         {
@@ -185,8 +177,11 @@ namespace Elite_Personal_Training.Controllers
         [HttpPost("cancel/user/{userId}/{bookingId}")]
         public async Task<IActionResult> CancelUserBooking(string userId, int bookingId)
         {
+            if (!Guid.TryParse(userId, out Guid userGuid))
+                return BadRequest("Invalid UserId format.");
+
             var booking = await _context.Bookings
-                .Where(b => b.Id == bookingId && b.UserId == userId)
+                .Where(b => b.Id == bookingId && b.UserId == userGuid)
                 .FirstOrDefaultAsync();
 
             if (booking == null)
@@ -197,10 +192,6 @@ namespace Elite_Personal_Training.Controllers
 
             return Ok(booking);
         }
-
-
-
-
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking(int id)
