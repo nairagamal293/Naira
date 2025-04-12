@@ -65,7 +65,7 @@ namespace Elite_Personal_Training.Controllers
                 return Unauthorized(new { message = "Invalid credentials" });
 
             var roles = await _userManager.GetRolesAsync(user);
-            var role = roles.FirstOrDefault() ?? "User"; // ✅ Ensure role exists
+            var role = roles.FirstOrDefault() ?? "User";
 
             var token = await GenerateJwtToken(user, role);
 
@@ -74,13 +74,14 @@ namespace Elite_Personal_Training.Controllers
                 token,
                 user = new
                 {
+                    id = user.Id,
                     fullName = user.FullName,
                     email = user.Email,
+                    phone = user.PhoneNumber,
                     role = role
                 }
             });
         }
-
 
 
         // ✅ JWT TOKEN GENERATION
@@ -91,11 +92,18 @@ namespace Elite_Personal_Training.Controllers
 
             var claims = new List<Claim>
     {
-        new Claim(ClaimTypes.NameIdentifier, user.Id),
-        new Claim(ClaimTypes.Email, user.Email),
-        new Claim(ClaimTypes.Name, user.FullName),
-        new Claim(ClaimTypes.Role, role) // ✅ Directly add role here
+        new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+        new Claim(JwtRegisteredClaimNames.Name, user.FullName),
+        new Claim(JwtRegisteredClaimNames.Email, user.Email),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim(ClaimTypes.Role, role)
     };
+
+            // Add phone if available
+            if (!string.IsNullOrEmpty(user.PhoneNumber))
+            {
+                claims.Add(new Claim("phone", user.PhoneNumber));
+            }
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
@@ -106,7 +114,6 @@ namespace Elite_Personal_Training.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
 
     }
 }

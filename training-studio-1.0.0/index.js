@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Initialize all functionality
     checkAuthStatus();
     setupBookingButtons();
     loadMemberships();
@@ -6,12 +7,20 @@ document.addEventListener("DOMContentLoaded", function () {
     loadClasses();
     loadSchedules();
     loadOnlineSessions();
+    setupBookingForm();
 });
 
 // ✅ Authentication State Management
 const auth = {
     isLoggedIn: () => localStorage.getItem("authToken") !== null,
-    currentUser: () => JSON.parse(localStorage.getItem("userData")) || null,
+    currentUser: () => {
+        try {
+            return JSON.parse(localStorage.getItem("userData")) || null;
+        } catch (e) {
+            console.error("Error parsing user data:", e);
+            return null;
+        }
+    },
     logout: () => {
         localStorage.removeItem("authToken");
         localStorage.removeItem("userData");
@@ -29,7 +38,7 @@ function checkAuthStatus() {
             authLinks.innerHTML = `
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user-circle"></i> <span id="userName">${user?.fullName || 'My Account'}</span>
+                        <i class="fas fa-user-circle"></i> <span id="userName">${user?.fullName || user?.username || user?.name || 'My Account'}</span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="profile.html">Profile</a></li>
@@ -40,7 +49,7 @@ function checkAuthStatus() {
                 </li>
             `;
 
-            // ✅ Ensure the dropdown is initialized
+            // Initialize dropdown
             setTimeout(() => {
                 const dropdownElement = document.getElementById("userDropdown");
                 if (dropdownElement) {
@@ -72,6 +81,154 @@ function redirectToSignup() {
     return false;
 }
 
+// ✅ Setup Booking Form
+function setupBookingForm() {
+    const apiBase = "https://localhost:7020/api";
+    const bookingForm = document.getElementById("bookingForm");
+    
+    if (!bookingForm) return;
+
+    const userData = auth.currentUser();
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const phoneInput = document.getElementById("phone");
+    const notesInput = document.getElementById("notes");
+    const bookingTypeSelect = document.getElementById("bookingType");
+    const bookingItemSelect = document.getElementById("bookingItem");
+    const paymentMethodSelect = document.getElementById("paymentMethod");
+    const totalPriceDisplay = document.getElementById("totalPrice");
+
+    // Initialize form with user data
+    if (userData) {
+        nameInput.value = userData.fullName || userData.username || userData.name || "";
+        emailInput.value = userData.email || "";
+        phoneInput.value = userData.phone || "";
+    }
+
+    // Load items when booking type changes
+    bookingTypeSelect.addEventListener("change", loadBookingItems);
+    bookingItemSelect.addEventListener("change", updateBookingPrice);
+    bookingForm.addEventListener("submit", handleBookingSubmit);
+
+    let bookingItemsCache = {
+        Membership: [],
+        Class: [],
+        OnlineSession: []
+    };
+
+    async function loadBookingItems() {
+        const type = bookingTypeSelect.value;
+        if (!type) return;
+
+        bookingItemSelect.disabled = true;
+        bookingItemSelect.innerHTML = `<option value="">Loading ${type} options...</option>`;
+
+        try {
+            // Check cache first
+            if (bookingItemsCache[type].length > 0) {
+                populateBookingItems(type, bookingItemsCache[type]);
+                return;
+            }
+
+            const response = await fetch(`${apiBase}/${type}`);
+            if (!response.ok) throw new Error(`Failed to load ${type} options`);
+
+            const data = await response.json();
+            if (!Array.isArray(data)) throw new Error(`Invalid ${type} data format`);
+
+            // Cache the results
+            bookingItemsCache[type] = data;
+            populateBookingItems(type, data);
+        } catch (error) {
+            console.error(`Error loading ${type} options:`, error);
+            bookingItemSelect.innerHTML = `<option value="">Error loading options</option>`;
+        } finally {
+            bookingItemSelect.disabled = false;
+        }
+    }
+
+    function populateBookingItems(type, items) {
+        bookingItemSelect.innerHTML = `<option value="">Select ${type}</option>`;
+        
+        items.forEach(item => {
+            const option = document.createElement("option");
+            option.value = item.id;
+            option.textContent = `${item.name || 'Item'} - ${item.price || '0'} SAR`;
+            option.dataset.price = item.price || '0';
+            bookingItemSelect.appendChild(option);
+        });
+
+        updateBookingPrice();
+    }
+
+    function updateBookingPrice() {
+        const selectedOption = bookingItemSelect.selectedOptions[0];
+        const price = selectedOption ? selectedOption.dataset.price || "0" : "0";
+        totalPriceDisplay.textContent = `${price} SAR`;
+    }
+
+    async function handleBookingSubmit(e) {
+        e.preventDefault();
+
+        if (!auth.isLoggedIn()) {
+            alert("Please log in to make a booking");
+            window.location.href = "SignUp.html";
+            return;
+        }
+
+        const type = bookingTypeSelect.value;
+        const itemId = bookingItemSelect.value;
+        const selectedOption = bookingItemSelect.selectedOptions[0];
+        const price = selectedOption?.dataset.price || "0";
+
+        if (!itemId || itemId === "") {
+            alert("Please select an item to book");
+            return;
+        }
+
+        const bookingData = {
+            userId: userData.id,
+            bookingType: type,
+            name: nameInput.value.trim(),
+            email: emailInput.value.trim(),
+            phone: phoneInput.value.trim(),
+            notes: notesInput.value.trim(),
+            paymentMethod: paymentMethodSelect.value,
+            amountPaid: parseFloat(price),
+            bookingDate: new Date().toISOString()
+        };
+
+        // Add type-specific reference
+        if (type === "Membership") bookingData.membershipId = itemId;
+        if (type === "Class") bookingData.classId = itemId;
+        if (type === "OnlineSession") bookingData.onlineSessionId = itemId;
+
+        try {
+            const response = await fetch(`${apiBase}/Booking`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+                },
+                body: JSON.stringify(bookingData)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                alert("Booking confirmed successfully!");
+                bookingForm.reset();
+                totalPriceDisplay.textContent = "0 SAR";
+            } else {
+                const error = await response.json().catch(() => ({ message: "Unknown error occurred" }));
+                throw new Error(error.message || "Booking failed");
+            }
+        } catch (error) {
+            console.error("Booking error:", error);
+            alert(`Booking failed: ${error.message}`);
+        }
+    }
+}
+
 // ✅ Load Memberships
 async function loadMemberships() {
     const membershipContainer = document.querySelector("#membership .row");
@@ -92,9 +249,12 @@ async function loadMemberships() {
                 <div class="col-lg-3 col-md-6">
                     <div class="membership-card">
                         <h3>${membership.name || 'Membership'}</h3>
-                        <p class="price">$${membership.price || '0'} / ${membership.durationInDays || '0'} days</p>
+                        <p class="price">${membership.price || '0'} SAR / ${membership.durationInDays || '0'} days</p>
                         <ul><li>✔ ${membership.description || 'No description available'}</li></ul>
-                        <a href="booking.html" class="btn-main">Join Now</a>
+                        <button onclick="document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });" 
+                                class="btn-main booking-btn">
+                            Join Now
+                        </button>
                     </div>
                 </div>`).join("");
     } catch (error) {
@@ -151,7 +311,10 @@ async function loadClasses() {
                     <h4>${cls.name || 'Class'}</h4>
                     <p>${cls.description || 'No description available'}</p>
                     <p><strong>Trainer:</strong> ${cls.trainerName || "Unknown"}</p>
-                  <button class="btn btn-primary" onclick="openBookingModal('Class', 1)">Join Class</button>
+                    <button onclick="document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });" 
+                            class="btn btn-success booking-btn">
+                        Book Now
+                    </button>
                 </div>
             </div>`).join("");
     } catch (error) {
@@ -210,7 +373,10 @@ async function loadOnlineSessions() {
                         <h3>${session.title || 'Session'}</h3>
                         <p><strong>Trainer:</strong> ${session.trainerName || 'Unknown'}</p>
                         <p><strong>Date & Time:</strong> ${session.sessionDateTime ? new Date(session.sessionDateTime).toLocaleString() : 'Not specified'}</p>
-                        <a href="booking.html" class="btn-main booking-btn">Book Session</a>
+                        <button onclick="document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });" 
+                                class="btn-main booking-btn">
+                            Book Session
+                        </button>
                     </div>
                 </div>`).join("");
     } catch (error) {
@@ -219,95 +385,6 @@ async function loadOnlineSessions() {
     }
 }
 
-
-function openBookingModal(type, itemId, price) {
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  if (!userData) {
-    alert("Please sign in to book.");
-    return;
-  }
-
-  // Fill hidden booking info
-  document.getElementById("booking-type").value = type;
-  document.getElementById("booking-item-id").value = itemId;
-  document.getElementById("booking-amount").value = price;
-
-  // Pre-fill user info
-  document.getElementById("name").value = userData.name;
-  document.getElementById("email").value = userData.email;
-  document.getElementById("phone").value = userData.phone;
-
-  // Open modal
-  const modal = new bootstrap.Modal(document.getElementById("bookingModal"));
-  modal.show();
-}
-
-
-
-function openBookingModal(type, id, price) {
-    const userData = JSON.parse(localStorage.getItem("userData"));
-  
-    if (!userData) {
-      alert("Please sign in to book.");
-      return;
-    }
-  
-    document.getElementById("bookingType").value = type;
-    document.getElementById("itemId").value = id;
-  
-    document.getElementById("name").value = userData.name || "";
-    document.getElementById("email").value = userData.email || "";
-    document.getElementById("phone").value = userData.phone || "";
-  
-    const bookingModal = new bootstrap.Modal(document.getElementById("bookingModal"));
-    bookingModal.show();
-  }
-  
-  document.getElementById("bookingForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
-  
-    const userData = JSON.parse(localStorage.getItem("userData"));
-    const form = e.target;
-  
-    const bookingType = form.bookingType.value;
-    const itemId = form.itemId.value;
-  
-    const payload = {
-      userId: userData.id,
-      name: form.name.value,
-      email: form.email.value,
-      phone: form.phone.value,
-      paymentMethod: form.paymentMethod.value,
-      notes: form.notes.value,
-      amountPaid: 100, // 🔁 Dynamically set based on the item later
-      bookingType: bookingType,
-    };
-  
-    if (bookingType === "Membership") payload.membershipId = parseInt(itemId);
-    if (bookingType === "Class") payload.classId = parseInt(itemId);
-    if (bookingType === "OnlineSession") payload.onlineSessionId = parseInt(itemId);
-  
-    try {
-      const res = await fetch("/api/Booking", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-  
-      if (!res.ok) {
-        const error = await res.text();
-        throw new Error(error);
-      }
-  
-      alert("Booking successful!");
-      bootstrap.Modal.getInstance(document.getElementById("bookingModal")).hide();
-    } catch (err) {
-      alert("Error: " + err.message);
-    }
-  });
-  
 // Contact Form Handling
 document.addEventListener("DOMContentLoaded", function () {
     const contactForm = document.getElementById("contact-form");

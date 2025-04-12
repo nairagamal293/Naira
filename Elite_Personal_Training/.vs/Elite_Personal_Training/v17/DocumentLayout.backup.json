@@ -3,6 +3,30 @@
   "WorkspaceRootPath": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\models\\contact.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\models\\contact.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\controllers\\membershipcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\controllers\\membershipcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\models\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\models\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -59,16 +83,8 @@
       "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\models\\membership.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\models\\attendance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\models\\attendance.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\controllers\\trainercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -81,10 +97,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\controllers\\paymentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\controllers\\paymentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\controllers\\membershipcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\controllers\\membershipcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\models\\trainer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -123,14 +135,6 @@
       "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\controllers\\onlinesessioncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\models\\signuprequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\models\\signuprequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -145,10 +149,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\models\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\models\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\models\\contact.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\models\\contact.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -172,72 +172,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Booking.cs",
-              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Booking.cs",
-              "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\Booking.cs",
-              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Booking.cs",
-              "RelativeToolTip": "Elite_Personal_Training\\Models\\Booking.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-05T12:22:58.152Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ClassController.cs",
-              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\ClassController.cs",
-              "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\ClassController.cs",
-              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\ClassController.cs",
-              "RelativeToolTip": "Elite_Personal_Training\\Controllers\\ClassController.cs",
-              "ViewState": "AgIAAJcAAAAAAAAAAAAAAK0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-05T07:55:08.362Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "20250409084515_AddContactDetailsToBookings.cs",
-              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Migrations\\20250409084515_AddContactDetailsToBookings.cs",
-              "RelativeDocumentMoniker": "Elite_Personal_Training\\Migrations\\20250409084515_AddContactDetailsToBookings.cs",
-              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Migrations\\20250409084515_AddContactDetailsToBookings.cs",
-              "RelativeToolTip": "Elite_Personal_Training\\Migrations\\20250409084515_AddContactDetailsToBookings.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-09T08:45:20.313Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "BookingRequest.cs",
-              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\DTOs\\BookingRequest.cs",
-              "RelativeDocumentMoniker": "Elite_Personal_Training\\DTOs\\BookingRequest.cs",
-              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\DTOs\\BookingRequest.cs",
-              "RelativeToolTip": "Elite_Personal_Training\\DTOs\\BookingRequest.cs",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAAACAAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-09T07:26:20.146Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "BookingController.cs",
-              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\BookingController.cs",
-              "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\BookingController.cs",
-              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\BookingController.cs",
-              "RelativeToolTip": "Elite_Personal_Training\\Controllers\\BookingController.cs",
-              "ViewState": "AgIAALcAAAAAAAAAAADwv88AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-05T06:46:12.82Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Program.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Program.cs",
@@ -250,6 +189,144 @@
             {
               "$type": "Document",
               "DocumentIndex": 5,
+              "Title": "MembershipController.cs",
+              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\MembershipController.cs",
+              "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\MembershipController.cs",
+              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\MembershipController.cs",
+              "RelativeToolTip": "Elite_Personal_Training\\Controllers\\MembershipController.cs",
+              "ViewState": "AgIAAEEAAAAAAAAAAAAuwE0AAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-05T12:25:15.457Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\User.cs",
+              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\User.cs",
+              "RelativeToolTip": "Elite_Personal_Training\\Models\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-23T12:21:40.928Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Contact.cs",
+              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Contact.cs",
+              "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\Contact.cs",
+              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Contact.cs",
+              "RelativeToolTip": "Elite_Personal_Training\\Models\\Contact.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-23T12:23:58.508Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\UserController.cs",
+              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\UserController.cs",
+              "RelativeToolTip": "Elite_Personal_Training\\Controllers\\UserController.cs",
+              "ViewState": "AgIAADYAAAAAAAAAAAAuwEUAAAAzAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-24T07:07:06.38Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\AdminController.cs",
+              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "Elite_Personal_Training\\Controllers\\AdminController.cs",
+              "ViewState": "AgIAAH0AAAAAAAAAAAAwwI8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-24T07:06:19.866Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Elite_Personal_Training\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAGgAAAAAAAAAAAAAAHcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-26T06:47:20.223Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "BookingController.cs",
+              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\BookingController.cs",
+              "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\BookingController.cs",
+              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\BookingController.cs",
+              "RelativeToolTip": "Elite_Personal_Training\\Controllers\\BookingController.cs",
+              "ViewState": "AgIAALcAAAAAAAAAAADwv88AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-05T06:46:12.82Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "BookingRequest.cs",
+              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\DTOs\\BookingRequest.cs",
+              "RelativeDocumentMoniker": "Elite_Personal_Training\\DTOs\\BookingRequest.cs",
+              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\DTOs\\BookingRequest.cs",
+              "RelativeToolTip": "Elite_Personal_Training\\DTOs\\BookingRequest.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAAACAAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T07:26:20.146Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "20250409084515_AddContactDetailsToBookings.cs",
+              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Migrations\\20250409084515_AddContactDetailsToBookings.cs",
+              "RelativeDocumentMoniker": "Elite_Personal_Training\\Migrations\\20250409084515_AddContactDetailsToBookings.cs",
+              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Migrations\\20250409084515_AddContactDetailsToBookings.cs",
+              "RelativeToolTip": "Elite_Personal_Training\\Migrations\\20250409084515_AddContactDetailsToBookings.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T08:45:20.313Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Booking.cs",
+              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Booking.cs",
+              "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\Booking.cs",
+              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Booking.cs",
+              "RelativeToolTip": "Elite_Personal_Training\\Models\\Booking.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-05T12:22:58.152Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ClassController.cs",
+              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\ClassController.cs",
+              "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\ClassController.cs",
+              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\ClassController.cs",
+              "RelativeToolTip": "Elite_Personal_Training\\Controllers\\ClassController.cs",
+              "ViewState": "AgIAAJcAAAAAAAAAAAAAAK0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-05T07:55:08.362Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "20250409103355_MakePaymentFieldsNullable.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Migrations\\20250409103355_MakePaymentFieldsNullable.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Migrations\\20250409103355_MakePaymentFieldsNullable.cs",
@@ -261,7 +338,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 12,
               "Title": "ApplicationDbContextModelSnapshot.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Migrations\\ApplicationDbContextModelSnapshot.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Migrations\\ApplicationDbContextModelSnapshot.cs",
@@ -273,7 +350,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 14,
               "Title": "20250409083454_AddBookingDateToBookings.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Migrations\\20250409083454_AddBookingDateToBookings.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Migrations\\20250409083454_AddBookingDateToBookings.cs",
@@ -285,7 +362,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 16,
               "Title": "20250324085047_RenameAspNetUsersToUsers.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Migrations\\20250324085047_RenameAspNetUsersToUsers.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Migrations\\20250324085047_RenameAspNetUsersToUsers.cs",
@@ -297,7 +374,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 15,
               "Title": "20250409083251_AddBookingDateAndNotes.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Migrations\\20250409083251_AddBookingDateAndNotes.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Migrations\\20250409083251_AddBookingDateAndNotes.cs",
@@ -309,7 +386,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 18,
               "Title": "Class.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Class.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\Class.cs",
@@ -321,19 +398,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "User.cs",
-              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\User.cs",
-              "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\User.cs",
-              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\User.cs",
-              "RelativeToolTip": "Elite_Personal_Training\\Models\\User.cs",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAiwBAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-23T12:21:40.928Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 19,
               "Title": "Membership.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Membership.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\Membership.cs",
@@ -345,7 +410,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 20,
               "Title": "Attendance.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Attendance.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\Attendance.cs",
@@ -357,7 +422,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 17,
               "Title": "Notification.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Notification.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\Notification.cs",
@@ -369,7 +434,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 22,
               "Title": "ScheduleController.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\ScheduleController.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\ScheduleController.cs",
@@ -381,7 +446,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 23,
               "Title": "PaymentController.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\PaymentController.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\PaymentController.cs",
@@ -393,19 +458,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "MembershipController.cs",
-              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\MembershipController.cs",
-              "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\MembershipController.cs",
-              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\MembershipController.cs",
-              "RelativeToolTip": "Elite_Personal_Training\\Controllers\\MembershipController.cs",
-              "ViewState": "AgIAAEEAAAAAAAAAAAAuwFcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-05T12:25:15.457Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 21,
               "Title": "TrainerController.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\TrainerController.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\TrainerController.cs",
@@ -417,19 +470,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
-              "Title": "UserController.cs",
-              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\UserController.cs",
-              "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\UserController.cs",
-              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\UserController.cs",
-              "RelativeToolTip": "Elite_Personal_Training\\Controllers\\UserController.cs",
-              "ViewState": "AgIAADYAAAAAAAAAAAAuwEwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-24T07:07:06.38Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 24,
               "Title": "Trainer.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Trainer.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\Trainer.cs",
@@ -441,7 +482,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 25,
               "Title": "Schedule.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Schedule.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\Schedule.cs",
@@ -453,7 +494,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 26,
               "Title": "OnlineSession.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\OnlineSession.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\OnlineSession.cs",
@@ -465,7 +506,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 27,
               "Title": "SessionBooking.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\SessionBooking.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\SessionBooking.cs",
@@ -477,7 +518,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 28,
               "Title": "OnlineSessionUpdateDto.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\DTOs\\OnlineSessionUpdateDto.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\DTOs\\OnlineSessionUpdateDto.cs",
@@ -489,7 +530,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 29,
               "Title": "OnlineSessionCreateDto.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\DTOs\\OnlineSessionCreateDto.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\DTOs\\OnlineSessionCreateDto.cs",
@@ -501,7 +542,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 30,
               "Title": "ApplicationDbContext.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Data\\ApplicationDbContext.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Data\\ApplicationDbContext.cs",
@@ -513,7 +554,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 31,
               "Title": "SessionBookingController.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\SessionBookingController.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\SessionBookingController.cs",
@@ -525,7 +566,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 32,
               "Title": "OnlineSessionController.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\OnlineSessionController.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\OnlineSessionController.cs",
@@ -537,31 +578,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\AuthController.cs",
-              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "Elite_Personal_Training\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAF4AAAAAAAAAAADwv3AAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-26T06:47:20.223Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 31,
-              "Title": "AdminController.cs",
-              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\AdminController.cs",
-              "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\AdminController.cs",
-              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\AdminController.cs",
-              "RelativeToolTip": "Elite_Personal_Training\\Controllers\\AdminController.cs",
-              "ViewState": "AgIAAH0AAAAAAAAAAAAwwI8AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-24T07:06:19.866Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 33,
               "Title": "SignUpRequest.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\SignUpRequest.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\SignUpRequest.cs",
@@ -573,7 +590,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 34,
               "Title": "SeedAdminUser.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\SeedAdminUser.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\SeedAdminUser.cs",
@@ -585,7 +602,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 35,
               "Title": "RoleSeeder.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\RoleSeeder.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\RoleSeeder.cs",
@@ -597,7 +614,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 36,
               "Title": "Payment.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Payment.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\Payment.cs",
@@ -606,18 +623,6 @@
               "ViewState": "AgIAAA4AAAAAAAAAAAAgwBwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-25T09:35:58.809Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 36,
-              "Title": "Contact.cs",
-              "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Contact.cs",
-              "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\Contact.cs",
-              "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Contact.cs",
-              "RelativeToolTip": "Elite_Personal_Training\\Models\\Contact.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-23T12:23:58.508Z"
             },
             {
               "$type": "Document",
