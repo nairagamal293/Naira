@@ -370,8 +370,8 @@
         }
       }
     },
-    "/api/Booking/cancel/user/{userId}/{bookingId}": {
-      "post": {
+    "/api/Booking/next-session/{userId}": {
+      "get": {
         "tags": [
           "Booking"
         ],
@@ -382,15 +382,6 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "bookingId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
             }
           }
         ],

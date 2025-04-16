@@ -190,27 +190,6 @@
   },
   {
     "ContainingType": "Elite_Personal_Training.Controllers.BookingController",
-    "Method": "CancelUserBooking",
-    "RelativePath": "api/Booking/cancel/user/{userId}/{bookingId}",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.String",
-        "IsRequired": true
-      },
-      {
-        "Name": "bookingId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Elite_Personal_Training.Controllers.BookingController",
     "Method": "ConfirmBooking",
     "RelativePath": "api/Booking/confirm/{id}",
     "HttpMethod": "POST",
@@ -242,6 +221,22 @@
         "Name": "type",
         "Type": "System.String",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elite_Personal_Training.Controllers.BookingController",
+    "Method": "GetNextSession",
+    "RelativePath": "api/Booking/next-session/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.String",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

@@ -78,6 +78,82 @@ https://templatemo.com/tm-548-training-studio
     </header>
     <!-- ***** Header Area End ***** -->
 
+
+    <!-- Add this modal structure near the top of your body (right after the header) -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="bookingModalLabel">Book Now</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Move the booking form content here -->
+          <form id="bookingForm">
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <label for="bookingType">Booking Type</label>
+                <select class="form-control" id="bookingType" required>
+                  <option value="">Select Type</option>
+                  <option value="Membership">Membership</option>
+                  <option value="Class">Class</option>
+                  <option value="OnlineSession">Online Session</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label for="bookingItem">Select Item</label>
+                <select class="form-control" id="bookingItem" required>
+                  <option value="">Select an item</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label for="paymentMethod">Payment Method</label>
+                <select class="form-control" id="paymentMethod" required>
+                  <option value="CreditCard">Credit Card</option>
+                  <option value="Mada">Mada</option>
+                  <option value="Tabby">Tabby</option>
+                  <option value="Tamara">Tamara</option>
+                </select>
+              </div>
+            </div>
+      
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" readonly required>
+              </div>
+              <div class="col-md-4">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" readonly required>
+              </div>
+              <div class="col-md-4">
+                <label for="phone">Phone</label>
+                <input type="text" class="form-control" id="phone" required>
+              </div>
+            </div>
+      
+            <div class="mb-3">
+              <label for="notes">Notes</label>
+              <textarea class="form-control" id="notes" rows="3"></textarea>
+            </div>
+      
+            <div class="mb-3">
+              <strong>Total Price: <span id="totalPrice">--</span> SAR</strong>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="confirmBookingBtn">Confirm Booking</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  
     <!-- ***** Main Banner Area Start ***** -->
     <div class="main-banner" id="top">
         <video autoplay muted loop id="bg-video">
@@ -89,7 +165,7 @@ https://templatemo.com/tm-548-training-studio
                 <h6>work harder, get stronger</h6>
                 <h2>easy with our <em>gym</em></h2>
                 <div class="main-button scroll-to-section">
-                    <a href="booking.html" class="main-button booking-btn">Become a Member</a>
+                    <a href="" class="main-button booking-btn">Become a Member</a>
                 </div>
             </div>
         </div>
@@ -175,7 +251,7 @@ https://templatemo.com/tm-548-training-studio
                         <h2>Don’t <em>think</em>, begin <em>today</em>!</h2>
                         <p>Ut consectetur, metus sit amet aliquet placerat, enim est ultricies ligula, sit amet dapibus odio augue eget libero. Morbi tempus mauris a nisi luctus imperdiet.</p>
                         <div class="main-button scroll-to-section">
-                            <a href="booking.html?type=membership" class="btn btn-primary booking-btn">Become a Member</a>
+                            <a href="" class="btn btn-primary booking-btn">Become a Member</a>
 
                         </div>
                     </div>
@@ -350,70 +426,7 @@ https://templatemo.com/tm-548-training-studio
     </section>
 
     <!-- ***** Testimonials Ends ***** -->
-    
-
-
-    <!-- Booking Modal -->
-    <section id="booking" class="section" style="margin-top: 80px;">
-        <div class="container">
-          <h2 class="text-center mb-4">Book Now</h2>
-          <form id="bookingForm">
-            <div class="row mb-3">
-              <div class="col-md-4">
-                <label for="bookingType">Booking Type</label>
-                <select class="form-control" id="bookingType" required>
-                  <option value="">Select Type</option>
-                  <option value="Membership">Membership</option>
-                  <option value="Class">Class</option>
-                  <option value="OnlineSession">Online Session</option>
-                </select>
-              </div>
-              <div class="col-md-4">
-                <label for="bookingItem">Select Item</label>
-                <select class="form-control" id="bookingItem" required>
-                  <option value="">Select an item</option>
-                </select>
-              </div>
-              <div class="col-md-4">
-                <label for="paymentMethod">Payment Method</label>
-                <select class="form-control" id="paymentMethod" required>
-                  <option value="CreditCard">Credit Card</option>
-                  <option value="Mada">Mada</option>
-                  <option value="Tabby">Tabby</option>
-                  <option value="Tamara">Tamara</option>
-                </select>
-              </div>
-            </div>
       
-            <div class="row mb-3">
-              <div class="col-md-4">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" readonly required>
-              </div>
-              <div class="col-md-4">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" readonly required>
-              </div>
-              <div class="col-md-4">
-                <label for="phone">Phone</label>
-                <input type="text" class="form-control" id="phone" required>
-              </div>
-            </div>
-      
-            <div class="mb-3">
-              <label for="notes">Notes</label>
-              <textarea class="form-control" id="notes" rows="3"></textarea>
-            </div>
-      
-            <div class="mb-3">
-              <strong>Total Price: <span id="totalPrice">--</span> SAR</strong>
-            </div>
-      
-            <button type="submit" class="btn btn-primary">Confirm Booking</button>
-          </form>
-        </div>
-      </section>
-        
     <!-- ***** Contact Us Area Starts ***** -->
 <section class="section" id="contact-us">
     <div class="container-fluid">

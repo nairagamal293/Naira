@@ -1,13 +1,28 @@
 document.addEventListener("DOMContentLoaded", function () {
     // Initialize all functionality
     checkAuthStatus();
-    setupBookingButtons();
+    setupBookingButtons(); // This will now handle all booking buttons
     loadMemberships();
     loadTrainers();
     loadClasses();
     loadSchedules();
     loadOnlineSessions();
     setupBookingForm();
+    
+    // Add click handler for any dynamically added booking buttons
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('booking-btn') || 
+            e.target.classList.contains('join-btn') || 
+            e.target.closest('.booking-btn') || 
+            e.target.closest('.join-btn')) {
+            e.preventDefault();
+            if (auth.isLoggedIn()) {
+                openBookingModal();
+            } else {
+                redirectToSignup();
+            }
+        }
+    });
 });
 
 // ✅ Authentication State Management
@@ -42,7 +57,7 @@ function checkAuthStatus() {
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="profile.html">Profile</a></li>
-                        <li><a class="dropdown-item" href="my-bookings.html">My Bookings</a></li>
+                        <li><a class="dropdown-item" href="Userdashboard.html">My Bookings</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#" onclick="auth.logout()">Logout</a></li>
                     </ul>
@@ -64,16 +79,48 @@ function checkAuthStatus() {
 
 // ✅ Manage Booking Buttons
 function setupBookingButtons() {
-    document.querySelectorAll(".booking-btn, .join-btn").forEach(button => {
+    // Select all buttons that should trigger the booking modal
+    const bookingButtons = document.querySelectorAll(".booking-btn, .join-btn, [class*='book-now'], [class*='join-now']");
+    
+    bookingButtons.forEach(button => {
+        // Update button behavior based on auth status
         if (auth.isLoggedIn()) {
             button.classList.remove("disabled");
-            button.onclick = null;
+            button.onclick = (e) => {
+                e.preventDefault();
+                openBookingModal();
+            };
         } else {
             button.classList.add("disabled");
-            button.onclick = redirectToSignup;
+            button.onclick = (e) => {
+                e.preventDefault();
+                redirectToSignup();
+            };
         }
     });
 }
+function openBookingModal() {
+    const bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
+    const bookingForm = document.getElementById("bookingForm");
+    const userData = auth.currentUser();
+    
+    // Reset form
+    bookingForm.reset();
+    document.getElementById("bookingType").value = "";
+    document.getElementById("bookingItem").innerHTML = '<option value="">Select an item</option>';
+    document.getElementById("totalPrice").textContent = "--";
+    
+    // Set user data
+    if (userData) {
+        document.getElementById("name").value = userData.fullName || userData.username || userData.name || "";
+        document.getElementById("email").value = userData.email || "";
+        document.getElementById("phone").value = userData.phone || "";
+    }
+    
+    // Show modal
+    bookingModal.show();
+}
+
 
 // ✅ Redirect Unauthenticated Users
 function redirectToSignup() {
@@ -82,9 +129,12 @@ function redirectToSignup() {
 }
 
 // ✅ Setup Booking Form
+// Modify the setupBookingForm function to work with the modal
 function setupBookingForm() {
     const apiBase = "https://localhost:7020/api";
     const bookingForm = document.getElementById("bookingForm");
+    const confirmBookingBtn = document.getElementById("confirmBookingBtn");
+    const bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
     
     if (!bookingForm) return;
 
@@ -108,8 +158,37 @@ function setupBookingForm() {
     // Load items when booking type changes
     bookingTypeSelect.addEventListener("change", loadBookingItems);
     bookingItemSelect.addEventListener("change", updateBookingPrice);
-    bookingForm.addEventListener("submit", handleBookingSubmit);
+    confirmBookingBtn.addEventListener("click", handleBookingSubmit);
 
+    // Update all booking buttons to open the modal
+    document.querySelectorAll(".booking-btn").forEach(button => {
+        button.addEventListener("click", function(e) {
+            e.preventDefault();
+            
+            if (!auth.isLoggedIn()) {
+                redirectToSignup();
+                return;
+            }
+            
+            // Reset form
+            bookingForm.reset();
+            bookingTypeSelect.value = "";
+            bookingItemSelect.innerHTML = '<option value="">Select an item</option>';
+            totalPriceDisplay.textContent = "--";
+            
+            // Set default values again
+            if (userData) {
+                nameInput.value = userData.fullName || userData.username || userData.name || "";
+                emailInput.value = userData.email || "";
+                phoneInput.value = userData.phone || "";
+            }
+            
+            // Show modal
+            bookingModal.show();
+        });
+    });
+
+    // Rest of the existing setupBookingForm logic remains the same...
     let bookingItemsCache = {
         Membership: [],
         Class: [],
@@ -164,7 +243,7 @@ function setupBookingForm() {
     function updateBookingPrice() {
         const selectedOption = bookingItemSelect.selectedOptions[0];
         const price = selectedOption ? selectedOption.dataset.price || "0" : "0";
-        totalPriceDisplay.textContent = `${price} SAR`;
+        totalPriceDisplay.textContent = price;
     }
 
     async function handleBookingSubmit(e) {
@@ -216,8 +295,9 @@ function setupBookingForm() {
             if (response.ok) {
                 const result = await response.json();
                 alert("Booking confirmed successfully!");
+                bookingModal.hide();
                 bookingForm.reset();
-                totalPriceDisplay.textContent = "0 SAR";
+                totalPriceDisplay.textContent = "--";
             } else {
                 const error = await response.json().catch(() => ({ message: "Unknown error occurred" }));
                 throw new Error(error.message || "Booking failed");
@@ -228,6 +308,8 @@ function setupBookingForm() {
         }
     }
 }
+
+
 
 // ✅ Load Memberships
 async function loadMemberships() {
@@ -251,10 +333,7 @@ async function loadMemberships() {
                         <h3>${membership.name || 'Membership'}</h3>
                         <p class="price">${membership.price || '0'} SAR / ${membership.durationInDays || '0'} days</p>
                         <ul><li>✔ ${membership.description || 'No description available'}</li></ul>
-                        <button onclick="document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });" 
-                                class="btn-main booking-btn">
-                            Join Now
-                        </button>
+                        <button class="btn btn-success booking-btn">Book Now</button>
                     </div>
                 </div>`).join("");
     } catch (error) {
@@ -311,10 +390,9 @@ async function loadClasses() {
                     <h4>${cls.name || 'Class'}</h4>
                     <p>${cls.description || 'No description available'}</p>
                     <p><strong>Trainer:</strong> ${cls.trainerName || "Unknown"}</p>
-                    <button onclick="document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });" 
-                            class="btn btn-success booking-btn">
-                        Book Now
-                    </button>
+                    <div class="main-button scroll-to-section">
+                    <a href="" class="main-button booking-btn">Become a Member</a>
+                </div>
                 </div>
             </div>`).join("");
     } catch (error) {

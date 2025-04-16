@@ -1,19 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
     <title>My Dashboard | Elite Studio</title>
-    <!-- Use your existing CSS links -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/font-awesome.css">
+    
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
     <link rel="stylesheet" href="assets/css/templatemo-training-studio.css">
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="index.css">
+
+    <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
+
+    <link rel="stylesheet" href="assets/css/templatemo-training-studio.css">
+    
     <style>
+        
         .dashboard-card {
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
             margin-bottom: 20px;
+            background: white;
+            border: 1px solid rgba(0,0,0,0.05);
         }
         .dashboard-card:hover {
             transform: translateY(-5px);
@@ -26,9 +44,10 @@
         .stat-number {
             font-size: 2.5rem;
             font-weight: bold;
+            color: #9c0d0d;
         }
         .upcoming-session {
-            border-left: 4px solid #f5a425;
+            border-left: 4px solid #d4a017;
         }
         .profile-img {
             width: 150px;
@@ -38,13 +57,104 @@
             border: 5px solid #fff;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+        .dashboard-section {
+            padding: 100px 0;
+            background: #f8f9fa;
+        }
+        .badge {
+            padding: 5px 10px;
+            font-weight: 500;
+        }
+        .btn-outline-primary {
+            border-color: #9c0d0d;
+            color: #9c0d0d;
+        }
+        .btn-outline-primary:hover {
+            background: #9c0d0d;
+            color: white;
+        }
+        .btn-outline-danger {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+        .btn-outline-danger:hover {
+            background: #dc3545;
+            color: white;
+        }
+        .btn-outline-info {
+            border-color: #17a2b8;
+            color: #17a2b8;
+        }
+        .btn-outline-info:hover {
+            background: #17a2b8;
+            color: white;
+        }
+        .btn-outline-secondary {
+            border-color: #6c757d;
+            color: #6c757d;
+        }
+        .btn-outline-secondary:hover {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-warning {
+            background: #d4a017;
+            border-color: #d4a017;
+            color: white;
+        }
+        .btn-warning:hover {
+            background: #c19115;
+            border-color: #c19115;
+        }
     </style>
 </head>
+    
 <body>
-    <!-- Reuse your existing header -->
+    <!-- ***** Preloader Start ***** -->
+    <div id="js-preloader" class="js-preloader">
+      <div class="preloader-inner">
+        <span class="dot"></span>
+        <div class="dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+    <!-- ***** Preloader End ***** -->
+    
+    <!-- ***** Header Area Start ***** -->
     <header class="header-area header-sticky">
-        <!-- Your existing header content -->
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <!-- ***** Logo Start ***** -->
+                        <a href="index.html" class="logo">Elite<em> Studio</em></a>
+                        <!-- ***** Logo End ***** -->
+                        <!-- ***** Menu Start ***** -->
+                        <ul class="nav">
+                            <li class="scroll-to-section"><a href="index.html">Home</a></li>
+                            <li class="scroll-to-section"><a href="index.html#features">About</a></li>
+                            <li class="scroll-to-section"><a href="index.html#our-classes">Classes</a></li>
+                            <li class="scroll-to-section"><a href="index.html#schedule">Schedules</a></li>
+                            <li class="scroll-to-section"><a href="index.html#membership">Membership</a></li>
+                            <li class="scroll-to-section"><a href="index.html#online-sessions">Online</a></li>
+                            <li class="scroll-to-section"><a href="index.html#contact-us">Contact</a></li> 
+                            <li class="auth-links">
+                                <!-- Will be populated by JavaScript -->
+                            </li>
+                        </ul>      
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+                        <!-- ***** Menu End ***** -->
+                    </nav>
+                </div>
+            </div>
+        </div>
     </header>
+    <!-- ***** Header Area End ***** -->
 
     <!-- Dashboard Content -->
     <section class="section dashboard-section">
@@ -55,38 +165,36 @@
                     <p class="text-muted">Welcome back, <span id="userGreeting"></span>!</p>
                 </div>
             </div>
-
             <!-- Stats Row -->
             <div class="row mb-4">
                 <div class="col-md-4">
-                    <div class="dashboard-card stat-card bg-white">
+                    <div class="dashboard-card stat-card">
                         <h3>Active Bookings</h3>
-                        <div class="stat-number text-primary" id="activeBookingsCount">0</div>
+                        <div class="stat-number" id="activeBookingsCount">0</div>
                         <p>Upcoming sessions</p>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="dashboard-card stat-card bg-white">
+                    <div class="dashboard-card stat-card">
                         <h3>Membership</h3>
-                        <div class="stat-number text-success" id="membershipStatus">-</div>
+                        <div class="stat-number" id="membershipStatus">-</div>
                         <p id="membershipExpiry">Expires: -</p>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="dashboard-card stat-card bg-white">
+                    <div class="dashboard-card stat-card">
                         <h3>Total Spent</h3>
-                        <div class="stat-number text-info" id="totalSpent">$0</div>
+                        <div class="stat-number" id="totalSpent">$0</div>
                         <p>This month</p>
                     </div>
                 </div>
             </div>
-
             <!-- Main Content Row -->
             <div class="row">
                 <!-- Left Column -->
                 <div class="col-lg-8">
                     <!-- Upcoming Bookings -->
-                    <div class="dashboard-card bg-white p-4 mb-4">
+                    <div class="dashboard-card p-4 mb-4">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h2>Upcoming Bookings</h2>
                             <a href="my-bookings.html" class="btn btn-sm btn-outline-primary">View All</a>
@@ -104,17 +212,13 @@
                                     </tr>
                                 </thead>
                                 <tbody id="upcomingBookings">
-                                    <!-- Will be populated by JavaScript -->
-                                    <tr>
-                                        <td colspan="6" class="text-center">Loading bookings...</td>
-                                    </tr>
+                                    <tr><td colspan="6" class="text-center">Loading bookings...</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
                     <!-- Recent Payments -->
-                    <div class="dashboard-card bg-white p-4">
+                    <div class="dashboard-card p-4">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h2>Recent Payments</h2>
                             <a href="payment-history.html" class="btn btn-sm btn-outline-primary">View All</a>
@@ -131,20 +235,16 @@
                                     </tr>
                                 </thead>
                                 <tbody id="recentPayments">
-                                    <!-- Will be populated by JavaScript -->
-                                    <tr>
-                                        <td colspan="5" class="text-center">Loading payments...</td>
-                                    </tr>
+                                    <tr><td colspan="5" class="text-center">Loading payments...</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-
                 <!-- Right Column -->
                 <div class="col-lg-4">
                     <!-- Profile Summary -->
-                    <div class="dashboard-card bg-white p-4 mb-4 text-center">
+                    <div class="dashboard-card p-4 mb-4 text-center">
                         <div class="mb-3">
                             <img src="assets/images/profile-placeholder.jpg" alt="Profile" class="profile-img" id="profileImage">
                         </div>
@@ -155,9 +255,8 @@
                             <a href="change-password.html" class="btn btn-outline-secondary">Change Password</a>
                         </div>
                     </div>
-
                     <!-- Quick Actions -->
-                    <div class="dashboard-card bg-white p-4 mb-4">
+                    <div class="dashboard-card p-4 mb-4">
                         <h2 class="mb-3">Quick Actions</h2>
                         <div class="d-grid gap-2">
                             <a href="booking.html" class="btn btn-outline-primary">Book a Class</a>
@@ -165,9 +264,8 @@
                             <a href="online-sessions.html" class="btn btn-outline-info">Join Online Session</a>
                         </div>
                     </div>
-
                     <!-- Next Session -->
-                    <div class="dashboard-card bg-white p-4 upcoming-session">
+                    <div class="dashboard-card p-4 upcoming-session">
                         <h2 class="mb-3">Next Session</h2>
                         <div id="nextSession">
                             <p class="text-muted">No upcoming sessions</p>
@@ -178,16 +276,391 @@
         </div>
     </section>
 
-    <!-- Reuse your existing footer -->
+    <!-- ***** Footer Start ***** -->
     <footer>
-        <!-- Your existing footer content -->
-    </footer>
+        <div class="container">
+            <div class="row">
+                <!-- About Section -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-section">
+                        <h4>About Elite Studio</h4>
+                        <p>Elite Studio is your go-to fitness destination, offering state-of-the-art facilities, expert trainers, and personalized programs to help you achieve your fitness goals.</p>
+                        <div class="social-icons">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- JavaScript Files -->
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="index.html#features">About</a></li>
+                            <li><a href="index.html#our-classes">Classes</a></li>
+                            <li><a href="index.html#schedule">Schedules</a></li>
+                            <li><a href="index.html#membership">Membership</a></li>
+                            <li><a href="index.html#contact-us">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-section">
+                        <h4>Contact Us</h4>
+                        <ul class="contact-info">
+                            <li><i class="fa fa-map-marker"></i> 123 Fitness Street, Rio de Janeiro, Brazil</li>
+                            <li><i class="fa fa-phone"></i> +55 123 456 789</li>
+                            <li><i class="fa fa-envelope"></i> info@elitestudio.com</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-section">
+                        <h4>Newsletter</h4>
+                        <p>Subscribe to our newsletter to get the latest updates and offers.</p>
+                        <form class="newsletter-form">
+                            <input type="email" placeholder="Your Email" required>
+                            <button type="submit"><i class="fa fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="copyright">
+                        <p>Copyright &copy; 2023 Elite Studio. All Rights Reserved. 
+                            <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- ***** Footer Ends ***** -->
+
+    <!-- jQuery -->
     <script src="assets/js/jquery-2.1.0.min.js"></script>
+
+    <!-- Bootstrap -->
     <script src="assets/js/popper.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="userdashboard.js"></script>
+
+    <!-- Plugins -->
+    <script src="assets/js/scrollreveal.min.js"></script>
+    <script src="assets/js/waypoints.min.js"></script>
+    <script src="assets/js/jquery.counterup.min.js"></script>
+    <script src="assets/js/imgfix.min.js"></script> 
+    <script src="assets/js/mixitup.js"></script> 
+    <script src="assets/js/accordions.js"></script>
+    
+    <!-- Global Init -->
+    <script src="assets/js/custom.js"></script>
+    
+    <!-- Dashboard Script -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    checkAuthStatus();
+    loadDashboardData();
+});
+
+async function loadDashboardData() {
+    const user = auth.currentUser();
+    if (!user) {
+        window.location.href = 'SignUp.html';
+        return;
+    }
+
+    document.getElementById('userGreeting').textContent = user.fullName || user.username;
+    document.getElementById('userFullName').textContent = user.fullName || user.username;
+    document.getElementById('userEmail').textContent = user.email;
+
+    await loadUserBookings(user.id);
+    await loadUserPayments(user.id);
+    await loadMembershipInfo(user.id);
+    await loadNextSession(user.id);
+}
+
+async function loadUserBookings(userId) {
+    try {
+        const response = await fetch(`https://localhost:7020/api/Booking/user/${userId}`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+        });
+        if (!response.ok) throw new Error('Failed to load bookings');
+        const bookings = await response.json();
+        const upcomingBookings = bookings.filter(b => b.status !== 'Cancelled');
+
+        document.getElementById('activeBookingsCount').textContent = upcomingBookings.length;
+
+        const bookingsTable = document.getElementById('upcomingBookings');
+        bookingsTable.innerHTML = upcomingBookings.length > 0 ?
+            upcomingBookings.map(booking => `
+                <tr>
+                    <td>${new Date(booking.bookingDate).toLocaleDateString()}</td>
+                    <td>${booking.class?.startTime || 'N/A'}</td>
+                    <td>${booking.class?.name || booking.onlineSession?.title || 'N/A'}</td>
+                    <td>${booking.class?.trainer?.name || booking.onlineSession?.trainer?.name || 'N/A'}</td>
+                    <td><span class="badge ${getStatusBadgeClass(booking.status)}">${booking.status}</span></td>
+                    <td>
+                        ${booking.status === 'Confirmed' ?
+                `<button class="btn btn-sm btn-outline-danger cancel-booking" data-id="${booking.id}">Cancel</button>` :
+                booking.status === 'Pending' ?
+                    `<button class="btn btn-sm btn-outline-primary pay-now" data-id="${booking.id}">Pay Now</button>` : ''}
+                    </td>
+                </tr>
+            `).join('') :
+            `<tr><td colspan="6" class="text-center">No upcoming bookings found</td></tr>`;
+    } catch (error) {
+        console.error('Error loading bookings:', error);
+        document.getElementById('upcomingBookings').innerHTML =
+            `<tr><td colspan="6" class="text-center text-danger">Error loading bookings</td></tr>`;
+    }
+}
+
+async function loadNextSession(userId) {
+    try {
+        const response = await fetch(`https://localhost:7020/api/Booking/next-session/${userId}`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+        });
+        if (!response.ok) throw new Error('Failed to load next session');
+        const nextSession = await response.json();
+        const nextSessionDiv = document.getElementById('nextSession');
+
+        if (nextSession) {
+            nextSessionDiv.innerHTML = `
+                <h4>${nextSession.class?.name || nextSession.onlineSession?.title}</h4>
+                <p><strong>Date:</strong> ${new Date(nextSession.bookingDate).toLocaleDateString()}</p>
+                <p><strong>Time:</strong> ${nextSession.class?.startTime || 'N/A'}</p>
+                <p><strong>Trainer:</strong> ${nextSession.class?.trainer?.name || nextSession.onlineSession?.trainer?.name}</p>
+                <a href="#" class="btn btn-sm btn-warning">View Details</a>
+            `;
+        } else {
+            nextSessionDiv.innerHTML = '<p class="text-muted">No upcoming sessions</p>';
+        }
+    } catch (error) {
+        console.error('Error loading next session:', error);
+        document.getElementById('nextSession').innerHTML = '<p class="text-danger">Error loading session</p>';
+    }
+}
+
+    // Load user payments
+    async function loadUserPayments(userId) {
+        try {
+            const response = await fetch(`https://localhost:7020/api/Payment`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                }
+            });
+            
+            if (!response.ok) throw new Error('Failed to load payments');
+            
+            const payments = await response.json();
+            const userPayments = payments.filter(p => p.booking?.userId === userId);
+            
+            // Calculate total spent this month
+            const currentMonth = new Date().getMonth();
+            const monthlyTotal = userPayments
+                .filter(p => new Date(p.paymentDate).getMonth() === currentMonth && p.paymentStatus === 'Completed')
+                .reduce((sum, p) => sum + p.amount, 0);
+                
+            document.getElementById('totalSpent').textContent = `$${monthlyTotal.toFixed(2)}`;
+            
+            // Populate payments table (last 5)
+            const paymentsTable = document.getElementById('recentPayments');
+            const recentPayments = userPayments.slice(0, 5);
+            
+            paymentsTable.innerHTML = recentPayments.length > 0 ? 
+                recentPayments.map(payment => `
+                    <tr>
+                        <td>${new Date(payment.paymentDate).toLocaleDateString()}</td>
+                        <td>$${payment.amount.toFixed(2)}</td>
+                        <td>${payment.booking?.class?.name || payment.booking?.onlineSession?.title || 'Payment'}</td>
+                        <td><span class="badge ${getPaymentStatusBadgeClass(payment.paymentStatus)}">${payment.paymentStatus}</span></td>
+                        <td>
+                            <a href="#" class="btn btn-sm btn-outline-info">View</a>
+                        </td>
+                    </tr>
+                `).join('') : 
+                `<tr><td colspan="5" class="text-center">No payment history found</td></tr>`;
+                
+        } catch (error) {
+            console.error('Error loading payments:', error);
+            document.getElementById('recentPayments').innerHTML = 
+                `<tr><td colspan="5" class="text-center text-danger">Error loading payments</td></tr>`;
+        }
+    }
+
+    // Load membership info
+    async function loadMembershipInfo(userId) {
+        try {
+            // This endpoint might need to be created to get user's active membership
+            const response = await fetch(`https://localhost:7020/api/User/${userId}/membership`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                }
+            });
+            
+            if (!response.ok) throw new Error('Failed to load membership info');
+            
+            const membership = await response.json();
+            
+            if (membership) {
+                document.getElementById('membershipStatus').textContent = membership.name;
+                document.getElementById('membershipExpiry').textContent = 
+                    `Expires: ${new Date(membership.expiryDate).toLocaleDateString()}`;
+            } else {
+                document.getElementById('membershipStatus').textContent = 'No active membership';
+                document.getElementById('membershipExpiry').textContent = '';
+            }
+            
+        } catch (error) {
+            console.error('Error loading membership info:', error);
+            document.getElementById('membershipStatus').textContent = 'Error loading';
+            document.getElementById('membershipExpiry').textContent = '';
+        }
+    }
+
+    // Load next session
+    async function loadNextSession(userId) {
+        try {
+            const response = await fetch(`https://localhost:7020/api/Booking/next-session`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                }
+            });
+            
+            if (!response.ok) throw new Error('Failed to load next session');
+            
+            const nextSession = await response.json();
+            const nextSessionDiv = document.getElementById('nextSession');
+            
+            if (nextSession) {
+                nextSessionDiv.innerHTML = `
+                    <h4>${nextSession.class?.name || nextSession.onlineSession?.title}</h4>
+                    <p><strong>Date:</strong> ${new Date(nextSession.bookingDate).toLocaleDateString()}</p>
+                    <p><strong>Time:</strong> ${nextSession.class?.startTime || 'N/A'}</p>
+                    <p><strong>Trainer:</strong> ${nextSession.class?.trainer?.name || nextSession.onlineSession?.trainer?.name}</p>
+                    <a href="#" class="btn btn-sm btn-warning">View Details</a>
+                `;
+            } else {
+                nextSessionDiv.innerHTML = '<p class="text-muted">No upcoming sessions</p>';
+            }
+            
+        } catch (error) {
+            console.error('Error loading next session:', error);
+            document.getElementById('nextSession').innerHTML = '<p class="text-danger">Error loading session</p>';
+        }
+    }
+
+    // Helper functions
+    function getStatusBadgeClass(status) {
+        switch(status.toLowerCase()) {
+            case 'confirmed': return 'bg-success';
+            case 'pending': return 'bg-warning text-dark';
+            case 'cancelled': return 'bg-secondary';
+            default: return 'bg-info';
+        }
+    }
+
+    function getPaymentStatusBadgeClass(status) {
+        switch(status.toLowerCase()) {
+            case 'completed': return 'bg-success';
+            case 'pending': return 'bg-warning text-dark';
+            case 'failed': return 'bg-danger';
+            default: return 'bg-info';
+        }
+    }
+
+    async function handleCancelBooking(e) {
+        const bookingId = e.target.dataset.id;
+        if (!confirm('Are you sure you want to cancel this booking?')) return;
+        
+        try {
+            const response = await fetch(`https://localhost:7020/api/Booking/${bookingId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                }
+            });
+            
+            if (!response.ok) throw new Error('Failed to cancel booking');
+            
+            alert('Booking cancelled successfully');
+            loadDashboardData(); // Refresh data
+            
+        } catch (error) {
+            console.error('Error cancelling booking:', error);
+            alert('Failed to cancel booking');
+        }
+    }
+
+    async function handlePayNow(e) {
+        const bookingId = e.target.dataset.id;
+        // You can implement payment flow here or redirect to payment page
+        window.location.href = `payment.html?bookingId=${bookingId}`;
+    }
+
+    // Reuse your existing auth system
+    const auth = {
+        isLoggedIn: () => localStorage.getItem("authToken") !== null,
+        currentUser: () => {
+            const user = JSON.parse(localStorage.getItem("userData")) || null;
+            if (user) {
+                user.fullName = user.FulName || user.fullName || user.username;
+            }
+            return user;
+        },
+        logout: () => {
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("userData");
+            window.location.href = "index.html";
+        }
+    };
+
+    function checkAuthStatus() {
+        if (!auth.isLoggedIn()) {
+            window.location.href = 'SignUp.html';
+            return;
+        }
+
+        // Update navbar with user info
+        const authLinks = document.querySelector(".auth-links");
+        const user = auth.currentUser();
+
+        if (authLinks && user) {
+            authLinks.innerHTML = `
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle"></i> <span id="userName">${user.fullName || user.username || 'My Account'}</span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                        
+                        <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+                        <li><a class="dropdown-item" href="Userdashboard.html">My Bookings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" onclick="auth.logout()">Logout</a></li>
+                    </ul>
+                </li>
+            `;
+
+            // Initialize dropdown
+            setTimeout(() => {
+                const dropdownElement = document.getElementById("userDropdown");
+                if (dropdownElement) {
+                    new bootstrap.Dropdown(dropdownElement);
+                }
+            }, 100);
+        }
+    }
+    </script>
 </body>
 </html>

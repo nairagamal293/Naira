@@ -21,6 +21,7 @@ namespace Elite_Personal_Training.Controllers
             _context = context;
         }
 
+        // 1. Get a specific booking by ID
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBooking(int id)
         {
@@ -35,6 +36,7 @@ namespace Elite_Personal_Training.Controllers
             return Ok(booking);
         }
 
+        // 2. Get all bookings for a specific user
         [HttpGet("user/{userId}")]
         public async Task<IActionResult> GetBookingsByUser(string userId)
         {
@@ -52,6 +54,7 @@ namespace Elite_Personal_Training.Controllers
             return Ok(bookings);
         }
 
+        // 3. Create a new booking
         [HttpPost]
         public async Task<IActionResult> CreateBooking([FromBody] BookingRequest request)
         {
@@ -103,6 +106,7 @@ namespace Elite_Personal_Training.Controllers
             return CreatedAtAction(nameof(GetBooking), new { id = booking.Id }, booking);
         }
 
+        // 4. Confirm a booking
         [HttpPost("confirm/{id}")]
         public async Task<IActionResult> ConfirmBooking(int id)
         {
@@ -119,6 +123,7 @@ namespace Elite_Personal_Training.Controllers
             return Ok(booking);
         }
 
+        // 5. Cancel a booking
         [HttpPost("cancel/{id}")]
         public async Task<IActionResult> CancelBooking(int id)
         {
@@ -135,6 +140,7 @@ namespace Elite_Personal_Training.Controllers
             return Ok(booking);
         }
 
+        // 6. Filter bookings by status or type
         [HttpGet("filter")]
         public async Task<IActionResult> FilterBookings([FromQuery] string? status, [FromQuery] string? type)
         {
@@ -155,6 +161,7 @@ namespace Elite_Personal_Training.Controllers
             return Ok(bookings);
         }
 
+        // 7. Update booking details
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBooking(int id, [FromBody] BookingRequest request)
         {
@@ -174,25 +181,7 @@ namespace Elite_Personal_Training.Controllers
             return Ok(booking);
         }
 
-        [HttpPost("cancel/user/{userId}/{bookingId}")]
-        public async Task<IActionResult> CancelUserBooking(string userId, int bookingId)
-        {
-            if (!Guid.TryParse(userId, out Guid userGuid))
-                return BadRequest("Invalid UserId format.");
-
-            var booking = await _context.Bookings
-                .Where(b => b.Id == bookingId && b.UserId == userGuid)
-                .FirstOrDefaultAsync();
-
-            if (booking == null)
-                return NotFound("Booking not found or does not belong to this user.");
-
-            booking.Status = "Cancelled";
-            await _context.SaveChangesAsync();
-
-            return Ok(booking);
-        }
-
+        // 8. Delete a booking
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
@@ -202,6 +191,22 @@ namespace Elite_Personal_Training.Controllers
             _context.Bookings.Remove(booking);
             await _context.SaveChangesAsync();
             return NoContent();
+        }
+
+        // 9. Get the next session for a user
+        [HttpGet("next-session/{userId}")]
+        public async Task<IActionResult> GetNextSession(string userId)
+        {
+            if (!Guid.TryParse(userId, out Guid userGuid))
+                return BadRequest("Invalid UserId format.");
+
+            var nextSession = await _context.Bookings
+                .Where(b => b.UserId == userGuid && b.Status != "Cancelled" && b.BookingDate >= DateTime.UtcNow)
+                .OrderBy(b => b.BookingDate)
+                .FirstOrDefaultAsync();
+
+            if (nextSession == null) return NotFound("No upcoming sessions found.");
+            return Ok(nextSession);
         }
     }
 }
