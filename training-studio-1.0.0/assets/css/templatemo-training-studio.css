@@ -343,8 +343,8 @@ header
 
 .header-area .main-nav .nav li:hover a,
 .header-area .main-nav .nav li a.active {
-  color: rgb(156, 13, 13)!important;
-  opacity: 1;
+  color: rgb(9, 1, 1)!important;
+  opacity: 16;
 }
 
 .background-header .main-nav .nav li:hover a,

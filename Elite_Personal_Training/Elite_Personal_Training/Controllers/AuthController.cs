@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 
@@ -53,38 +54,44 @@ namespace Elite_Personal_Training.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            if (request == null || string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
-                return BadRequest(new { message = "Invalid request" });
-
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null)
-                return Unauthorized(new { message = "Invalid credentials" });
-
-            var result = await _signInManager.PasswordSignInAsync(user, request.Password, false, false);
-            if (!result.Succeeded)
-                return Unauthorized(new { message = "Invalid credentials" });
-
-            var roles = await _userManager.GetRolesAsync(user);
-            var role = roles.FirstOrDefault() ?? "User";
-
-            var token = await GenerateJwtToken(user, role);
-
-            return Ok(new
+            try
             {
-                token,
-                user = new
+                if (request == null || string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
+                    return BadRequest(new { message = "Email and password are required." });
+
+                var user = await _userManager.FindByEmailAsync(request.Email);
+                if (user == null)
+                    return Unauthorized(new { message = "Invalid credentials." });
+
+                var result = await _signInManager.PasswordSignInAsync(user, request.Password, false, false);
+                if (!result.Succeeded)
+                    return Unauthorized(new { message = "Invalid credentials." });
+
+                // Generate JWT token
+                var roles = await _userManager.GetRolesAsync(user);
+                var role = roles.FirstOrDefault() ?? "User";
+                var token = await GenerateJwtToken(user, role);
+
+                return Ok(new
                 {
-                    id = user.Id,
-                    fullName = user.FullName,
-                    email = user.Email,
-                    phone = user.PhoneNumber,
-                    role = role
-                }
-            });
+                    token = token, // Direct token string
+                    user = new
+                    {
+                        id = user.Id,
+                        fullName = user.FullName,
+                        email = user.Email,
+                        role = role,
+                        phone = user.PhoneNumber
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Login error: {ex}");
+                return StatusCode(500, new { message = "An internal server error occurred." });
+            }
         }
 
-
-        // ✅ JWT TOKEN GENERATION
         private async Task<string> GenerateJwtToken(User user, string role)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -99,7 +106,6 @@ namespace Elite_Personal_Training.Controllers
         new Claim(ClaimTypes.Role, role)
     };
 
-            // Add phone if available
             if (!string.IsNullOrEmpty(user.PhoneNumber))
             {
                 claims.Add(new Claim("phone", user.PhoneNumber));
@@ -114,6 +120,64 @@ namespace Elite_Personal_Training.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        // Add to AuthController.cs
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Email))
+                return BadRequest("Email is required.");
+
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+                return Ok(); // Don't reveal if user doesn't exist (security)
+
+            // Generate reset token (expires in 1 hour)
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            // In a real app, send this link via email (simplified here)
+            var resetLink = $"https://yourdomain.com/reset-password?token={WebUtility.UrlEncode(token)}&email={user.Email}";
+
+            return Ok(new { resetLink }); // Return link for testing (replace with email service)
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Email) ||
+                string.IsNullOrEmpty(request.Token) ||
+                string.IsNullOrEmpty(request.NewPassword))
+            {
+                return BadRequest("All fields are required.");
+            }
+
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+                return BadRequest("Invalid request.");
+
+            var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok("Password reset successfully!");
+        }
+
+        // DTO Classes (add to your project)
+        public class ForgotPasswordRequest
+        {
+            public string Email { get; set; }
+        }
+
+        public class ResetPasswordRequest
+        {
+            public string Email { get; set; }
+            public string Token { get; set; }
+            public string NewPassword { get; set; }
+        }
+
+        // ✅ JWT TOKEN GENERATION
+        
 
     }
 }

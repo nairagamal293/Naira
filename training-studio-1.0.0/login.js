@@ -27,32 +27,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: JSON.stringify({ email, password }),
             });
 
+            // First check if response is OK
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Login failed. Please try again.");
+            }
+
+            // Then parse the JSON
             const data = await response.json();
             
-            if (!response.ok) {
-                throw new Error(data.message || "Login failed. Please try again.");
+            if (!data.token) {
+                throw new Error("Invalid response: Missing token");
             }
 
-            if (data.token && data.user) {
-                // Decode the JWT token to get additional claims
-                const tokenPayload = JSON.parse(atob(data.token.split('.')[1]));
-                
-                // Store token & user data in localStorage
-                localStorage.setItem("authToken", data.token);
-                localStorage.setItem("userData", JSON.stringify({
-                    id: tokenPayload.nameid || tokenPayload.sub, // User ID from token
-                    fullName: data.user.fullName || tokenPayload.name, // From both response and token
-                    email: data.user.email,
-                    role: data.user.role || tokenPayload.role || "User",
-                    phone: tokenPayload.phone || "" // If phone is in token
-                }));
+            // Store token & user data
+            localStorage.setItem("authToken", data.token);
+            localStorage.setItem("userData", JSON.stringify(data.user));
 
-                // Redirect based on role
-                const redirectUrl = data.user.role === "Admin" ? "Dashboard.html" : "index.html";
-                window.location.href = redirectUrl;
-            } else {
-                throw new Error("Invalid response from server");
-            }
+            // Redirect based on role
+            const redirectUrl = data.user.role === "Admin" ? "Dashboard.html" : "index.html";
+            window.location.href = redirectUrl;
+
         } catch (error) {
             console.error("Login error:", error);
             errorMessage.textContent = error.message || "Something went wrong. Please try again.";
@@ -65,6 +60,5 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Auto-focus email field on page load
     document.getElementById("email").focus();
 });

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Learn about Elite Studio - Our mission, trainers, and facilities">
+    <title>About Us - Elite Studio</title>
+    
+    <!-- CSS Files -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.css">
+    <link rel="stylesheet" href="assets/css/templatemo-training-studio.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+     <!-- Additional CSS Files -->
+     <!-- <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css"> -->
+     <link rel="stylesheet" type="text/css" href="index.css">
+ 
+     <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
+ 
+  <!--    <link rel="stylesheet" href="assets/css/templatemo-training-studio.css">
+  -->
+    <style>
+        /* About Page Specific Styles */
+        .about-hero {
+            background: linear-gradient(rgba(35, 45, 57, 0.8), rgba(35, 45, 57, 0.8)), 
+                        url('assets/images/training-image-03.jpg') center/cover no-repeat;
+            padding: 150px 0 100px;
+            color: white;
+            text-align: center;
+        }
+        
+        .about-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        
+        .about-hero h1 em {
+            color: #9c0d0d;
+            font-style: normal;
+        }
+        
+        .mission-section, .trainer-section {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+        
+        .section-title {
+            color: #232d39;
+            font-weight: 800;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            background: #9c0d0d;
+            bottom: -10px;
+            left: 0;
+        }
+        
+        .value-card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            transition: transform 0.3s;
+            border-top: 4px solid #9c0d0d;
+        }
+        
+        .value-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .value-card i {
+            font-size: 2.5rem;
+            color: #9c0d0d;
+            margin-bottom: 20px;
+        }
+        
+        .team-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .team-image {
+            height: 300px;
+            overflow: hidden;
+        }
+        
+        .team-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .team-card:hover .team-image img {
+            transform: scale(1.05);
+        }
+        
+        .testimonial-section {
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('assets/images/testimonial-bg.jpg');
+            background-size: cover;
+            padding: 100px 0;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .about-hero {
+                padding: 100px 0 60px;
+            }
+            
+            .about-hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ***** Preloader Start ***** -->
+    <div id="js-preloader" class="js-preloader">
+        <div class="preloader-inner">
+            <span class="dot"></span>
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <!-- ***** Preloader End ***** -->
+
+    <!-- ***** Header Area Start ***** -->
+    <header class="header-area header-sticky">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <a href="index.html" class="logo">Elite<em> Studio</em></a>
+                        <ul class="nav">
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="about.html" class="active">About</a></li>
+                            <li><a href="classes.html">Classes</a></li>
+                            <li><a href="index.html#schedule">Schedules</a></li>
+                            <li><a href="index.html#membership">Membership</a></li>
+                            <li class="scroll-to-section"><a href="index.html#online-sessions">Online</a></li>
+                            <li class="scroll-to-section"><a href="index.html#contact-us">Contact</a></li> 
+                            <li class="auth-links">
+                                <!-- Will be populated by JavaScript -->
+                            </li>
+                        </ul>      
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- ***** Header Area End ***** -->
+
+    <!-- ***** About Hero Section ***** -->
+    <section class="about-hero">
+        <div class="container">
+            <h1>Our <em>Story</em></h1>
+            <p>Transforming lives through fitness since 2015</p>
+        </div>
+    </section>
+
+    <!-- ***** Mission Section ***** -->
+    <section class="mission-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2 class="section-title">Our Mission</h2>
+                    <p>At Elite Studio, we're committed to helping people of all fitness levels achieve their health goals in a supportive, state-of-the-art environment. Our certified trainers and cutting-edge facilities provide the perfect combination for your transformation.</p>
+                    <p>We believe fitness should be accessible, enjoyable, and rewarding. Every program we design reflects our core values of excellence, community, and personal growth.</p>
+                    <a href="#membership" class="main-button">Join Our Community</a>
+                </div>
+                <div class="col-lg-6">
+                    <img src="assets/images/training-image-01.jpg" alt="Group fitness class" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ***** Values Section ***** -->
+    <section class="values-section py-5">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col-12">
+                    <h2 class="section-title">Our Core Values</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="value-card">
+                        <i class="fas fa-heartbeat"></i>
+                        <h3>Health First</h3>
+                        <p>We prioritize safe, effective training methods that promote long-term health benefits over quick fixes.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="value-card">
+                        <i class="fas fa-users"></i>
+                        <h3>Community</h3>
+                        <p>Our members become family. We foster an inclusive environment where everyone supports each other.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="value-card">
+                        <i class="fas fa-trophy"></i>
+                        <h3>Excellence</h3>
+                        <p>From our facilities to our trainers, we maintain the highest standards in everything we do.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ***** Team Section ***** -->
+    <section class="trainer-section" id="trainers">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="section-heading">
+                        <h2 class="section-title">Expert <em>Trainers</em></h2>
+                        <img src="assets/images/line-dec.png" alt="">
+                        <p>Our professional trainers are here to guide you through personalized fitness journeys.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="team-card">
+                        <div class="team-image">
+                            <img src="assets/images/first-trainer.jpg" alt="First Trainer">
+                        </div>
+                        <div class="team-info">
+                            <h3>John Doe</h3>
+                            <p>Strength Trainer</p>
+                            <p class="bio">With 10+ years of experience, John specializes in strength conditioning and functional training.</p>
+                            <div class="social-links">
+                                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="team-card">
+                        <div class="team-image">
+                            <img src="assets/images/second-trainer.jpg" alt="Second Trainer">
+                        </div>
+                        <div class="team-info">
+                            <h3>Jane Smith</h3>
+                            <p>Yoga Instructor</p>
+                            <p class="bio">Jane brings mindfulness and movement together in her transformative yoga sessions.</p>
+                            <div class="social-links">
+                                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="team-card">
+                        <div class="team-image">
+                            <img src="assets/images/third-trainer.jpg" alt="Third Trainer">
+                        </div>
+                        <div class="team-info">
+                            <h3>Mike Johnson</h3>
+                            <p>Cardio Specialist</p>
+                            <p class="bio">Mike's high-energy cardio classes will push you to new limits while keeping it fun.</p>
+                            <div class="social-links">
+                                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ***** CTA Section ***** -->
+    <section class="section" id="call-to-action" style="background-image: url('assets/images/cta-bg.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1">
+                    <div class="cta-content">
+                        <h2>Ready To <em>Transform</em> Your Life?</h2>
+                        <p>Join today and get 1 week free trial for new members</p>
+                        <div class="main-button scroll-to-section">
+                            <a href="#membership">Become a Member</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ***** Footer Start ***** -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <!-- About Section -->
+            <div class="col-lg-4 col-md-6">
+                <div class="footer-section">
+                    <h4>About Elite Studio</h4>
+                    <p>Elite Studio is your go-to fitness destination, offering state-of-the-art facilities, expert trainers, and personalized programs to help you achieve your fitness goals.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fa fa-facebook"></i></a>
+                        <a href="#"><i class="fa fa-twitter"></i></a>
+                        <a href="#"><i class="fa fa-instagram"></i></a>
+                        <a href="#"><i class="fa fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#features">About</a></li>
+                        <li><a href="#our-classes">Classes</a></li>
+                        <li><a href="#schedule">Schedules</a></li>
+                        <li><a href="#membership">Membership</a></li>
+                        <li><a href="#contact-us">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <ul class="contact-info">
+                        <li><i class="fa fa-map-marker"></i> 123 Fitness Street, Rio de Janeiro, Brazil</li>
+                        <li><i class="fa fa-phone"></i> +55 123 456 789</li>
+                        <li><i class="fa fa-envelope"></i> info@elitestudio.com</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-section">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe to our newsletter to get the latest updates and offers.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your Email" required>
+                        <button type="submit"><i class="fa fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+      
+</footer>
+<!-- ***** Footer Ends ***** -->
+
+
+    <!-- jQuery -->
+    <script src="assets/js/jquery-2.1.0.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="assets/js/popper.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+
+    <!-- Plugins -->
+    <script src="assets/js/scrollreveal.min.js"></script>
+    <script src="assets/js/waypoints.min.js"></script>
+    <script src="assets/js/jquery.counterup.min.js"></script>
+    <script src="assets/js/imgfix.min.js"></script> 
+    <script src="assets/js/mixitup.js"></script> 
+    <script src="assets/js/accordions.js"></script>
+
+    <!-- Global Init -->
+    <script src="assets/js/custom.js"></script>
+
+    <!-- Auth Logic -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            checkAuthStatus();
+            
+            // Mobile menu toggle
+            $('.menu-trigger').click(function() {
+                $('.nav').slideToggle();
+            });
+        });
+        
+        function checkAuthStatus() {
+            const authLinks = document.querySelector('.auth-links');
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            const authToken = localStorage.getItem('authToken');
+            
+            if (authToken && userData) {
+                // User is logged in
+                authLinks.innerHTML = `
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fas fa-user"></i> ${userData.fullName || 'My Account'}
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="profile.html">Profile</a>
+                            <a class="dropdown-item" href="bookings.html">My Bookings</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" id="logout-btn">Logout</a>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('logout-btn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userData');
+                    window.location.href = 'index.html';
+                });
+            } else {
+                // User is not logged in
+                authLinks.innerHTML = `
+                    <a href="login.html" class="main-button">Login</a>
+                    <a href="signup.html" class="main-button ml-2">Sign Up</a>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

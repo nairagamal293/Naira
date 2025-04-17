@@ -348,7 +348,7 @@
     position: absolute;
     top: 15px;
     left: 15px;
-    background: #9c0d0d;
+    background: rgb(156, 13, 13);
     color: white;
     padding: 5px 15px;
     border-radius: 20px;
@@ -384,7 +384,7 @@
 
 .session-meta i {
     margin-right: 5px;
-    color: #9c0d0d;
+    color: rgb(156, 13, 13);
 }
 
 .session-card .btn-main {

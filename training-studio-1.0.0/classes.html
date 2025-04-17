@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Browse all fitness classes at Elite Studio - Yoga, HIIT, Strength Training and more">
+    <title>Our Classes - Elite Studio</title>
+    
+    <!-- CSS Assets -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
+
+
+     <!-- Additional CSS Files -->
+   <!--   <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css"> -->
+     <link rel="stylesheet" type="text/css" href="index.css">
+ 
+     <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
+ 
+     <link rel="stylesheet" href="assets/css/templatemo-training-studio.css">
+ 
+    
+    <style>
+        :root {
+            --primary: #9c0d0d;
+            --primary-dark: #7a0a0a;
+            --dark: #232d39;
+            --light: #f8f9fa;
+        }
+        
+        /* Header (Matches Index Exactly) */
+        .header-area.header-sticky {
+            background: #232d39 !important;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.15) !important;
+        }
+        
+        /* Classes Hero */
+        .classes-hero {
+            background: linear-gradient(rgba(35, 45, 57, 0.9), rgba(35, 45, 57, 0.9)), 
+                        url('assets/images/training-image-03.jpg') center/cover no-repeat;
+            padding: 150px 0 100px;
+            color: white;
+            text-align: center;
+            margin-top: 80px; /* Account for fixed header */
+        }
+        
+        .classes-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        
+        .classes-hero h1 em {
+            color: var(--primary);
+            font-style: normal;
+        }
+        
+        /* Main Content */
+        .classes-container {
+            padding: 80px 0;
+            background: var(--light);
+        }
+        
+        /* Filter Buttons */
+        .class-filters {
+            margin-bottom: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .filter-btn {
+            padding: 8px 20px;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Class Cards */
+        .class-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .class-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .class-img {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .class-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .class-card:hover .class-img img {
+            transform: scale(1.05);
+        }
+        
+        .class-body {
+            padding: 25px;
+        }
+        
+        .class-category {
+            display: inline-block;
+            padding: 3px 10px;
+            background: rgba(156, 13, 13, 0.1);
+            color: var(--primary);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .class-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .class-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+        
+        .class-meta span {
+            display: flex;
+            align-items: center;
+        }
+        
+        .class-meta i {
+            color: var(--primary);
+            margin-right: 5px;
+        }
+        
+        .difficulty {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .difficulty-badge {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .beginner { background: #28a745; }
+        .intermediate { background: #ffc107; }
+        .advanced { background: #dc3545; }
+        
+        .btn-book {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px;
+            font-weight: 600;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .btn-book:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Schedule CTA */
+        .schedule-cta {
+            background: var(--dark);
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .classes-hero {
+                padding: 120px 0 80px;
+            }
+            
+            .classes-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .filter-btn {
+                padding: 6px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ***** Header Area (Identical to Index) ***** -->
+    <header class="header-area header-sticky">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <!-- Logo -->
+                        <a href="index.html" class="logo">Elite<em> Studio</em></a>
+                        
+                        <!-- Navigation -->
+                        <ul class="nav">
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="classes.html" class="active">Classes</a></li>
+                            <li><a href="index.html#schedule">Schedules</a></li>
+                            <li><a href="index.html#membership">Membership</a></li>
+                            <li class="scroll-to-section"><a href="index.html#online-sessions">Online</a></li>
+                            <li class="scroll-to-section"><a href="index.html#contact-us">Contact</a></li> 
+                            
+                            <!-- Dynamic Auth Links -->
+                            <li class="auth-links">
+                                <!-- Populated by JavaScript -->
+                            </li>
+                        </ul>
+                        
+                        <!-- Mobile Menu -->
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ***** Hero Section ***** -->
+    <section class="classes-hero">
+        <div class="container">
+            
+            <h1>Find Your <em>Perfect Class</em></h1>
+            <p>Professional training programs for all fitness levels</p>
+            
+
+        </div>
+    </section>
+
+    <!-- ***** Classes Section ***** -->
+    <section class="classes-container">
+        <div class="container">
+            <!-- Class Filters -->
+            <div class="class-filters">
+                <button class="filter-btn active" data-filter="all">All Classes</button>
+                <button class="filter-btn" data-filter="strength">Strength</button>
+                <button class="filter-btn" data-filter="cardio">Cardio</button>
+                <button class="filter-btn" data-filter="flexibility">Flexibility</button>
+                <button class="filter-btn" data-filter="hiit">HIIT</button>
+            </div>
+            
+            <!-- Class Grid -->
+            <div class="row">
+                <!-- Class 1 -->
+                <div class="col-lg-4 col-md-6" data-category="strength">
+                    <div class="class-card">
+                        <div class="class-img">
+                            <img src="assets/images/training-image-01.jpg" alt="Power Lifting">
+                        </div>
+                        <div class="class-body">
+                            <span class="class-category">Strength</span>
+                            <h3 class="class-title">Power Lifting</h3>
+                            
+                            <div class="difficulty">
+                                <span class="difficulty-badge intermediate"></span>
+                                <span>Intermediate</span>
+                            </div>
+                            
+                            <div class="class-meta">
+                                <span><i class="far fa-clock"></i> 60 mins</span>
+                                <span><i class="fas fa-user-tie"></i> Mark</span>
+                            </div>
+                            
+                            <p>Build raw strength with compound lifts and progressive overload techniques.</p>
+                            
+                            <button class="btn-book booking-btn">
+                                <i class="fas fa-calendar-alt"></i> Book Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Class 2 -->
+                <div class="col-lg-4 col-md-6" data-category="cardio">
+                    <div class="class-card">
+                        <div class="class-img">
+                            <img src="assets/images/training-image-01.jpg" alt="Spin Cycling">
+                        </div>
+                        <div class="class-body">
+                            <span class="class-category">Cardio</span>
+                            <h3 class="class-title">Spin Cycling</h3>
+                            
+                            <div class="difficulty">
+                                <span class="difficulty-badge beginner"></span>
+                                <span>Beginner</span>
+                            </div>
+                            
+                            <div class="class-meta">
+                                <span><i class="far fa-clock"></i> 45 mins</span>
+                                <span><i class="fas fa-user-tie"></i> Sarah</span>
+                            </div>
+                            
+                            <p>High-energy cycling class with motivating music and varied intensity.</p>
+                            
+                            <button class="btn-book booking-btn">
+                                <i class="fas fa-calendar-alt"></i> Book Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Class 3 -->
+                <div class="col-lg-4 col-md-6" data-category="flexibility">
+                    <div class="class-card">
+                        <div class="class-img">
+                            <img src="assets/images/training-image-01.jpg" alt="Yoga Flow">
+                        </div>
+                        <div class="class-body">
+                            <span class="class-category">Flexibility</span>
+                            <h3 class="class-title">Yoga Flow</h3>
+                            
+                            <div class="difficulty">
+                                <span class="difficulty-badge beginner"></span>
+                                <span>Beginner</span>
+                            </div>
+                            
+                            <div class="class-meta">
+                                <span><i class="far fa-clock"></i> 55 mins</span>
+                                <span><i class="fas fa-user-tie"></i> David</span>
+                            </div>
+                            
+                            <p>High-energy cycling class with motivating music and varied intensity.</p>
+                            
+                            <button class="btn-book booking-btn">
+                                <i class="fas fa-calendar-alt"></i> Book Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Add more classes as needed -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ***** Schedule CTA ***** -->
+    <section class="schedule-cta">
+        <div class="container">
+            <h2 style="color: white; margin-bottom: 20px;">Ready to Transform?</h2>
+            <p style="color: #aaa; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                View our full schedule and reserve your spot today
+            </p>
+            <a href="index.html#schedule" class="main-button">View Class Schedule</a>
+        </div>
+    </section>
+
+    <!-- ***** Footer (Identical to Index) ***** -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-section">
+                        <h4>About Elite Studio</h4>
+                        <p>Your premier fitness destination with state-of-the-art facilities and expert trainers.</p>
+                        <div class="social-icons">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="classes.html">Classes</a></li>
+                            <li><a href="index.html#schedule">Schedule</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-section">
+                        <h4>Contact Info</h4>
+                        <ul class="contact-info">
+                            <li><i class="fas fa-map-marker-alt"></i> 123 Fitness St, Riyadh</li>
+                            <li><i class="fas fa-phone"></i> +966 12 345 6789</li>
+                            <li><i class="fas fa-envelope"></i> info@elitestudio.com</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-section">
+                        <h4>Newsletter</h4>
+                        <form class="newsletter-form">
+                            <input type="email" placeholder="Your Email" required>
+                            <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12">
+                    <div class="copyright">
+                        <p>&copy; 2023 Elite Studio. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="assets/js/jquery-2.1.0.min.js"></script>
+    <script src="assets/js/popper.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // ✅ Authentication State Management (Identical to Index)
+        const auth = {
+            isLoggedIn: () => localStorage.getItem("authToken") !== null,
+            currentUser: () => {
+                try {
+                    return JSON.parse(localStorage.getItem("userData")) || null;
+                } catch (e) {
+                    console.error("Error parsing user data:", e);
+                    return null;
+                }
+            },
+            logout: () => {
+                localStorage.removeItem("authToken");
+                localStorage.removeItem("userData");
+                window.location.href = "index.html";
+            }
+        };
+
+        // ✅ Check Auth Status & Update UI (Identical to Index)
+        function checkAuthStatus() {
+            const authLinks = document.querySelector(".auth-links");
+            const user = auth.currentUser();
+
+            if (authLinks) {
+                if (auth.isLoggedIn()) {
+                    authLinks.innerHTML = `
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle"></i> <span id="userName">${user?.fullName || user?.username || user?.name || 'My Account'}</span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+                                <li><a class="dropdown-item" href="bookings.html">My Bookings</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" onclick="auth.logout()">Logout</a></li>
+                            </ul>
+                        </li>
+                    `;
+
+                    // Initialize dropdown
+                    new bootstrap.Dropdown(document.getElementById('userDropdown'));
+                } else {
+                    authLinks.innerHTML = `
+                        <li class="main-button">
+                            <a href="SignUp.html">Sign Up</a>
+                        </li>
+                    `;
+                }
+            }
+        }
+
+        // ✅ Class Filtering
+        function setupClassFilters() {
+            $('.filter-btn').click(function() {
+                $('.filter-btn').removeClass('active');
+                $(this).addClass('active');
+                
+                const filter = $(this).data('filter');
+                $('.class-card').parent().hide();
+                
+                if (filter === 'all') {
+                    $('.class-card').parent().show();
+                } else {
+                    $(`.class-card[data-category="${filter}"]`).parent().show();
+                }
+            });
+        }
+
+        // ✅ Booking Button Handling (Identical to Index)
+        function setupBookingButtons() {
+            $(document).on('click', '.booking-btn', function(e) {
+                e.preventDefault();
+                if (auth.isLoggedIn()) {
+                    // Open booking modal (implementation matches index)
+                    $('#bookingModal').modal('show');
+                } else {
+                    window.location.href = "SignUp.html?redirect=" + encodeURIComponent(window.location.href);
+                }
+            });
+        }
+
+        // ✅ Mobile Menu Toggle (Identical to Index)
+        function setupMobileMenu() {
+            $('.menu-trigger').click(function() {
+                $('.nav').slideToggle();
+            });
+        }
+
+        // ✅ Initialize Everything
+        $(document).ready(function() {
+            checkAuthStatus();
+            setupClassFilters();
+            setupBookingButtons();
+            setupMobileMenu();
+        });
+    </script>
+</body>
+</html>
