@@ -57,7 +57,7 @@ function checkAuthStatus() {
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdown">
                         <li><a class="dropdown-item" href="profile.html">Profile</a></li>
-                        <li><a class="dropdown-item" href="Userdashboard.html">My Bookings</a></li>
+                        <li><a class="dropdown-item" href="Userdashboard.html">My Dashboard</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#" onclick="auth.logout()">Logout</a></li>
                     </ul>
@@ -333,7 +333,7 @@ async function loadMemberships() {
                         <h3>${membership.name || 'Membership'}</h3>
                         <p class="price">${membership.price || '0'} SAR / ${membership.durationInDays || '0'} days</p>
                         <ul><li>✔ ${membership.description || 'No description available'}</li></ul>
-                        <button class="btn btn-success booking-btn">Book Now</button>
+                        <button class="btn-main booking-btn">Book Now</button>
                     </div>
                 </div>`).join("");
     } catch (error) {
@@ -402,10 +402,8 @@ async function loadClasses() {
 }
 
 // ✅ Load Schedules
+// Updated loadSchedules function
 async function loadSchedules() {
-    const scheduleTable = document.querySelector(".schedule-table tbody");
-    if (!scheduleTable) return;
-    
     try {
         const response = await fetch("https://localhost:7020/api/Schedule");
         if (!response.ok) throw new Error("Failed to load schedules.");
@@ -414,20 +412,106 @@ async function loadSchedules() {
         if (!Array.isArray(schedules)) {
             throw new Error("Invalid data format received from API");
         }
-        
-        scheduleTable.innerHTML = schedules.length === 0 ? 
-            "<tr><td colspan='3'>No schedules available.</td></tr>" :
-            schedules.map(schedule => `
-                <tr>
-                    <td>${schedule.className || 'Class'}</td>
-                    <td>${schedule.startTime || ''} - ${schedule.endTime || ''}</td>
-                    <td>${schedule.trainerName || 'Trainer'}</td>
-                </tr>`).join("");
+
+        if (schedules.length === 0) {
+            showEmptySchedule();
+            return;
+        }
+
+        // Group schedules by day
+        const schedulesByDay = {
+            monday: [],
+            tuesday: [],
+            wednesday: [],
+            thursday: [],
+            friday: [],
+            saturday: []
+        };
+
+        schedules.forEach(schedule => {
+            const day = schedule.day?.toLowerCase() || 'monday';
+            if (schedulesByDay[day]) {
+                schedulesByDay[day].push(schedule);
+            }
+        });
+
+        // Populate each day's tab
+        for (const day in schedulesByDay) {
+            const tabContent = document.getElementById(day);
+            if (tabContent) {
+                if (schedulesByDay[day].length > 0) {
+                    tabContent.innerHTML = schedulesByDay[day].map(schedule => `
+                        <div class="schedule-card">
+                            <div class="schedule-card-header">
+                                <span class="schedule-time">${schedule.startTime || '09:00'} - ${schedule.endTime || '10:00'}</span>
+                                <span class="schedule-badge">${schedule.difficulty || 'All Levels'}</span>
+                            </div>
+                            <div class="schedule-card-body">
+                                <h4 class="schedule-class-name">${schedule.className || 'Fitness Class'}</h4>
+                                <div class="schedule-trainer">
+                                    <i class="fas fa-user-tie"></i>
+                                    <span>${schedule.trainerName || 'Professional Trainer'}</span>
+                                </div>
+                                <div class="schedule-capacity">
+                                    <span class="schedule-slots">
+                                        <i class="fas fa-users"></i>
+                                        ${schedule.availableSlots !== undefined ? `${schedule.availableSlots} slots available` : 'Open enrollment'}
+                                    </span>
+                                    <button class="schedule-book-btn booking-btn ${auth.isLoggedIn() ? '' : 'disabled'}" 
+                                            data-class-id="${schedule.classId}" 
+                                            data-class-name="${schedule.className}"
+                                            data-class-price="${schedule.price || 0}">
+                                        Book Now
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join("");
+                } else {
+                    tabContent.innerHTML = `
+                        <div class="schedule-empty">
+                            <i class="far fa-calendar-times"></i>
+                            <h4>No classes scheduled</h4>
+                            <p>Check back later for updates</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+
     } catch (error) {
         console.error("Error loading schedules:", error);
-        scheduleTable.innerHTML = `<tr><td colspan="3" class="text-danger">Error loading schedules. Please try again later.</td></tr>`;
+        showEmptySchedule("Error loading schedule. Please try again later.");
     }
 }
+
+function showEmptySchedule(message = "No schedule available at the moment.") {
+    const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    days.forEach(day => {
+        const tabContent = document.getElementById(day);
+        if (tabContent) {
+            tabContent.innerHTML = `
+                <div class="schedule-empty">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h4>${message}</h4>
+                    <button onclick="loadSchedules()" class="btn btn-primary mt-3">
+                        <i class="fas fa-sync-alt"></i> Try Again
+                    </button>
+                </div>
+            `;
+        }
+    });
+}
+
+// Initialize schedule tabs
+document.addEventListener("DOMContentLoaded", function() {
+    const scheduleTabs = document.getElementById('scheduleTabs');
+    if (scheduleTabs) {
+        scheduleTabs.addEventListener('shown.bs.tab', function (event) {
+            // You could add lazy loading here if needed
+        });
+    }
+});
 
 // ✅ Load Online Sessions
 async function loadOnlineSessions() {
