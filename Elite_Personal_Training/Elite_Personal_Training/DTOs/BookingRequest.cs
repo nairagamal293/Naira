@@ -4,13 +4,17 @@
 namespace Elite_Personal_Training.DTOs
 {
     using global::Elite_Personal_Training.Models;
+    using System.ComponentModel.DataAnnotations;
     using System.Text.Json.Serialization;
 
     namespace Elite_Personal_Training.DTOs
     {
         public class BookingRequest
         {
-            public string UserId { get; set; }
+            [Required]
+            [RegularExpression(@"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+        ErrorMessage = "UserId must be a valid GUID")]
+            public Guid UserId { get; set; }
             public int? MembershipId { get; set; }
             public int? ClassId { get; set; }
             public int? OnlineSessionId { get; set; }

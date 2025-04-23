@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Elite_Personal_Training.Models
 {
@@ -14,7 +15,10 @@ namespace Elite_Personal_Training.Models
     {
         public int Id { get; set; }
 
-        public Guid UserId { get; set; } // ✅ changed from string to Guid
+        // Change from string to Guid
+        public Guid UserId { get; set; }
+
+        [ForeignKey(nameof(UserId))]
         public User? User { get; set; }
 
         public int? MembershipId { get; set; }
@@ -35,6 +39,7 @@ namespace Elite_Personal_Training.Models
 
         public string? PaymentReference { get; set; }
         public string? PaymentMethod { get; set; }
+        public DateTime? PaymentDate { get; set; }
 
         public List<Payment> Payments { get; set; } = new List<Payment>();
 
@@ -45,5 +50,8 @@ namespace Elite_Personal_Training.Models
         public string Email { get; set; }
 
         public BookingType BookingType { get; set; }
+
+        public DateTime? MembershipStartDate { get; set; }
+        public DateTime? MembershipEndDate { get; set; }
     }
 }

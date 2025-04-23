@@ -3,14 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Elite_Personal_Training.Models
 {
-    [Table("Users")] // 👈 This forces the table name to be "Users"
-    public class User : IdentityUser
+    [Table("Users")]
+    public class User : IdentityUser<Guid>
     {
         public string FullName { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        // ✅ Navigation Property
+        // Navigation Properties
         public List<SessionBooking> SessionBookings { get; set; } = new List<SessionBooking>();
+        public List<Booking> Bookings { get; set; } = new List<Booking>(); // Links user to bookings
     }
 }

@@ -240,12 +240,32 @@
             font-weight: 600;
         }
         
-        .table-responsive {
+      /*   .table-responsive {
             border-radius: 8px;
             overflow: hidden;
-        }
+        } */
         
-        
+        /* Add this to your style section */
+.table-responsive {
+    overflow-x: auto;
+}
+
+#upcomingBookings td {
+    vertical-align: middle;
+    padding: 12px 8px;
+}
+
+#upcomingBookings td:nth-child(3) {
+    min-width: 200px;
+}
+#membershipDetails td {
+    vertical-align: middle;
+}
+
+#membershipDetails th:nth-child(1),
+#membershipDetails td:nth-child(1) {
+    min-width: 180px;
+}
         
         /* Responsive Adjustments */
         @media (max-width: 991px) {
@@ -391,7 +411,33 @@
                         </div>
                     </div>
                 </div>
-                
+                <!-- Membership Details -->
+<div class="dashboard-card mt-4">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">My Memberships</h3>
+            <a href="membership.html" class="btn btn-sm btn-outline-light">View All</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Membership</th>
+                        <th>Start Date</th>
+                        <th>Expiry Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="membershipDetails">
+                    <tr><td colspan="5" class="text-center">Loading memberships...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
                 <!-- Recent Payments -->
                 <div class="dashboard-card mt-4">
                     <div class="card-header">
@@ -545,19 +591,21 @@
 
 async function loadDashboardData() {
     const user = auth.currentUser();
-    if (!user) {
-        window.location.href = 'SignUp.html';
-        return;
-    }
+    if (!user) return window.location.href = 'SignUp.html';
 
+    // Set user info
     document.getElementById('userGreeting').textContent = user.fullName || user.username;
     document.getElementById('userFullName').textContent = user.fullName || user.username;
     document.getElementById('userEmail').textContent = user.email;
 
-    await loadUserBookings(user.id);
-    await loadUserPayments(user.id);
-    await loadMembershipInfo(user.id);
-    await loadNextSession(user.id);
+    // Load data in parallel
+    await Promise.all([
+        loadUserBookings(user.id),
+        loadMembershipInfo(user.id),  // Fixed function
+        loadMembershipDetails(user.id), // Fixed function
+        loadUserPayments(user.id),
+        loadNextSession(user.id)
+    ]);
 }
 
 async function loadUserBookings(userId) {
@@ -669,35 +717,7 @@ async function loadNextSession(userId) {
         }
     }
 
-    // Load membership info
-    async function loadMembershipInfo(userId) {
-        try {
-            // This endpoint might need to be created to get user's active membership
-            const response = await fetch(`https://localhost:7020/api/User/${userId}/membership`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-                }
-            });
-            
-            if (!response.ok) throw new Error('Failed to load membership info');
-            
-            const membership = await response.json();
-            
-            if (membership) {
-                document.getElementById('membershipStatus').textContent = membership.name;
-                document.getElementById('membershipExpiry').textContent = 
-                    `Expires: ${new Date(membership.expiryDate).toLocaleDateString()}`;
-            } else {
-                document.getElementById('membershipStatus').textContent = 'No active membership';
-                document.getElementById('membershipExpiry').textContent = '';
-            }
-            
-        } catch (error) {
-            console.error('Error loading membership info:', error);
-            document.getElementById('membershipStatus').textContent = 'Error loading';
-            document.getElementById('membershipExpiry').textContent = '';
-        }
-    }
+   
 
     // Load next session
     async function loadNextSession(userId) {

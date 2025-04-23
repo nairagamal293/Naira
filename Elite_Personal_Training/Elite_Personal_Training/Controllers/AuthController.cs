@@ -1,6 +1,5 @@
 ﻿using Elite_Personal_Training.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -18,7 +17,10 @@ namespace Elite_Personal_Training.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
 
-        public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IConfiguration configuration)
+        public AuthController(
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
+            IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -30,7 +32,7 @@ namespace Elite_Personal_Training.Controllers
         public async Task<IActionResult> SignUp([FromBody] SignUpRequest request)
         {
             if (request == null)
-                return BadRequest(new { message = "Request body is empty. Ensure JSON format is correct." });
+                return BadRequest(new { message = "Request body is empty." });
 
             if (string.IsNullOrWhiteSpace(request.FullName))
                 return BadRequest(new { message = "Full Name is required." });
@@ -42,11 +44,20 @@ namespace Elite_Personal_Training.Controllers
             if (existingUser != null)
                 return BadRequest(new { message = "User already exists with this email." });
 
-            var user = new User { UserName = request.Email, Email = request.Email, FullName = request.FullName };
+            var user = new User
+            {
+                UserName = request.Email,
+                Email = request.Email,
+                FullName = request.FullName
+            };
+
             var result = await _userManager.CreateAsync(user, request.Password);
 
             if (!result.Succeeded)
                 return BadRequest(new { message = "User creation failed.", errors = result.Errors });
+
+            // Add default role if needed
+            await _userManager.AddToRoleAsync(user, "Member");
 
             return Ok(new { message = "User created successfully!" });
         }
@@ -56,32 +67,38 @@ namespace Elite_Personal_Training.Controllers
         {
             try
             {
-                if (request == null || string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
+                if (request == null || string.IsNullOrEmpty(request.Email)
+                    || string.IsNullOrEmpty(request.Password))
                     return BadRequest(new { message = "Email and password are required." });
 
                 var user = await _userManager.FindByEmailAsync(request.Email);
                 if (user == null)
                     return Unauthorized(new { message = "Invalid credentials." });
 
-                var result = await _signInManager.PasswordSignInAsync(user, request.Password, false, false);
+                var result = await _signInManager.PasswordSignInAsync(
+                    user,
+                    request.Password,
+                    isPersistent: false,
+                    lockoutOnFailure: false);
+
                 if (!result.Succeeded)
                     return Unauthorized(new { message = "Invalid credentials." });
 
                 // Generate JWT token
                 var roles = await _userManager.GetRolesAsync(user);
                 var role = roles.FirstOrDefault() ?? "User";
-                var token = await GenerateJwtToken(user, role);
+                var token = GenerateJwtToken(user, role);
 
                 return Ok(new
                 {
-                    token = token, // Direct token string
-                    user = new
+                    Token = token,
+                    User = new
                     {
-                        id = user.Id,
-                        fullName = user.FullName,
-                        email = user.Email,
-                        role = role,
-                        phone = user.PhoneNumber
+                        Id = user.Id,
+                        FullName = user.FullName,
+                        Email = user.Email,
+                        Role = role,
+                        Phone = user.PhoneNumber
                     }
                 });
             }
@@ -92,36 +109,31 @@ namespace Elite_Personal_Training.Controllers
             }
         }
 
-        private async Task<string> GenerateJwtToken(User user, string role)
+        private string GenerateJwtToken(User user, string role)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var securityKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var claims = new List<Claim>
-    {
-        new Claim(JwtRegisteredClaimNames.Sub, user.Id),
-        new Claim(JwtRegisteredClaimNames.Name, user.FullName),
-        new Claim(JwtRegisteredClaimNames.Email, user.Email),
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        new Claim(ClaimTypes.Role, role)
-    };
-
-            if (!string.IsNullOrEmpty(user.PhoneNumber))
+            var claims = new[]
             {
-                claims.Add(new Claim("phone", user.PhoneNumber));
-            }
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Name, user.FullName),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, role)
+            };
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
                 expires: DateTime.UtcNow.AddHours(12),
-                signingCredentials: creds);
+                signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        // Add to AuthController.cs
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
         {
@@ -130,15 +142,13 @@ namespace Elite_Personal_Training.Controllers
 
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
-                return Ok(); // Don't reveal if user doesn't exist (security)
+                return Ok(); // Security: don't reveal if user doesn't exist
 
-            // Generate reset token (expires in 1 hour)
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var resetLink = $"{_configuration["ClientUrl"]}/reset-password?token={WebUtility.UrlEncode(token)}&email={user.Email}";
 
-            // In a real app, send this link via email (simplified here)
-            var resetLink = $"https://yourdomain.com/reset-password?token={WebUtility.UrlEncode(token)}&email={user.Email}";
-
-            return Ok(new { resetLink }); // Return link for testing (replace with email service)
+            // In production, send email instead of returning link
+            return Ok(new { ResetLink = resetLink });
         }
 
         [HttpPost("reset-password")]
@@ -155,7 +165,10 @@ namespace Elite_Personal_Training.Controllers
             if (user == null)
                 return BadRequest("Invalid request.");
 
-            var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+            var result = await _userManager.ResetPasswordAsync(
+                user,
+                request.Token,
+                request.NewPassword);
 
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
@@ -163,21 +176,37 @@ namespace Elite_Personal_Training.Controllers
             return Ok("Password reset successfully!");
         }
 
-        // DTO Classes (add to your project)
-        public class ForgotPasswordRequest
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
         {
-            public string Email { get; set; }
+            await _signInManager.SignOutAsync();
+            return Ok(new { message = "Logged out successfully" });
         }
+    }
 
-        public class ResetPasswordRequest
-        {
-            public string Email { get; set; }
-            public string Token { get; set; }
-            public string NewPassword { get; set; }
-        }
+    // DTO Classes
+    public class SignUpRequest
+    {
+        public string FullName { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
 
-        // ✅ JWT TOKEN GENERATION
-        
+    public class LoginRequest
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
 
+    public class ForgotPasswordRequest
+    {
+        public string Email { get; set; }
+    }
+
+    public class ResetPasswordRequest
+    {
+        public string Email { get; set; }
+        public string Token { get; set; }
+        public string NewPassword { get; set; }
     }
 }

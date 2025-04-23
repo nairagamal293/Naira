@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     checkAuthStatus();
     loadDashboardData();
     
@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// Load all dashboard data
 async function loadDashboardData() {
     const user = auth.currentUser();
     if (!user) {
@@ -24,85 +23,86 @@ async function loadDashboardData() {
         return;
     }
 
-    // Set user info
     document.getElementById('userGreeting').textContent = user.fullName || user.username;
     document.getElementById('userFullName').textContent = user.fullName || user.username;
     document.getElementById('userEmail').textContent = user.email;
-    
-    // Load user bookings
-    await loadUserBookings(user.id);
-    
-    // Load user payments
-    await loadUserPayments(user.id);
-    
-    // Load membership info
+
     await loadMembershipInfo(user.id);
-    
-    // Load next session
+    await loadMembershipDetails(user.id);
+    await loadUserBookings(user.id);
+    await loadUserPayments(user.id);
     await loadNextSession(user.id);
 }
 
-// Load user bookings
 async function loadUserBookings(userId) {
     try {
-        const response = await fetch(`https://localhost:7020/api/Booking/my-bookings`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-            }
+        const response = await fetch(`https://localhost:7020/api/Booking/user/${userId}`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
         });
-        
         if (!response.ok) throw new Error('Failed to load bookings');
-        
         const bookings = await response.json();
         const upcomingBookings = bookings.filter(b => b.status !== 'Cancelled');
-        
-        // Update stats
+
         document.getElementById('activeBookingsCount').textContent = upcomingBookings.length;
-        
-        // Populate bookings table
+
         const bookingsTable = document.getElementById('upcomingBookings');
-        bookingsTable.innerHTML = upcomingBookings.length > 0 ? 
+        bookingsTable.innerHTML = upcomingBookings.length > 0 ?
             upcomingBookings.map(booking => `
                 <tr>
                     <td>${new Date(booking.bookingDate).toLocaleDateString()}</td>
-                    <td>${booking.class?.startTime || 'N/A'}</td>
-                    <td>${booking.class?.name || booking.onlineSession?.title || 'N/A'}</td>
+                    <td>${booking.class?.startTime || booking.onlineSession?.startTime || 'N/A'}</td>
+                    <td>
+                        <strong>${booking.class?.name || booking.onlineSession?.title || 'N/A'}</strong>
+                        ${booking.membership ? `<br><small class="text-muted">Membership: ${booking.membership.name}</small>` : ''}
+                    </td>
                     <td>${booking.class?.trainer?.name || booking.onlineSession?.trainer?.name || 'N/A'}</td>
                     <td><span class="badge ${getStatusBadgeClass(booking.status)}">${booking.status}</span></td>
                     <td>
-                        ${booking.status === 'Confirmed' ? 
-                            `<button class="btn btn-sm btn-outline-danger cancel-booking" data-id="${booking.id}">Cancel</button>` : 
-                            booking.status === 'Pending' ? 
-                            `<button class="btn btn-sm btn-outline-primary pay-now" data-id="${booking.id}">Pay Now</button>` : 
-                            ''}
+                        ${booking.status === 'Confirmed' ?
+                            `<button class="btn btn-sm btn-outline-danger cancel-booking" data-id="${booking.id}">Cancel</button>` :
+                            booking.status === 'Pending' ?
+                            `<button class="btn btn-sm btn-outline-primary pay-now" data-id="${booking.id}">Pay Now</button>` : ''}
                     </td>
                 </tr>
-            `).join('') : 
+            `).join('') :
             `<tr><td colspan="6" class="text-center">No upcoming bookings found</td></tr>`;
-            
-        // Add event listeners to buttons
-        document.querySelectorAll('.cancel-booking').forEach(button => {
-            button.addEventListener('click', handleCancelBooking);
-        });
-        
-        document.querySelectorAll('.pay-now').forEach(button => {
-            button.addEventListener('click', handlePayNow);
-        });
-        
     } catch (error) {
         console.error('Error loading bookings:', error);
-        document.getElementById('upcomingBookings').innerHTML = 
+        document.getElementById('upcomingBookings').innerHTML =
             `<tr><td colspan="6" class="text-center text-danger">Error loading bookings</td></tr>`;
     }
 }
 
-// Load user payments
+async function loadNextSession(userId) {
+    try {
+        const response = await fetch(`https://localhost:7020/api/Booking/next-session/${userId}`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+        });
+        if (!response.ok) throw new Error('Failed to load next session');
+        const nextSession = await response.json();
+        const nextSessionDiv = document.getElementById('nextSession');
+
+        if (nextSession) {
+            nextSessionDiv.innerHTML = `
+                <h4>${nextSession.class?.name || nextSession.onlineSession?.title || 'Next Session'}</h4>
+                <p><strong>Date:</strong> ${new Date(nextSession.bookingDate).toLocaleDateString()}</p>
+                <p><strong>Time:</strong> ${nextSession.class?.startTime || nextSession.onlineSession?.startTime || 'N/A'}</p>
+                <p><strong>Trainer:</strong> ${nextSession.class?.trainer?.name || nextSession.onlineSession?.trainer?.name || 'N/A'}</p>
+                <a href="#" class="btn btn-sm btn-warning">View Details</a>
+            `;
+        } else {
+            nextSessionDiv.innerHTML = '<p class="text-muted">No upcoming sessions</p>';
+        }
+    } catch (error) {
+        console.error('Error loading next session:', error);
+        document.getElementById('nextSession').innerHTML = '<p class="text-danger">Error loading session</p>';
+    }
+}
+
 async function loadUserPayments(userId) {
     try {
         const response = await fetch(`https://localhost:7020/api/Payment`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-            }
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
         });
         
         if (!response.ok) throw new Error('Failed to load payments');
@@ -110,7 +110,6 @@ async function loadUserPayments(userId) {
         const payments = await response.json();
         const userPayments = payments.filter(p => p.booking?.userId === userId);
         
-        // Calculate total spent this month
         const currentMonth = new Date().getMonth();
         const monthlyTotal = userPayments
             .filter(p => new Date(p.paymentDate).getMonth() === currentMonth && p.paymentStatus === 'Completed')
@@ -118,7 +117,6 @@ async function loadUserPayments(userId) {
             
         document.getElementById('totalSpent').textContent = `$${monthlyTotal.toFixed(2)}`;
         
-        // Populate payments table (last 5)
         const paymentsTable = document.getElementById('recentPayments');
         const recentPayments = userPayments.slice(0, 5);
         
@@ -143,65 +141,80 @@ async function loadUserPayments(userId) {
     }
 }
 
-// Load membership info
+// CORRECTED membership loading function
 async function loadMembershipInfo(userId) {
     try {
-        // This endpoint might need to be created to get user's active membership
-        const response = await fetch(`https://localhost:7020/api/User/${userId}/membership`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        const response = await fetch(`https://localhost:7020/api/Membership/UserMembership/${userId}`, {
+            headers: { 
+                'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                'accept': 'application/json'
             }
         });
         
-        if (!response.ok) throw new Error('Failed to load membership info');
+        if (!response.ok) {
+            const error = await response.text();
+            throw new Error(`API Error ${response.status}: ${error}`);
+        }
         
         const membership = await response.json();
+        console.log("Membership data:", membership); // Debug log
         
         if (membership) {
-            document.getElementById('membershipStatus').textContent = membership.name;
+            document.getElementById('membershipStatus').textContent = membership.membershipName;
             document.getElementById('membershipExpiry').textContent = 
                 `Expires: ${new Date(membership.expiryDate).toLocaleDateString()}`;
         } else {
             document.getElementById('membershipStatus').textContent = 'No active membership';
             document.getElementById('membershipExpiry').textContent = '';
         }
-        
     } catch (error) {
-        console.error('Error loading membership info:', error);
+        console.error("Membership load failed:", error);
         document.getElementById('membershipStatus').textContent = 'Error loading';
         document.getElementById('membershipExpiry').textContent = '';
     }
 }
 
-// Load next session
-async function loadNextSession(userId) {
+// CORRECTED membership details function
+async function loadMembershipDetails(userId) {
     try {
-        const response = await fetch(`https://localhost:7020/api/Booking/next-session`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        const response = await fetch(`https://localhost:7020/api/Membership/UserMembership/${userId}`, {
+            headers: { 
+                'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+                'accept': 'application/json'
             }
         });
         
-        if (!response.ok) throw new Error('Failed to load next session');
+        if (!response.ok) throw new Error('Failed to load membership details');
         
-        const nextSession = await response.json();
-        const nextSessionDiv = document.getElementById('nextSession');
+        const membership = await response.json();
+        const tableBody = document.getElementById('membershipDetails');
         
-        if (nextSession) {
-            nextSessionDiv.innerHTML = `
-                <h4>${nextSession.class?.name || nextSession.onlineSession?.title}</h4>
-                <p><strong>Date:</strong> ${new Date(nextSession.bookingDate).toLocaleDateString()}</p>
-                <p><strong>Time:</strong> ${nextSession.class?.startTime || 'N/A'}</p>
-                <p><strong>Trainer:</strong> ${nextSession.class?.trainer?.name || nextSession.onlineSession?.trainer?.name}</p>
-                <a href="#" class="btn btn-sm btn-warning">View Details</a>
+        if (membership) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td>
+                        <strong>${membership.membershipName}</strong>
+                        <br><small class="text-muted">${membership.description}</small>
+                    </td>
+                    <td>${new Date(membership.startDate).toLocaleDateString()}</td>
+                    <td>${new Date(membership.expiryDate).toLocaleDateString()}</td>
+                    <td>
+                        <span class="badge ${new Date(membership.expiryDate) > new Date() ? 'bg-success' : 'bg-secondary'}">
+                            ${new Date(membership.expiryDate) > new Date() ? 'Active' : 'Expired'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-info">Details</button>
+                    </td>
+                </tr>
             `;
         } else {
-            nextSessionDiv.innerHTML = '<p class="text-muted">No upcoming sessions</p>';
+            tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No membership found</td></tr>';
         }
-        
     } catch (error) {
-        console.error('Error loading next session:', error);
-        document.getElementById('nextSession').innerHTML = '<p class="text-danger">Error loading session</p>';
+        console.error("Membership details failed:", error);
+        document.getElementById('membershipDetails').innerHTML = 
+            '<tr><td colspan="5" class="text-center text-danger">Error loading</td></tr>';
     }
 }
 
@@ -249,11 +262,10 @@ async function handleCancelBooking(e) {
 
 async function handlePayNow(e) {
     const bookingId = e.target.dataset.id;
-    // You can implement payment flow here or redirect to payment page
     window.location.href = `payment.html?bookingId=${bookingId}`;
 }
 
-// Reuse your existing auth system
+// Auth system
 const auth = {
     isLoggedIn: () => localStorage.getItem("authToken") !== null,
     currentUser: () => {
@@ -273,5 +285,32 @@ const auth = {
 function checkAuthStatus() {
     if (!auth.isLoggedIn()) {
         window.location.href = 'SignUp.html';
+        return;
+    }
+
+    const authLinks = document.querySelector(".auth-links");
+    const user = auth.currentUser();
+
+    if (authLinks && user) {
+        authLinks.innerHTML = `
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user-circle"></i> <span id="userName">${user.fullName || user.username || 'My Account'}</span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+                    <li><a class="dropdown-item" href="Userdashboard.html">My Dashboard</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#" onclick="auth.logout()">Logout</a></li>
+                </ul>
+            </li>
+        `;
+
+        setTimeout(() => {
+            const dropdownElement = document.getElementById("userDropdown");
+            if (dropdownElement) {
+                new bootstrap.Dropdown(dropdownElement);
+            }
+        }, 100);
     }
 }

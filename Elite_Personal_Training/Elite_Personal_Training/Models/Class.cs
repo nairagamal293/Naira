@@ -31,13 +31,11 @@ namespace Elite_Personal_Training.Models
 
         public string DaysOfWeek { get; set; }
 
-        public decimal Price { get; set; } // 🔹 Added Price Property
+        public decimal Price { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        // ✅ Ensure this navigation property is included
         public List<Schedule> Schedules { get; set; } = new List<Schedule>();
-
     }
 }

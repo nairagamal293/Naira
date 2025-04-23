@@ -15,7 +15,7 @@ namespace Elite_Personal_Training.Models
         public int Id { get; set; }
 
         [Required]
-        public string UserId { get; set; } = "";
+        public Guid UserId { get; set; }
         public User User { get; set; } = new User();
 
         [ForeignKey("OnlineSession")]

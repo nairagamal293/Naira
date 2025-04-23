@@ -25,13 +25,13 @@ namespace Elite_Personal_Training.Models
         [Url]
         public string MeetingLink { get; set; }
 
-        public decimal Price { get; set; } // 🔹 Added Price Property
+        public int Capacity { get; set; }
+
+        public decimal Price { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        // ✅ Ensure this navigation property is included
         public List<SessionBooking> SessionBookings { get; set; } = new List<SessionBooking>();
-
     }
 }

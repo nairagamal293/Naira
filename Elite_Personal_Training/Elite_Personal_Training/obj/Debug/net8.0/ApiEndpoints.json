@@ -81,7 +81,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Elite_Personal_Training.Controllers.AuthController\u002BForgotPasswordRequest",
+        "Type": "Elite_Personal_Training.Controllers.ForgotPasswordRequest",
         "IsRequired": true
       }
     ],
@@ -97,10 +97,20 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Microsoft.AspNetCore.Identity.Data.LoginRequest",
+        "Type": "Elite_Personal_Training.Controllers.LoginRequest",
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elite_Personal_Training.Controllers.AuthController",
+    "Method": "Logout",
+    "RelativePath": "api/Auth/logout",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -113,7 +123,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Elite_Personal_Training.Controllers.AuthController\u002BResetPasswordRequest",
+        "Type": "Elite_Personal_Training.Controllers.ResetPasswordRequest",
         "IsRequired": true
       }
     ],
@@ -129,7 +139,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Elite_Personal_Training.Models.SignUpRequest",
+        "Type": "Elite_Personal_Training.Controllers.SignUpRequest",
         "IsRequired": true
       }
     ],
@@ -206,6 +216,26 @@
   },
   {
     "ContainingType": "Elite_Personal_Training.Controllers.BookingController",
+    "Method": "GetAvailableClasses",
+    "RelativePath": "api/Booking/available-classes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elite_Personal_Training.Controllers.BookingController",
+    "Method": "GetAvailableOnlineSessions",
+    "RelativePath": "api/Booking/available-online-sessions",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elite_Personal_Training.Controllers.BookingController",
     "Method": "CancelBooking",
     "RelativePath": "api/Booking/cancel/{id}",
     "HttpMethod": "POST",
@@ -267,7 +297,7 @@
     "Parameters": [
       {
         "Name": "userId",
-        "Type": "System.String",
+        "Type": "System.Guid",
         "IsRequired": true
       }
     ],
@@ -283,7 +313,7 @@
     "Parameters": [
       {
         "Name": "userId",
-        "Type": "System.String",
+        "Type": "System.Guid",
         "IsRequired": true
       }
     ],
@@ -530,6 +560,22 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elite_Personal_Training.Controllers.MembershipController",
+    "Method": "GetUserMembership",
+    "RelativePath": "api/Membership/UserMembership/{userId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Guid",
         "IsRequired": true
       }
     ],

@@ -16,7 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
 // ✅ Register Identity Services
-builder.Services.AddIdentity<User, IdentityRole>()
+builder.Services.AddIdentity<User, IdentityRole<Guid>>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
@@ -32,9 +32,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 // ✅ Configure JWT authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-//var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
-
 
 builder.Services.AddAuthentication(options =>
 {
@@ -55,23 +53,15 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// ✅ Enable CORS with Allowed Origins (Secure)
+// ✅ Enable CORS with Allowed Origins
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
         policy => policy.WithOrigins("http://127.0.0.1:5500")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
-                        .AllowCredentials()); // ✅ Required for JWT authentication
+                        .AllowCredentials());
 });
-
-
-//builder.Services.AddControllers().AddJsonOptions(options =>
-//{
-//  options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-// options.JsonSerializerOptions.WriteIndented = true;
-//});
-
 
 // ✅ Add Controllers & API Documentation
 builder.Services.AddControllers()
@@ -80,7 +70,6 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.WriteIndented = true;
     });
-
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -94,9 +83,79 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowFrontend"); // ✅ CORS Applied Here
+app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+// ✅ Seed Admin User
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var userManager = services.GetRequiredService<UserManager<User>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+
+        // Ensure Admin role exists
+        if (!await roleManager.RoleExistsAsync("Admin"))
+        {
+            await roleManager.CreateAsync(new IdentityRole<Guid>("Admin"));
+            Console.WriteLine("✅ Admin role created");
+        }
+
+        // Check if admin exists
+        var adminEmail = "admin@elite.com";
+        var admin = await userManager.FindByEmailAsync(adminEmail);
+
+        if (admin == null)
+        {
+            admin = new User
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                EmailConfirmed = true,
+                FullName = "Elite Admin"
+            };
+
+            var result = await userManager.CreateAsync(admin, "Admin@123");
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(admin, "Admin");
+                Console.WriteLine("✅ Admin user created successfully!");
+            }
+            else
+            {
+                Console.WriteLine("❌ Failed to create admin user:");
+                foreach (var error in result.Errors)
+                {
+                    Console.WriteLine($"- {error.Description}");
+                }
+            }
+        }
+        else
+        {
+            // Reset password to ensure we know it
+            var token = await userManager.GeneratePasswordResetTokenAsync(admin);
+            var resetResult = await userManager.ResetPasswordAsync(admin, token, "Admin@123");
+
+            // Ensure admin has the role
+            if (!await userManager.IsInRoleAsync(admin, "Admin"))
+            {
+                await userManager.AddToRoleAsync(admin, "Admin");
+            }
+
+            Console.WriteLine(resetResult.Succeeded
+                ? "✅ Admin password reset to 'Admin@123'"
+                : "❌ Failed to reset admin password");
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "❌ An error occurred while seeding the admin user.");
+    }
+}
+
 app.MapControllers();
 app.Run();

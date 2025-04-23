@@ -70,6 +70,30 @@ namespace Elite_Personal_Training.Controllers
             return Ok(existingMembership);
         }
 
+        // GET: api/Membership/UserMembership/{userId}
+        [HttpGet("UserMembership/{userId}")]
+        public async Task<IActionResult> GetUserMembership(Guid userId)
+        {
+            var userMembership = await _context.Bookings
+                .Include(b => b.Membership)
+                .Where(b => b.UserId == userId && b.MembershipId != null)
+                .Select(b => new
+                {
+                    MembershipName = b.Membership.Name,
+                    StartDate = b.Membership.StartDate,
+                    ExpiryDate = b.Membership.ExpiryDate,
+                    Price = b.Membership.Price,
+                    Description = b.Membership.Description
+                })
+                .FirstOrDefaultAsync();
+
+            if (userMembership == null)
+                return NotFound(new { Message = "No active membership found for this user." });
+
+            return Ok(userMembership);
+        }
+
+
         // DELETE: api/Membership/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMembership(int id)

@@ -1,18 +1,21 @@
 ﻿using Elite_Personal_Training.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Elite_Personal_Training.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User>
+    public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
-       public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-           : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
         {
         }
 
-        // Add this parameterless constructor for design-time migrations
-        
+        // Parameterless constructor for design-time migrations
+        public ApplicationDbContext()
+        {
+        }
 
         public DbSet<Membership> Memberships { get; set; }
         public DbSet<Class> Classes { get; set; }
@@ -28,7 +31,17 @@ namespace Elite_Personal_Training.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // ✅ Ensure the decimal fields have correct precision
+            // Configure User entity with GUID primary key
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd()
+                    .HasConversion(
+                        v => v.ToString(),
+                        v => Guid.Parse(v));
+            });
+
+            // Configure decimal precision for monetary values
             modelBuilder.Entity<Booking>()
                 .Property(b => b.Price)
                 .HasColumnType("decimal(18,2)");
@@ -41,25 +54,59 @@ namespace Elite_Personal_Training.Data
                 .Property(o => o.Price)
                 .HasColumnType("decimal(18,2)");
 
-            // ✅ Prevent cascade delete on Payment -> Booking
+            // Configure relationship between Payment and Booking
             modelBuilder.Entity<Payment>()
                 .HasOne(p => p.Booking)
                 .WithMany(b => b.Payments)
                 .HasForeignKey(p => p.BookingId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            // Configure relationship between Booking and User with GUID conversion
+            modelBuilder.Entity<Booking>()
+                .Property(b => b.UserId)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => Guid.Parse(v));
+
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.User)
+                .WithMany(u => u.Bookings)
+                .HasForeignKey(b => b.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure relationship between SessionBooking and User with GUID conversion
+            modelBuilder.Entity<SessionBooking>()
+                .Property(sb => sb.UserId)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => Guid.Parse(v));
+
+            modelBuilder.Entity<SessionBooking>()
+                .HasOne(sb => sb.User)
+                .WithMany(u => u.SessionBookings)
+                .HasForeignKey(sb => sb.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Identity GUID configuration — NO additional conversions
+            modelBuilder.Entity<IdentityRole<Guid>>()
+                .Property(r => r.Id)
+                .ValueGeneratedOnAdd();
         }
 
-
-
-        // Add the OnConfiguring method here
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                // This is only used for migrations if not configured via DI
-                optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=EliteStudio;Trusted_Connection=True;TrustServerCertificate=True;");
+                optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=EliteStudio;Trusted_Connection=True;TrustServerCertificate=True;",
+                    sqlOptions =>
+                    {
+                        sqlOptions.MigrationsHistoryTable("__EFMigrationsHistory");
+                        sqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 5,
+                            maxRetryDelay: TimeSpan.FromSeconds(30),
+                            errorNumbersToAdd: null);
+                    });
             }
         }
-
     }
 }

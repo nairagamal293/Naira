@@ -21,7 +21,6 @@ namespace Elite_Personal_Training.Controllers
             _context = context;
         }
 
-        // 1. Get a specific booking by ID
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBooking(int id)
         {
@@ -36,42 +35,23 @@ namespace Elite_Personal_Training.Controllers
             return Ok(booking);
         }
 
-        // 2. Get all bookings for a specific user
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetBookingsByUser(string userId)
-        {
-            if (!Guid.TryParse(userId, out Guid userGuid))
-                return BadRequest("Invalid UserId format.");
 
-            var bookings = await _context.Bookings
-                .Where(b => b.UserId == userGuid)
-                .Include(b => b.Membership)
-                .Include(b => b.Class)
-                .Include(b => b.OnlineSession)
-                .Include(b => b.User)
-                .ToListAsync();
 
-            return Ok(bookings);
-        }
-
-        // 3. Create a new booking
         [HttpPost]
         public async Task<IActionResult> CreateBooking([FromBody] BookingRequest request)
         {
-            if (request == null || string.IsNullOrEmpty(request.UserId))
+            if (request == null || request.UserId == Guid.Empty)
                 return BadRequest("Invalid booking data.");
 
-            if (!Guid.TryParse(request.UserId, out Guid userGuid))
-                return BadRequest("Invalid UserId format.");
-
             bool alreadyBooked = await _context.Bookings.AnyAsync(b =>
-                b.UserId == userGuid &&
+                b.UserId == request.UserId &&  // Now using Guid comparison
                 (
                     (request.MembershipId != null && b.MembershipId == request.MembershipId) ||
                     (request.ClassId != null && b.ClassId == request.ClassId) ||
                     (request.OnlineSessionId != null && b.OnlineSessionId == request.OnlineSessionId)
                 ) &&
                 b.Status != "Cancelled");
+
 
             if (alreadyBooked)
                 return BadRequest("You already have an active booking for this item.");
@@ -84,9 +64,22 @@ namespace Elite_Personal_Training.Controllers
                     return BadRequest("Class is fully booked.");
             }
 
+            DateTime? membershipStart = null;
+            DateTime? membershipEnd = null;
+
+            if (request.MembershipId.HasValue)
+            {
+                var membership = await _context.Memberships.FindAsync(request.MembershipId.Value);
+                if (membership == null)
+                    return BadRequest("Membership not found.");
+
+                membershipStart = DateTime.UtcNow;
+                membershipEnd = membershipStart.Value.AddDays(membership.DurationInDays);
+            }
+
             var booking = new Booking
             {
-                UserId = userGuid,
+                UserId = request.UserId,
                 MembershipId = request.MembershipId,
                 ClassId = request.ClassId,
                 OnlineSessionId = request.OnlineSessionId,
@@ -97,7 +90,9 @@ namespace Elite_Personal_Training.Controllers
                 Phone = request.Phone,
                 Name = request.Name,
                 Email = request.Email,
-                BookingType = request.BookingType
+                BookingType = request.BookingType,
+                MembershipStartDate = membershipStart,
+                MembershipEndDate = membershipEnd
             };
 
             _context.Bookings.Add(booking);
@@ -106,7 +101,6 @@ namespace Elite_Personal_Training.Controllers
             return CreatedAtAction(nameof(GetBooking), new { id = booking.Id }, booking);
         }
 
-        // 4. Confirm a booking
         [HttpPost("confirm/{id}")]
         public async Task<IActionResult> ConfirmBooking(int id)
         {
@@ -123,7 +117,6 @@ namespace Elite_Personal_Training.Controllers
             return Ok(booking);
         }
 
-        // 5. Cancel a booking
         [HttpPost("cancel/{id}")]
         public async Task<IActionResult> CancelBooking(int id)
         {
@@ -140,7 +133,6 @@ namespace Elite_Personal_Training.Controllers
             return Ok(booking);
         }
 
-        // 6. Filter bookings by status or type
         [HttpGet("filter")]
         public async Task<IActionResult> FilterBookings([FromQuery] string? status, [FromQuery] string? type)
         {
@@ -161,7 +153,6 @@ namespace Elite_Personal_Training.Controllers
             return Ok(bookings);
         }
 
-        // 7. Update booking details
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBooking(int id, [FromBody] BookingRequest request)
         {
@@ -181,7 +172,6 @@ namespace Elite_Personal_Training.Controllers
             return Ok(booking);
         }
 
-        // 8. Delete a booking
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
@@ -193,20 +183,67 @@ namespace Elite_Personal_Training.Controllers
             return NoContent();
         }
 
-        // 9. Get the next session for a user
-        [HttpGet("next-session/{userId}")]
-        public async Task<IActionResult> GetNextSession(string userId)
-        {
-            if (!Guid.TryParse(userId, out Guid userGuid))
-                return BadRequest("Invalid UserId format.");
 
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetBookingsByUser(Guid userId)
+        {
+            var bookings = await _context.Bookings
+                .Where(b => b.UserId == userId)
+                .Include(b => b.Membership)
+                .Include(b => b.Class)
+                .Include(b => b.OnlineSession)
+                .OrderByDescending(b => b.BookingDate)
+                .ToListAsync();
+
+            if (!bookings.Any())
+            {
+                return NotFound($"No bookings found for user with ID: {userId}");
+            }
+
+            return Ok(bookings);
+        }
+
+        [HttpGet("next-session/{userId}")]
+        public async Task<IActionResult> GetNextSession(Guid userId)  // Changed from string to Guid
+        {
             var nextSession = await _context.Bookings
-                .Where(b => b.UserId == userGuid && b.Status != "Cancelled" && b.BookingDate >= DateTime.UtcNow)
+                .Where(b => b.UserId == userId && b.Status != "Cancelled" && b.BookingDate >= DateTime.UtcNow)
                 .OrderBy(b => b.BookingDate)
                 .FirstOrDefaultAsync();
 
             if (nextSession == null) return NotFound("No upcoming sessions found.");
             return Ok(nextSession);
+        }
+
+        [HttpGet("available-classes")]
+        public async Task<IActionResult> GetAvailableClasses()
+        {
+            var now = DateTime.UtcNow.Date;
+
+            var availableClasses = await _context.Classes
+                .Where(c =>
+                    c.Date >= now &&
+                    !_context.Bookings
+                        .Where(b => b.ClassId == c.Id && b.Status != "Cancelled")
+                        .GroupBy(b => b.ClassId)
+                        .Select(g => new { ClassId = g.Key, Count = g.Count() })
+                        .Any(g => g.ClassId == c.Id && g.Count >= c.Capacity)
+                )
+                .ToListAsync();
+
+            return Ok(availableClasses);
+        }
+
+        [HttpGet("available-online-sessions")]
+        public async Task<IActionResult> GetAvailableOnlineSessions()
+        {
+            var now = DateTime.UtcNow;
+
+            var availableSessions = await _context.OnlineSessions
+                .Where(s => s.SessionDateTime > now)
+                .ToListAsync();
+
+            return Ok(availableSessions);
         }
     }
 }

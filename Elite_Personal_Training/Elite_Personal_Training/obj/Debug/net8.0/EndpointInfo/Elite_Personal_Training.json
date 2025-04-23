@@ -221,6 +221,18 @@
         }
       }
     },
+    "/api/Auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Booking/{id}": {
       "get": {
         "tags": [
@@ -295,28 +307,6 @@
             "schema": {
               "type": "integer",
               "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Booking/user/{userId}": {
-      "get": {
-        "tags": [
-          "Booking"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
             }
           }
         ],
@@ -432,6 +422,29 @@
         }
       }
     },
+    "/api/Booking/user/{userId}": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Booking/next-session/{userId}": {
       "get": {
         "tags": [
@@ -443,9 +456,34 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Booking/available-classes": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Booking/available-online-sessions": {
+      "get": {
+        "tags": [
+          "Booking"
         ],
         "responses": {
           "200": {
@@ -839,6 +877,29 @@
             "schema": {
               "type": "integer",
               "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Membership/UserMembership/{userId}": {
+      "get": {
+        "tags": [
+          "Membership"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -1894,6 +1955,11 @@
             "type": "string",
             "nullable": true
           },
+          "paymentDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "payments": {
             "type": "array",
             "items": {
@@ -1919,16 +1985,30 @@
           },
           "bookingType": {
             "$ref": "#/components/schemas/BookingType"
+          },
+          "membershipStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "membershipEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false
       },
       "BookingRequest": {
+        "required": [
+          "userId"
+        ],
         "type": "object",
         "properties": {
           "userId": {
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
             "type": "string",
-            "nullable": true
+            "format": "uuid"
           },
           "membershipId": {
             "type": "integer",
@@ -2158,10 +2238,6 @@
         "additionalProperties": false
       },
       "LoginRequest": {
-        "required": [
-          "email",
-          "password"
-        ],
         "type": "object",
         "properties": {
           "email": {
@@ -2169,14 +2245,6 @@
             "nullable": true
           },
           "password": {
-            "type": "string",
-            "nullable": true
-          },
-          "twoFactorCode": {
-            "type": "string",
-            "nullable": true
-          },
-          "twoFactorRecoveryCode": {
             "type": "string",
             "nullable": true
           }
@@ -2260,6 +2328,10 @@
             "minLength": 1,
             "type": "string",
             "format": "uri"
+          },
+          "capacity": {
+            "type": "integer",
+            "format": "int32"
           },
           "price": {
             "type": "number",
@@ -2475,8 +2547,8 @@
             "format": "int32"
           },
           "userId": {
-            "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "user": {
             "$ref": "#/components/schemas/User"
@@ -2500,25 +2572,19 @@
         "additionalProperties": false
       },
       "SignUpRequest": {
-        "required": [
-          "email",
-          "fullName",
-          "password"
-        ],
         "type": "object",
         "properties": {
           "fullName": {
-            "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "email": {
-            "minLength": 1,
             "type": "string",
-            "format": "email"
+            "nullable": true
           },
           "password": {
-            "minLength": 6,
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2572,6 +2638,13 @@
               "$ref": "#/components/schemas/OnlineSession"
             },
             "nullable": true
+          },
+          "classes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Class"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2581,7 +2654,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "nullable": true
+            "format": "uuid"
           },
           "userName": {
             "type": "string",
@@ -2652,6 +2725,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/SessionBooking"
+            },
+            "nullable": true
+          },
+          "bookings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Booking"
             },
             "nullable": true
           }
