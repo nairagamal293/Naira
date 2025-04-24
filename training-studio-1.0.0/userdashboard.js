@@ -49,7 +49,10 @@ async function loadUserBookings(userId) {
         bookingsTable.innerHTML = upcomingBookings.length > 0 ?
             upcomingBookings.map(booking => `
                 <tr>
-                    <td>${new Date(booking.bookingDate).toLocaleDateString()}</td>
+                    <td>${booking.membershipStartDate ? new Date(booking.membershipStartDate).toLocaleDateString() : 
+                        new Date(booking.bookingDate).toLocaleDateString()}</td>
+                    <td>${booking.membershipEndDate ? new Date(booking.membershipEndDate).toLocaleDateString() : 
+                        'N/A'}</td>
                     <td>${booking.class?.startTime || booking.onlineSession?.startTime || 'N/A'}</td>
                     <td>
                         <strong>${booking.class?.name || booking.onlineSession?.title || 'N/A'}</strong>
@@ -65,11 +68,11 @@ async function loadUserBookings(userId) {
                     </td>
                 </tr>
             `).join('') :
-            `<tr><td colspan="6" class="text-center">No upcoming bookings found</td></tr>`;
+            `<tr><td colspan="7" class="text-center">No upcoming bookings found</td></tr>`;
     } catch (error) {
         console.error('Error loading bookings:', error);
         document.getElementById('upcomingBookings').innerHTML =
-            `<tr><td colspan="6" class="text-center text-danger">Error loading bookings</td></tr>`;
+            `<tr><td colspan="7" class="text-center text-danger">Error loading bookings</td></tr>`;
     }
 }
 

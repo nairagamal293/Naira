@@ -1,265 +1,528 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - Elite Studio</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Payment - Elite Studio</title>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="index.css">
+
+    <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
+
+    <link rel="stylesheet" href="assets/css/templatemo-training-studio.css">
+
     <style>
         :root {
-            --primary-color: rgb(156, 13, 13);
-            --secondary-color: #f8f9fa;
+            --primary: #9c0d0d;
+            --primary-light: #c21818;
+            --secondary: #d4a017;
+            --dark: #232d39;
+            --light: #0d141c;
+            --gray: #7a7a7a;
+            --border: #e9ecef;
         }
         
         body {
-            background-color: #f7f7f7;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
         }
         
-        .checkout-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 15px;
-        }
-        
-        .checkout-card {
+
+        .payment-container {
+            margin-top: 400px;
+            max-width: 800px;
+            margin: 80px auto;
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             overflow: hidden;
         }
         
-        .checkout-header {
-            background-color: var(--primary-color);
+        .payment-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
-            padding: 20px;
+            padding: 30px;
             text-align: center;
         }
         
-        .checkout-header h2 {
-            margin: 0;
-            font-weight: 700;
+        .payment-header h2 {
+            font-weight: 600;
+            margin-bottom: 5px;
         }
         
-        .checkout-body {
-            padding: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
+        .payment-body {
+            padding: 40px;
         }
         
-        .booking-summary {
-            flex: 1;
-            min-width: 300px;
+        .form-section {
+            margin-bottom: 30px;
         }
         
-        .payment-form {
-            flex: 1;
-            min-width: 300px;
-        }
-        
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .summary-item:last-child {
-            border-bottom: none;
-        }
-        
-        .summary-total {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-        
-        .payment-method {
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark);
             margin-bottom: 20px;
-        }
-        
-        .payment-option {
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
         }
         
-        .payment-option:hover {
-            border-color: var(--primary-color);
-        }
-        
-        .payment-option.active {
-            border-color: var(--primary-color);
-            background-color: rgba(156, 13, 13, 0.05);
-        }
-        
-        .payment-option input {
+        .section-title i {
             margin-right: 10px;
-        }
-        
-        .payment-option img {
-            height: 30px;
-            margin-left: auto;
+            color: var(--primary);
         }
         
         .form-group {
             margin-bottom: 20px;
         }
         
-        .form-group label {
+        .form-label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
         }
         
         .form-control {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 15px;
+            transition: all 0.3s;
         }
         
-        .card-element {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: white;
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(156,13,13,0.1);
+            outline: none;
+        }
+        
+        .payment-method-select {
+            position: relative;
+        }
+        
+        .payment-method-select select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 15px;
+            padding-right: 40px;
+        }
+        
+        .payment-method-icon {
+            position: absolute;
+            right: 45px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 24px;
+        }
+        
+        .card-icons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .card-icons img {
+            height: 24px;
+            opacity: 0.6;
+        }
+        
+        .card-icons img.active {
+            opacity: 1;
+        }
+        
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .row .form-group {
+            flex: 1;
         }
         
         .btn-pay {
-            background-color: var(--primary-color);
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
             color: white;
             border: none;
-            padding: 12px 30px;
+            border-radius: 6px;
             font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
             font-weight: 600;
-            transition: background 0.3s ease;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
         }
         
         .btn-pay:hover {
-            background-color: rgba(156, 13, 13, 0.9);
+            background: linear-gradient(to right, var(--primary-light), var(--primary));
+            box-shadow: 0 5px 15px rgba(156,13,13,0.3);
         }
         
-        .secure-payment {
+        .summary-item {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 20px;
-            color: #666;
-            font-size: 14px;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed var(--border);
         }
         
-        .secure-payment i {
-            color: #28a745;
-            margin-right: 5px;
+        .summary-total {
+            font-weight: 700;
+            font-size: 18px;
+            margin-top: 15px;
         }
         
         @media (max-width: 768px) {
-            .checkout-body {
+            .payment-container {
+                margin: 40px 20px;
+            }
+            
+            .payment-body {
+                padding: 25px;
+            }
+            
+            .row {
                 flex-direction: column;
+                gap: 0;
             }
         }
     </style>
 </head>
 <body>
-
-<header class="header-area header-sticky">
-    <div class="container">
-        <nav class="main-nav">
-            <a href="index.html" class="logo">Elite<em> Studio</em></a>
-            <ul class="nav auth-links"></ul>
-        </nav>
-    </div>
-</header>
-
-<!-- payment.html -->
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Mock Payment Gateway</h4>
-                </div>
-                <div class="card-body">
-                    <form id="paymentForm">
-                        <div class="form-group">
-                            <label for="cardNumber">Card Number</label>
-                            <input type="text" class="form-control" id="cardNumber" placeholder="4242 4242 4242 4242" required>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="expiryDate">Expiry Date</label>
-                                <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="cvv">CVV</label>
-                                <input type="text" class="form-control" id="cvv" placeholder="123" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="amount">Amount</label>
-                            <input type="text" class="form-control" id="amount" readonly value="50.00">
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">Process Payment</button>
-                        <button type="button" id="btnFail" class="btn btn-danger btn-block mt-2">Simulate Failed Payment</button>
-                    </form>
+    <!-- Header (Same as index page) -->
+    <header class="header-area header-sticky">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <a href="index.html" class="logo">Elite<em> Studio</em></a>
+                        <ul class="nav">
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="classes.html">Classes</a></li>
+                            <li><a href="index.html#schedule">Schedules</a></li>
+                            <li><a href="membership.html">Membership</a></li>
+                            <li><a href="index.html#online-sessions">Online</a></li>
+                            <li><a href="contact.html">Contact</a></li> 
+                            <li class="auth-links">
+                                <!-- Populated by JavaScript -->
+                            </li>
+                        </ul>      
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+                    </nav>
                 </div>
             </div>
         </div>
+    </header>
+
+    <!-- Payment Container -->
+    <div class="payment-container">
+       
+        <div class="payment-body">
+            <form id="paymentForm">
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-user"></i>
+                        Personal Information
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ID Number</label>
+                            <input type="text" class="form-control" id="idNumber" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payment Method -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-credit-card"></i>
+                        Payment Method
+                    </div>
+                    
+                    <div class="form-group payment-method-select">
+                        <label class="form-label">Select Payment Method</label>
+                        <select class="form-control" id="paymentMethod" required>
+                            <option value="mada">Mada</option>
+                            <option value="creditcard">Credit/Debit Card</option>
+                            <option value="tabby">Tabby (Pay in 4)</option>
+                            <option value="tamara">Tamara (Installments)</option>
+                            <option value="cash">Cash Payment</option>
+                        </select>
+                        <img src="assets/images/mada-logo.png" alt="Mada" class="payment-method-icon" id="paymentIcon">
+                    </div>
+                    
+                    <!-- Credit Card Fields (Shown when credit card selected) -->
+                    <div id="creditCardFields" style="display: none;">
+                        <div class="form-group">
+                            <label class="form-label">Card Number</label>
+                            <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="form-label">Expiry Date</label>
+                                <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">CVV</label>
+                                <input type="text" class="form-control" id="cvv" placeholder="123">
+                            </div>
+                        </div>
+                        
+                        <div class="card-icons">
+                            <img src="assets/images/visa.png" alt="Visa" id="visaIcon">
+                            <img src="assets/images/mastercard.png" alt="Mastercard" id="mastercardIcon">
+                            <img src="assets/images/amex.png" alt="American Express" id="amexIcon">
+                            <img src="assets/images/mada-card.png" alt="Mada" id="madaCardIcon">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Order Summary -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-receipt"></i>
+                        Order Summary
+                    </div>
+                    
+                    <div class="summary-item">
+                        <span>3-Month Membership</span>
+                        <span>900 SAR</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>VAT (15%)</span>
+                        <span>135 SAR</span>
+                    </div>
+                    <div class="summary-item summary-total">
+                        <span>Total Amount</span>
+                        <span>1,035 SAR</span>
+                    </div>
+                </div>
+                
+                <!-- Terms and Submit -->
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="termsCheck" required>
+                        <label class="form-check-label" for="termsCheck">I agree to the <a href="#">Terms & Conditions</a></label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-pay">
+                    <i class="fas fa-lock"></i> Complete Secure Payment
+                </button>
+            </form>
+        </div>
     </div>
-</div>
-<footer>
-    <div class="container">
-        <p style="text-align: center;">&copy; 2025 Elite Studio. All Rights Reserved.</p>
-    </div>
-</footer>
 
-<script>
+    <!-- Footer (Same as index page) -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-section">
+                        <h4>About Elite Studio</h4>
+                        <p>Premier women's fitness center in Saudi Arabia offering world-class training facilities.</p>
+                        <div class="social-icons">
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-snapchat"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="classes.html">Classes</a></li>
+                            <li><a href="membership.html">Membership</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-section">
+                        <h4>Contact</h4>
+                        <ul class="contact-info">
+                            <li><i class="fas fa-map-marker-alt"></i> Riyadh, Saudi Arabia</li>
+                            <li><i class="fas fa-phone"></i> +966 12 345 6789</li>
+                            <li><i class="fas fa-envelope"></i> info@elitestudio.com</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-section">
+                        <h4>Newsletter</h4>
+                        <form class="newsletter-form">
+                            <input type="email" placeholder="Your Email">
+                            <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Elite Studio. For women only.</p>
+            </div>
+        </div>
+    </footer>
 
-
-document.getElementById('paymentForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    processPayment(true); // Simulate successful payment
-});
-
-document.getElementById('btnFail').addEventListener('click', function() {
-    processPayment(false); // Simulate failed payment
-});
-
-function processPayment(isSuccess) {
-    // Show loading
-    const btn = document.querySelector('#paymentForm button[type="submit"]');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
-    
-    // Simulate API call delay
-    setTimeout(() => {
-        if(isSuccess) {
-            // Success case
-            alert('Payment successful! Transaction ID: MOCK' + Math.random().toString(36).substr(2, 9).toUpperCase());
-            // Redirect or update UI as needed
-            window.location.href = '/booking-confirmation?status=success';
-        } else {
-            // Failure case
-            alert('Payment failed: Insufficient funds');
-            // Reset form
-            btn.disabled = false;
-            btn.innerHTML = 'Process Payment';
+    <!-- Scripts -->
+    <script src="assets/js/jquery-2.1.0.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Check auth status and populate user data if logged in
+            checkAuthStatus();
+            
+            // Payment method change handler
+            const paymentMethod = document.getElementById('paymentMethod');
+            const paymentIcon = document.getElementById('paymentIcon');
+            const creditCardFields = document.getElementById('creditCardFields');
+            
+            paymentMethod.addEventListener('change', function() {
+                // Update payment icon
+                const method = this.value;
+                let iconSrc = 'assets/images/mada-logo.png';
+                
+                switch(method) {
+                    case 'creditcard':
+                        iconSrc = 'assets/images/credit-card.png';
+                        creditCardFields.style.display = 'block';
+                        break;
+                    case 'tabby':
+                        iconSrc = 'assets/images/tabby-logo.png';
+                        creditCardFields.style.display = 'none';
+                        break;
+                    case 'tamara':
+                        iconSrc = 'assets/images/tamara-logo.png';
+                        creditCardFields.style.display = 'none';
+                        break;
+                    default:
+                        creditCardFields.style.display = 'none';
+                }
+                
+                paymentIcon.src = iconSrc;
+            });
+            
+            // Form submission
+            const paymentForm = document.getElementById('paymentForm');
+            paymentForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validate form
+                if (!this.checkValidity()) {
+                    e.stopPropagation();
+                    this.classList.add('was-validated');
+                    return;
+                }
+                
+                // Process payment
+                const paymentMethod = document.getElementById('paymentMethod').value;
+                alert(`Processing ${paymentMethod} payment...\n\nIn a real implementation, this would connect to the payment gateway.`);
+                
+                // Here you would:
+                // 1. Collect all form data
+                // 2. Send to your payment processor
+                // 3. Handle the response
+                // 4. Redirect to success/failure page
+            });
+            
+            // Card number formatting
+            const cardNumber = document.getElementById('cardNumber');
+            if (cardNumber) {
+                cardNumber.addEventListener('input', function(e) {
+                    this.value = this.value.replace(/\s/g, '').replace(/(\d{4})/g, '$1 ').trim();
+                });
+            }
+        });
+        
+        // Auth functions (same as index page)
+        const auth = {
+            isLoggedIn: () => localStorage.getItem("authToken") !== null,
+            currentUser: () => {
+                try {
+                    const user = JSON.parse(localStorage.getItem("userData")) || null;
+                    if (user) {
+                        // Pre-fill form if user is logged in
+                        document.getElementById('fullName').value = user.fullName || '';
+                        document.getElementById('email').value = user.email || '';
+                        document.getElementById('phone').value = user.phone || '';
+                    }
+                    return user;
+                } catch (e) {
+                    console.error("Error parsing user data:", e);
+                    return null;
+                }
+            },
+            logout: () => {
+                localStorage.removeItem("authToken");
+                localStorage.removeItem("userData");
+                window.location.href = "index.html";
+            }
+        };
+        
+        function checkAuthStatus() {
+            const authLinks = document.querySelector(".auth-links");
+            const user = auth.currentUser();
+        
+            if (authLinks) {
+                if (auth.isLoggedIn()) {
+                    authLinks.innerHTML = `
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle"></i> ${user?.fullName || user?.username || 'Account'}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+                                <li><a class="dropdown-item" href="Userdashboard.html">Dashboard</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" onclick="auth.logout()">Logout</a></li>
+                            </ul>
+                        </li>
+                    `;
+        
+                    // Initialize dropdown
+                    new bootstrap.Dropdown(document.getElementById('userDropdown'));
+                } else {
+                    authLinks.innerHTML = `
+                        <li class="main-button">
+                            <a href="SignUp.html">Sign Up</a>
+                        </li>
+                    `;
+                }
+            }
         }
-    }, 2000);
-}
-</script>
-
+    </script>
 </body>
 </html>

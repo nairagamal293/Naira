@@ -852,7 +852,8 @@ schedule
 */
 /* Schedule Section Styles */
 #schedule {
-    padding: 100px 0;
+    padding-top: 5px ;
+    padding-bottom: 50px;
     background: #f8f9fa;
     position: relative;
 }
@@ -1350,3 +1351,8 @@ responsive
     margin-left: 130px;
   }
 }
+
+
+
+
+

@@ -28,7 +28,216 @@ https://templatemo.com/tm-548-training-studio
 
     
     </head>
+    <style>
+
+      /* Logo Styles */
+.logo {
+    display: flex;
+    align-items: center;
+    height: 80px;
+    line-height: 80px;
+}
+
+.logo-image {
+    height: 80px;
+    margin-right: 10px;
+}
+
+.logo-text {
+    font-size: 32px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.background-header .logo-text {
+    color: #232d39 !important;
+}
+
+.logo-text em {
+    font-style: normal;
+    color: rgb(156, 13, 13);
+    font-weight: 900;
+}
+
+/* Adjust header for mobile */
+@media (max-width: 767px) {
+    .logo {
+        margin-left: 0;
+    }
     
+    /* .logo-image {
+        height: 40px;
+    } */
+    
+    .logo-text {
+        font-size: 24px;
+    }
+}
+        /* Online Presence Section */
+.online-presence-section {
+  padding: 80px 0;
+  background-color: #f9f9f9;
+  position: relative;
+}
+
+.section-intro {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 60px;
+}
+
+.section-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #232d39;
+  margin-bottom: 15px;
+}
+
+.section-title span {
+  color: #9c0d0d;
+}
+
+.divider {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(to right, #9c0d0d, #d4a017);
+  margin: 0 auto 20px;
+}
+
+.section-description {
+  font-size: 18px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-bottom: 60px;
+}
+
+.service-card {
+  background: white;
+  padding: 40px 30px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+  transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+}
+
+.service-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background: linear-gradient(135deg, rgba(156,13,13,0.1) 0%, rgba(212,160,23,0.1) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-icon i {
+  font-size: 32px;
+  color: #9c0d0d;
+}
+
+.service-card h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #232d39;
+}
+
+.service-card p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.platform-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.feature-image img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.feature-content h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #232d39;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+.feature-list li {
+  margin-bottom: 12px;
+  color: #555;
+  font-size: 16px;
+  position: relative;
+  padding-left: 30px;
+}
+
+.feature-list i {
+  color: #9c0d0d;
+  position: absolute;
+  left: 0;
+  top: 3px;
+}
+
+.learn-more-link {
+  color: #9c0d0d;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.learn-more-link i {
+  margin-left: 8px;
+  transition: transform 0.3s ease;
+}
+
+.learn-more-link:hover i {
+  transform: translateX(5px);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .platform-features {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .feature-image {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 28px;
+  }
+  
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+}
+    </style>
     <body>
     
     <!-- ***** Preloader Start ***** -->
@@ -52,7 +261,10 @@ https://templatemo.com/tm-548-training-studio
                 <div class="col-12">
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
-                        <a href="index.html" class="logo">Elite<em> Studio</em></a>
+                        <a href="index.html" class="logo">
+                          <img src="assets/images/elite_logo-removebg-preview.png" alt="Elite Studio Logo" class="logo-image">
+                          <!-- <span class="logo-text">Elite<em> Studio</em></span> -->
+                      </a>
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
                         <ul class="nav">
@@ -60,7 +272,7 @@ https://templatemo.com/tm-548-training-studio
                             <li class="scroll-to-section"><a href="about.html">About</a></li>
                             <li class="scroll-to-section"><a href="classes.html">Classes</a></li>
                             <li class="scroll-to-section"><a href="#schedule">Schedules</a></li>
-                            <li class="scroll-to-section"><a href="#membership">Membership</a></li>
+                            <li class="scroll-to-section"><a href="membership.html">Membership</a></li>
                             <li class="scroll-to-section"><a href="#online-sessions">Online</a></li>
                             <li class="scroll-to-section"><a href="contact.html">Contact</a></li> 
                             <li class="auth-links">
@@ -299,7 +511,7 @@ https://templatemo.com/tm-548-training-studio
                     </div>
                     <div class="equipment-content">
                         <h4>Strength Training</h4>
-                        <p>Professional-grade weight machines, free weights, and functional training equipment to build muscle and improve strength.</p>
+                        <p>Our premium cardio equipment includes treadmills, ellipticals, stair climbers, and rowing machines from top brands like Life Fitness and Technogym.</p>
                         <div class="equipment-features">
                             <span><i class="fas fa-dumbbell"></i> Free Weights</span>
                             <span><i class="fas fa-cogs"></i> Multi-Station Machines</span>
@@ -316,7 +528,7 @@ https://templatemo.com/tm-548-training-studio
                     </div>
                     <div class="equipment-content">
                         <h4>Functional Training</h4>
-                        <p>Specialized equipment for functional training including TRX systems, battle ropes, kettlebells, and plyometric boxes.</p>
+                        <p>Specialized equipment for functional training including TRX systems, battle ropes, kettlebells, and plyometric boxes.Our premium cardio equipment includes treadmills, ellipticals, stair climbers, and rowing machines from top brands like Life Fitness.</p>
                         <div class="equipment-features">
                             <span><i class="fas fa-fire"></i> High Intensity</span>
                             <span><i class="fas fa-running"></i> Full Body Workouts</span>
@@ -432,25 +644,65 @@ https://templatemo.com/tm-548-training-studio
 </section>
 
     <!-- Membership Section -->
-<section class="section" id="membership" >
+
+
+
+
+
+
+<!-- Online Training Presence Section -->
+<section class="online-presence-section">
     <div class="container">
-        <div class="section-heading text-center">
-            <h2 class="section-title">Elevate Your Fitness Journey</h2>
-            <div class="divider">
-                
-            </div>
-            <p class="section-subtitle">Select the perfect plan tailored to your ambitions. Transform your body with our expert guidance.</p>
+      <div class="section-intro">
+        <h2 class="section-title">Elevate Your Training <span>Online</span></h2>
+        <div class="divider"></div>
+        <p class="section-description">Access world-class coaching through our digital training platform anytime, anywhere</p>
+      </div>
+  
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="fas fa-laptop"></i>
+          </div>
+          <h3>Virtual Coaching</h3>
+          <p>Personalized training sessions with our certified coaches via video call</p>
         </div>
-        
-        <div class="row membership-cards">
-            <!-- Cards will be inserted here -->
+  
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3>Live Group Classes</h3>
+          <p>Interactive fitness classes streamed in real-time with our top instructors</p>
         </div>
-        
-        <div class="membership-cta">
-            <p>Not sure which plan is right for you? <a href="contact.html">Contact our fitness advisors</a></p>
+  
+        <div class="service-card">
+          <div class="service-icon">
+            <i class="fas fa-play-circle"></i>
+          </div>
+          <h3>On-Demand Library</h3>
+          <p>Hundreds of professional workout videos available 24/7</p>
         </div>
+      </div>
+  
+      <div class="platform-features">
+        <div class="feature-image">
+          <img src="assets/images/istockphoto-1304571085-612x612.jpg" alt="Online Training Platform Preview">
+        </div>
+        <div class="feature-content">
+          <h3>Our Digital Training Platform</h3>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> Seamless scheduling and session management</li>
+            <li><i class="fas fa-check"></i> Progress tracking and performance analytics</li>
+            <li><i class="fas fa-check"></i> Custom workout plans tailored to your goals</li>
+            <li><i class="fas fa-check"></i> Nutrition guidance and lifestyle coaching</li>
+            <li><i class="fas fa-check"></i> Supportive community of members</li>
+          </ul>
+          <a href="#" class="learn-more-link">Learn more about online training <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
     </div>
-</section>
+  </section>    
 
 <style>
    
@@ -458,62 +710,7 @@ https://templatemo.com/tm-548-training-studio
 <!-- ***** Membership Section Ends ***** -->
 
 <!-- ***** Online Sessions Section Starts ***** -->
-<section class="section" id="online-sessions">
-    <div class="container">
-        <div class="section-heading text-center">
-            <h2>Online <em>Sessions</em></h2>
-            <img src="assets/images/line-dec.png" alt="waves">
-            <p>Join live or on-demand fitness sessions from the comfort of your home.</p>
-        </div>
 
-        <!-- Filter Section (Can be Functional Later) -->
-        <div class="filter-section">
-            <div class="row">
-                <div class="col-md-3">
-                    <label>Category</label>
-                    <select class="form-select">
-                        <option>All</option>
-                        <option>Yoga</option>
-                        <option>Pilates</option>
-                        <option>Strength Training</option>
-                        <option>Cardio</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label>Duration</label>
-                    <select class="form-select">
-                        <option>All</option>
-                        <option>30 mins</option>
-                        <option>45 mins</option>
-                        <option>60 mins</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label>Trainer</label>
-                    <select class="form-select">
-                        <option>All</option>
-                        <option>Bret Bowers</option>
-                        <option>Hector Daigle</option>
-                        <option>Paul Newman</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label>Sort By</label>
-                    <select class="form-select">
-                        <option>Newest First</option>
-                        <option>Oldest First</option>
-                        <option>Popular</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- 🔹 Dynamic Sessions List (To be filled by JS) -->
-        <div class="row" id="sessions-container">
-            <p style="text-align:center; width:100%;">Loading sessions...</p>
-        </div>
-    </div>
-</section>
 <!-- ***** Online Sessions Section Ends ***** -->
 
     
