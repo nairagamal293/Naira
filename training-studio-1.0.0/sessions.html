@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Online Sessions - Elite Studio</title>
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
+    <link rel="stylesheet" href="assets/css/templatemo-training-studio.css">
+      <!-- Additional CSS Files -->
+      <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+      <link rel="stylesheet" type="text/css" href="index.css">
+  
+      <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
+  
+      <link rel="stylesheet" href="assets/css/templatemo-training-studio.css">
+  
+      
+    <style>
+        
+.logo {
+    display: flex;
+    align-items: center;
+    height: 80px;
+    line-height: 80px;
+}
+
+.logo-image {
+    height: 80px;
+    margin-right: 10px;
+}
+
+.logo-text {
+    font-size: 32px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.background-header .logo-text {
+    color: #232d39 !important;
+}
+
+.logo-text em {
+    font-style: normal;
+    color: rgb(156, 13, 13);
+    font-weight: 900;
+}
+
+/* Adjust header for mobile */
+@media (max-width: 767px) {
+    .logo {
+        margin-left: 0;
+    }
+}
+        /* Online Sessions Hero Section */
+        .online-hero {
+            background: linear-gradient(135deg, #050404 0%, rgba(35,45,57,0.9) 40%), url('assets/images/istockphoto-1304571085-612x612.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 150px 0 100px;
+            text-align: center;
+            color: white;
+        }
+        
+        .online-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .online-hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        /* Platform Features Section */
+        .platform-features {
+            padding: 80px 0;
+            background: #f9f9f9;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 40px 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            height: 100%;
+            border-top: 4px solid #9c0d0d;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 50px;
+            color: #9c0d0d;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #232d39;
+        }
+        
+        /* Session Types Section */
+        .session-types {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .session-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            border-left: 4px solid #9c0d0d;
+        }
+        
+        .session-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+        
+        .session-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .session-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .session-card:hover .session-image img {
+            transform: scale(1.05);
+        }
+        
+        .session-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #9c0d0d;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .session-content {
+            padding: 25px;
+        }
+        
+        .session-content h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .session-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .session-meta span {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #777;
+        }
+        
+        .session-meta i {
+            margin-right: 5px;
+            color: #9c0d0d;
+        }
+        
+        /* How It Works Section */
+        .how-it-works {
+            padding: 80px 0;
+            background: linear-gradient(135deg,#050404 0%, rgba(35,45,57,0.9) 70%), url('assets/images/750.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            position: relative;
+        }
+        
+        .step-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 4px solid #d4a017;
+            transition: all 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #d4a017;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        /* Testimonials Section */
+        .testimonials {
+            padding: 80px 0;
+            background: #f9f9f9;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .testimonial-card:before {
+            content: "";
+            font-size: 80px;
+            color: rgba(156,13,13,0.1);
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            line-height: 1;
+        }
+        
+        .testimonial-content {
+            margin-bottom: 20px;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+        
+        .author-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .author-info h5 {
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+        
+        .author-info p {
+            font-size: 0.8rem;
+            color: #777;
+            margin-bottom: 0;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .online-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .online-hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ***** Preloader Start ***** -->
+    <div id="js-preloader" class="js-preloader">
+        <div class="preloader-inner">
+            <span class="dot"></span>
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+    <!-- ***** Preloader End ***** -->
+    
+    <!-- ***** Header Area Start ***** -->
+    <header class="header-area header-sticky">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="main-nav">
+                        <!-- ***** Logo Start ***** -->
+                        <a href="index.html" class="logo">
+                            <img src="assets/images/elite_logo-removebg-preview.png" alt="Elite Studio Logo" class="logo-image">
+                        </a>
+                        <!-- ***** Logo End ***** -->
+                        <!-- ***** Menu Start ***** -->
+                        <ul class="nav">
+                            <li class="scroll-to-section"><a href="index.html">Home</a></li>
+                            <li class="scroll-to-section"><a href="about.html">About</a></li>
+                            <li class="scroll-to-section"><a href="classes.html">Classes</a></li>
+                            <li class="scroll-to-section"><a href="index.html#schedule">Schedules</a></li>
+                            <li class="scroll-to-section"><a href="membership.html">Membership</a></li>
+                            <li class="scroll-to-section"><a href="#top" class="active">Online</a></li>
+                            <li class="scroll-to-section"><a href="contact.html">Contact</a></li> 
+                            <li class="auth-links">
+                                <!-- Will be populated by JavaScript -->
+                            </li>
+                        </ul>      
+                        <a class='menu-trigger'>
+                            <span>Menu</span>
+                        </a>
+                        <!-- ***** Menu End ***** -->
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- ***** Header Area End ***** -->
+
+    <!-- Online Sessions Hero Section -->
+    <section class="online-hero" id="top">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <span class="hero-badge"><i class="fas fa-globe"></i> Available Worldwide</span>
+                    <h1>Online <em>Training</em> Sessions</h1>
+                    <p>Get professional training from anywhere in the world with our live and on-demand online sessions. Train with our elite coaches without leaving your home.</p>
+                    <div class="main-button scroll-to-section">
+                        <a href="#session-types" class="btn btn-primary">Explore Sessions</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platform Features Section -->
+    <section class="platform-features">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    <div class="section-heading">
+                        <h2>Our <em>Platform</em></h2>
+                        <img src="assets/images/line-dec.png" alt="waves">
+                        <p>Experience the future of fitness with our state-of-the-art online training platform</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-laptop"></i>
+                        </div>
+                        <h3>Any Device Access</h3>
+                        <p>Train from your computer, tablet, or smartphone. Our platform works seamlessly across all devices.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Progress Tracking</h3>
+                        <p>Monitor your fitness journey with detailed analytics and progress reports updated in real-time.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Community Support</h3>
+                        <p>Join our exclusive online community for motivation, challenges, and support from fellow members.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Session Types Section -->
+    <section class="session-types" id="session-types">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    <div class="section-heading">
+                        <h2>Session <em>Types</em></h2>
+                        <img src="assets/images/line-dec.png" alt="waves">
+                        <p>Choose from our variety of online training options to suit your needs</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="session-card">
+                        <div class="session-image">
+                            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Live Group Classes">
+                            <span class="session-badge">Most Popular</span>
+                        </div>
+                        <div class="session-content">
+                            <h3>Live Group Classes</h3>
+                            <div class="session-meta">
+                                <span><i class="fas fa-users"></i> 10-20 Participants</span>
+                                <span><i class="fas fa-clock"></i> 45-60 Minutes</span>
+                            </div>
+                            <p>Join our energetic group sessions led by top trainers in real-time with interactive elements.</p>
+                            <a href="#" class="btn btn-primary booking-btn">Join Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="session-card">
+                        <div class="session-image">
+                            <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1075&q=80" alt="1-on-1 Coaching">
+                            <span class="session-badge">Personalized</span>
+                        </div>
+                        <div class="session-content">
+                            <h3>1-on-1 Coaching</h3>
+                            <div class="session-meta">
+                                <span><i class="fas fa-user"></i> Private Session</span>
+                                <span><i class="fas fa-clock"></i> 30-60 Minutes</span>
+                            </div>
+                            <p>Get personalized attention with customized workouts tailored to your specific goals.</p>
+                            <a href="#" class="btn btn-primary booking-btn">Book Session</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="session-card">
+                        <div class="session-image">
+                            <img src="https://images.unsplash.com/photo-1538805060514-97d9cc17730c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80" alt="On-Demand Library">
+                            <span class="session-badge">Flexible</span>
+                        </div>
+                        <div class="session-content">
+                            <h3>On-Demand Library</h3>
+                            <div class="session-meta">
+                                <span><i class="fas fa-film"></i> 200+ Videos</span>
+                                <span><i class="fas fa-clock"></i> 10-90 Minutes</span>
+                            </div>
+                            <p>Access our extensive library of recorded workouts anytime that fits your schedule.</p>
+                            <a href="#" class="btn btn-primary booking-btn">Browse Library</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    <div class="section-heading">
+                        <h2>How It <em>Works</em></h2>
+                        <img src="assets/images/line-dec.png" alt="waves">
+                        <p>Getting started with our online sessions is quick and easy</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Choose Your Session</h3>
+                        <p>Select from our variety of live or on-demand sessions that match your fitness goals and schedule.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>Book & Prepare</h3>
+                        <p>Complete your booking and receive all the details you need to prepare for your session.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Join & Train</h3>
+                        <p>Connect at the scheduled time or access on-demand content and start your transformation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3">
+                    <div class="section-heading">
+                        <h2>Success <em>Stories</em></h2>
+                        <img src="assets/images/line-dec.png" alt="waves">
+                        <p>Hear what our members say about their online training experience</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <p>The live group classes make me feel like I'm right there in the studio. The energy is amazing and the trainers are so motivating!</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Sarah J.">
+                            </div>
+                            <div class="author-info">
+                                <h5>Sarah J.</h5>
+                                <p>Online Member</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <p>My 1-on-1 coach has completely transformed my approach to fitness. The personalized attention makes all the difference.</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Michael T.">
+                            </div>
+                            <div class="author-info">
+                                <h5>Michael T.</h5>
+                                <p>Online Member</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="testimonial-card">
+                        <div class="testimonial-content">
+                            <p>As a busy mom, the on-demand library is a lifesaver. I can workout whenever I have 20 minutes to spare.</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">
+                                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Lisa M.">
+                            </div>
+                            <div class="author-info">
+                                <h5>Lisa M.</h5>
+                                <p>Online Member</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="section" id="call-to-action">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1">
+                    <div class="cta-content">
+                        <h2>Ready To <em>Transform</em> Your Fitness?</h2>
+                        <p>Join our online community today and experience professional training from the comfort of your home.</p>
+                        <div class="main-button scroll-to-section">
+                            <a href="#" class="btn btn-primary booking-btn">Start Your Journey</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ***** Footer Start ***** -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <!-- About Section -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-section">
+                        <h4>About Elite Studio</h4>
+                        <p>Elite Studio is your go-to fitness destination, offering state-of-the-art facilities, expert trainers, and personalized programs to help you achieve your fitness goals.</p>
+                        <div class="social-icons">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="about.html">About</a></li>
+                            <li><a href="classes.html">Classes</a></li>
+                            <li><a href="index.html#schedule">Schedules</a></li>
+                            <li><a href="membership.html">Membership</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-section">
+                        <h4>Contact Us</h4>
+                        <ul class="contact-info">
+                            <li><i class="fa fa-map-marker"></i> 123 Fitness Street, Rio de Janeiro, Brazil</li>
+                            <li><i class="fa fa-phone"></i> +55 123 456 789</li>
+                            <li><i class="fa fa-envelope"></i> info@elitestudio.com</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-section">
+                        <h4>Newsletter</h4>
+                        <p>Subscribe to our newsletter to get the latest updates and offers.</p>
+                        <form class="newsletter-form">
+                            <input type="email" placeholder="Your Email" required>
+                            <button type="submit"><i class="fa fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- ***** Footer Ends ***** -->
+
+    <!-- jQuery -->
+    <script src="assets/js/jquery-2.1.0.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="assets/js/popper.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugins -->
+    <script src="assets/js/scrollreveal.min.js"></script>
+    <script src="assets/js/waypoints.min.js"></script>
+    <script src="assets/js/jquery.counterup.min.js"></script>
+    <script src="assets/js/imgfix.min.js"></script> 
+    <script src="assets/js/mixitup.js"></script> 
+    <script src="assets/js/accordions.js"></script>
+    
+    <!-- Global Init -->
+    <script src="assets/js/custom.js"></script>
+    
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Initialize all functionality
+        checkAuthStatus();
+        setupBookingButtons();
+        
+        // Add click handler for any dynamically added booking buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('booking-btn') || 
+                e.target.classList.contains('join-btn') || 
+                e.target.closest('.booking-btn') || 
+                e.target.closest('.join-btn')) {
+                e.preventDefault();
+                if (auth.isLoggedIn()) {
+                    openBookingModal();
+                } else {
+                    redirectToSignup();
+                }
+            }
+        });
+    });
+
+    // ✅ Authentication State Management
+    const auth = {
+        isLoggedIn: () => localStorage.getItem("authToken") !== null,
+        currentUser: () => {
+            try {
+                return JSON.parse(localStorage.getItem("userData")) || null;
+            } catch (e) {
+                console.error("Error parsing user data:", e);
+                return null;
+            }
+        },
+        logout: () => {
+            localStorage.removeItem("authToken");
+            localStorage.removeItem("userData");
+            window.location.href = "index.html";
+        }
+    };
+
+    // ✅ Check Authentication Status & Update Navbar
+    function checkAuthStatus() {
+        const authLinks = document.querySelector(".auth-links");
+        const user = auth.currentUser();
+
+        if (authLinks) {
+            if (auth.isLoggedIn()) {
+                authLinks.innerHTML = `
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user-circle"></i> <span id="userName">${user?.fullName || user?.username || user?.name || 'My Account'}</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+                            <li><a class="dropdown-item" href="Userdashboard.html">My Dashboard</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="auth.logout()">Logout</a></li>
+                        </ul>
+                    </li>
+                `;
+
+                // Initialize dropdown
+                setTimeout(() => {
+                    const dropdownElement = document.getElementById("userDropdown");
+                    if (dropdownElement) {
+                        new bootstrap.Dropdown(dropdownElement);
+                    }
+                }, 100);
+            } else {
+                authLinks.innerHTML = `<li class="main-button"><a href="SignUp.html">Sign Up</a></li>`;
+            }
+        }
+    }
+
+    // ✅ Manage Booking Buttons
+    function setupBookingButtons() {
+        // Select all buttons that should trigger the booking modal
+        const bookingButtons = document.querySelectorAll(".booking-btn, .join-btn, [class*='book-now'], [class*='join-now']");
+        
+        bookingButtons.forEach(button => {
+            // Update button behavior based on auth status
+            if (auth.isLoggedIn()) {
+                button.classList.remove("disabled");
+                button.onclick = (e) => {
+                    e.preventDefault();
+                    openBookingModal();
+                };
+            } else {
+                button.classList.add("disabled");
+                button.onclick = (e) => {
+                    e.preventDefault();
+                    redirectToSignup();
+                };
+            }
+        });
+    }
+
+    function openBookingModal() {
+        alert("Booking functionality will be implemented here. User is logged in.");
+        // In a real implementation, this would open a booking modal
+    }
+
+    // ✅ Redirect Unauthenticated Users
+    function redirectToSignup() {
+        window.location.href = `SignUp.html?redirect=${encodeURIComponent(window.location.href)}`;
+        return false;
+    }
+    </script>
+</body>
+</html>

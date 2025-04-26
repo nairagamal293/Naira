@@ -1,12 +1,125 @@
 {
   "Version": 1,
-  "Hash": "OGuAjuaH6G+574a7UKbL1awEk2HrrH2KCnIzTw4y65g=",
+  "Hash": "C+ADdsuKwjAIMBHA7+xefkEtPM6v0FuiXnSOzSxNnHs=",
   "Source": "Elite_Personal_Training",
   "BasePath": "_content/Elite_Personal_Training",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": [],
-  "Endpoints": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "Elite_Personal_Training\\wwwroot",
+      "Source": "Elite_Personal_Training",
+      "ContentRoot": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\wwwroot\\",
+      "BasePath": "_content/Elite_Personal_Training",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\wwwroot\\uploads\\profile-pictures\\f89f04ed-dec3-42f2-a344-83730d22f5b0.jpg",
+      "SourceId": "Elite_Personal_Training",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\wwwroot\\",
+      "BasePath": "_content/Elite_Personal_Training",
+      "RelativePath": "uploads/profile-pictures/f89f04ed-dec3-42f2-a344-83730d22f5b0#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "2yuyvnn44l",
+      "Integrity": "KnwjnVPB2+Vgc/r1T9I3dKH8WSxtrGPY4RDuuQ+MbkA=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\profile-pictures\\f89f04ed-dec3-42f2-a344-83730d22f5b0.jpg"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "uploads/profile-pictures/f89f04ed-dec3-42f2-a344-83730d22f5b0.2yuyvnn44l.jpg",
+      "AssetFile": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\wwwroot\\uploads\\profile-pictures\\f89f04ed-dec3-42f2-a344-83730d22f5b0.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "15269992"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"KnwjnVPB2+Vgc/r1T9I3dKH8WSxtrGPY4RDuuQ+MbkA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 26 Apr 2025 12:33:17 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "2yuyvnn44l"
+        },
+        {
+          "Name": "label",
+          "Value": "uploads/profile-pictures/f89f04ed-dec3-42f2-a344-83730d22f5b0.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-KnwjnVPB2+Vgc/r1T9I3dKH8WSxtrGPY4RDuuQ+MbkA="
+        }
+      ]
+    },
+    {
+      "Route": "uploads/profile-pictures/f89f04ed-dec3-42f2-a344-83730d22f5b0.jpg",
+      "AssetFile": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\wwwroot\\uploads\\profile-pictures\\f89f04ed-dec3-42f2-a344-83730d22f5b0.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "15269992"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"KnwjnVPB2+Vgc/r1T9I3dKH8WSxtrGPY4RDuuQ+MbkA=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sat, 26 Apr 2025 12:33:17 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-KnwjnVPB2+Vgc/r1T9I3dKH8WSxtrGPY4RDuuQ+MbkA="
+        }
+      ]
+    }
+  ]
 }

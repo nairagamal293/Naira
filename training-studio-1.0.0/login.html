@@ -1,115 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Elite Personal Training</title>
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background: linear-gradient(135deg, #1e1e2f, #252540);
-            font-family: 'Arial', sans-serif;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-        }
-        .login-container {
-            max-width: 400px;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            margin: auto;
-            text-align: left;
-        }
-        .logo {
-            width: 120px;
-            margin-bottom: 20px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .login-container h2 {
-            margin-bottom: 20px;
-            color: #333;
-            text-align: center;
-        }
-        .login-container .form-control {
-            border-radius: 5px;
-            padding: 10px;
-        }
-        .login-container .btn {
-            background: rgb(156, 13, 13);
-            color: white;
-            border-radius: 5px;
-            width: 100%;
-            padding: 10px;
-            font-weight: 600;
-        }
-        .login-container .btn:hover {
-            background: rgba(156, 13, 13, 0.9);
-        }
-        .login-container .text-center a {
-            color: rgb(156, 13, 13);
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .login-container .text-center a:hover {
-            text-decoration: underline;
-        }
-        .error-message {
-            color: red;
-            font-size: 14px;
-            text-align: center;
-            margin-bottom: 15px;
-            display: none;
-        }
-        .loading-spinner {
-            display: none;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Elite Personal Training</title>
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: #fff8f0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      display: flex;
+      width: 900px;
+      height: 600px;
+      box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+      background: white;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    .left-panel {
+    width: 420px; /* 👈 fixed width */
+    background: linear-gradient(135deg, #232d39, #40536a);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    margin-left: -30px;
+  }
+    .left-panel img {
+      width: 150px;
+      margin-bottom: 30px;
+    }
+    .left-panel h1 {
+      font-size: 48px;
+      margin-bottom: 10px;
+    }
+    .left-panel p {
+      font-size: 18px;
+    }
+    .right-panel {
+      flex: 1;
+      padding: 60px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .right-panel h2 {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .right-panel p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 30px;
+    }
+    .form-control {
+      border-radius: 5px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      background: #f89e0e;
+      color: white;
+      border-radius: 5px;
+      width: 100%;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    .btn:hover {
+      background: #e6a400;
+    }
+    .text-center {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .text-center a {
+      color: #fbb034;
+      text-decoration: none;
+    }
+    .text-center a:hover {
+      text-decoration: underline;
+    }
+    .error-message {
+      color: red;
+      font-size: 14px;
+      text-align: center;
+      margin-bottom: 15px;
+      display: none;
+    }
+    .loading-spinner {
+      display: none;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="login-container">
-            
-            <h2>Login to Your Account</h2>
-            <p id="error-message" class="error-message"></p>
-            <div id="loading-spinner" class="loading-spinner">
-                <i class="fas fa-spinner fa-spin fa-2x"></i>
-            </div>
-            <form id="login-form">
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
-                    <div class="form-text">
-                        <a href="forgot-password.html" class="text-muted">Forgot password?</a>
-                    </div>
-                </div>
-                <button type="submit" class="btn" id="login-button">
-                    <span id="login-text">Login</span>
-                    <span id="login-spinner" style="display: none;">
-                        <i class="fas fa-spinner fa-spin"></i>
-                    </span>
-                </button>
-                <div class="text-center mt-3">
-                    <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
-                </div>
-            </form>
-        </div>
+<div class="container">
+  <div class="left-panel">
+    <img src="assets/images/elite_logo-removebg-preview.png" alt="Elite Personal Training Logo">
+    <h1>Welcome!</h1>
+    <p>Login to continue your journey.</p>
+  </div>
+  <div class="right-panel">
+    <h2>Login to Your Account</h2>
+    <p id="error-message" class="error-message"></p>
+    <div id="loading-spinner" class="loading-spinner">
+      <i class="fas fa-spinner fa-spin fa-2x"></i>
     </div>
+    <form id="login-form">
+      <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+      <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+      <div class="text-end mb-3">
+        <a href="forgot-password.html" class="text-muted" style="font-size: 14px;">Forgot password?</a>
+      </div>
+      <button type="submit" class="btn" id="login-button">
+        <span id="login-text">Login</span>
+        <span id="login-spinner" style="display: none;">
+          <i class="fas fa-spinner fa-spin"></i>
+        </span>
+      </button>
+      <div class="text-center">
+        <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+      </div>
+    </form>
+  </div>
+</div>
 
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="login.js"></script>
+<script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="login.js"></script>
 
 </body>
 </html>

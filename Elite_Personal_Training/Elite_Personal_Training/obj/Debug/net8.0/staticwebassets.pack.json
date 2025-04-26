@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\wwwroot\\uploads\\profile-pictures\\f89f04ed-dec3-42f2-a344-83730d22f5b0.jpg",
+      "PackagePath": "staticwebassets\\uploads\\profile-pictures\\f89f04ed-dec3-42f2-a344-83730d22f5b0.jpg"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Elite_Personal_Training.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Elite_Personal_Training.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.Elite_Personal_Training.props",
+      "PackagePath": "build\\Elite_Personal_Training.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.Elite_Personal_Training.props",
+      "PackagePath": "buildMultiTargeting\\Elite_Personal_Training.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.Elite_Personal_Training.props",
+      "PackagePath": "buildTransitive\\Elite_Personal_Training.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
