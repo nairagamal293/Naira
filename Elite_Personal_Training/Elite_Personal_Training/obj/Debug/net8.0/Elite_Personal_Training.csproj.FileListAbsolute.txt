@@ -427,3 +427,6 @@ D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Tra
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\ref\Elite_Personal_Training.dll
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\bin\Debug\net8.0\Elite_Personal_Training.staticwebassets.runtime.json
+D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\bin\Debug\net8.0\Newtonsoft.Json.dll
+D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\bin\Debug\net8.0\SendGrid.dll
+D:\Naira\New Website\Elite_Gym-master\Elite_Personal_Training\Elite_Personal_Training\bin\Debug\net8.0\StarkbankEcdsa.dll

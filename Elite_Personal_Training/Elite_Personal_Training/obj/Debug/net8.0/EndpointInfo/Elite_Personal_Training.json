@@ -221,6 +221,18 @@
         }
       }
     },
+    "/api/Auth/test-sendgrid": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Auth/logout": {
       "post": {
         "tags": [

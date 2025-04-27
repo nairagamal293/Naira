@@ -146,6 +146,16 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "Elite_Personal_Training.Controllers.AuthController",
+    "Method": "TestSendGridConnection",
+    "RelativePath": "api/Auth/test-sendgrid",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "Elite_Personal_Training.Controllers.BookingController",
     "Method": "CreateBooking",
     "RelativePath": "api/Booking",

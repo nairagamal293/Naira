@@ -401,14 +401,15 @@ async function loadClasses() {
     }
 }
 
-// ✅ Load Schedules
-// Updated loadSchedules function
+// ✅ Load Schedules with Filtering
 async function loadSchedules() {
     try {
         const response = await fetch("https://localhost:7020/api/Schedule");
         if (!response.ok) throw new Error("Failed to load schedules.");
         
         const schedules = await response.json();
+        console.log("API Response:", schedules); // Debug log
+        
         if (!Array.isArray(schedules)) {
             throw new Error("Invalid data format received from API");
         }
@@ -418,71 +419,121 @@ async function loadSchedules() {
             return;
         }
 
-        // Group schedules by day
-        const schedulesByDay = {
-            monday: [],
-            tuesday: [],
-            wednesday: [],
-            thursday: [],
-            friday: [],
-            saturday: []
-        };
-
-        schedules.forEach(schedule => {
-            const day = schedule.day?.toLowerCase() || 'monday';
-            if (schedulesByDay[day]) {
-                schedulesByDay[day].push(schedule);
+        // Add day of week to each schedule based on scheduleDate
+        const schedulesWithDays = schedules.map(schedule => {
+            if (!schedule.scheduleDate) {
+                console.warn("Schedule missing scheduleDate:", schedule);
+                return schedule;
+            }
+            
+            try {
+                const date = new Date(schedule.scheduleDate);
+                if (isNaN(date.getTime())) {
+                    console.error("Invalid date:", schedule.scheduleDate);
+                    return schedule;
+                }
+                
+                const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                const day = days[date.getDay()];
+                
+                return {
+                    ...schedule,
+                    day: day
+                };
+            } catch (e) {
+                console.error("Error processing date:", e);
+                return schedule;
             }
         });
 
-        // Populate each day's tab
-        for (const day in schedulesByDay) {
-            const tabContent = document.getElementById(day);
-            if (tabContent) {
-                if (schedulesByDay[day].length > 0) {
-                    tabContent.innerHTML = schedulesByDay[day].map(schedule => `
-                        <div class="schedule-card">
-                            <div class="schedule-card-header">
-                                <span class="schedule-time">${schedule.startTime || '09:00'} - ${schedule.endTime || '10:00'}</span>
-                                <span class="schedule-badge">${schedule.difficulty || 'All Levels'}</span>
-                            </div>
-                            <div class="schedule-card-body">
-                                <h4 class="schedule-class-name">${schedule.className || 'Fitness Class'}</h4>
-                                <div class="schedule-trainer">
-                                    <i class="fas fa-user-tie"></i>
-                                    <span>${schedule.trainerName || 'Professional Trainer'}</span>
-                                </div>
-                                <div class="schedule-capacity">
-                                    <span class="schedule-slots">
-                                        <i class="fas fa-users"></i>
-                                        ${schedule.availableSlots !== undefined ? `${schedule.availableSlots} slots available` : 'Open enrollment'}
-                                    </span>
-                                    <button class="schedule-book-btn booking-btn ${auth.isLoggedIn() ? '' : 'disabled'}" 
-                                            data-class-id="${schedule.classId}" 
-                                            data-class-name="${schedule.className}"
-                                            data-class-price="${schedule.price || 0}">
-                                        Book Now
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `).join("");
-                } else {
-                    tabContent.innerHTML = `
-                        <div class="schedule-empty">
-                            <i class="far fa-calendar-times"></i>
-                            <h4>No classes scheduled</h4>
-                            <p>Check back later for updates</p>
-                        </div>
-                    `;
-                }
-            }
-        }
+        console.log("Processed schedules:", schedulesWithDays); // Debug log
+
+        // Store schedules globally for filtering
+        window.allSchedules = schedulesWithDays;
+
+        // Render all schedules initially (shows Monday by default)
+        renderSchedules('monday');
+
+        // Set up day filter buttons
+        setupDayFilters();
 
     } catch (error) {
         console.error("Error loading schedules:", error);
         showEmptySchedule("Error loading schedule. Please try again later.");
     }
+}
+
+function renderSchedules(day) {
+    const container = document.querySelector('.schedule-items-container');
+    if (!container) return;
+
+    // Filter schedules by day (case insensitive)
+    const filteredSchedules = window.allSchedules.filter(schedule => 
+        schedule.day?.toLowerCase() === day.toLowerCase()
+    );
+
+    if (filteredSchedules.length === 0) {
+        container.innerHTML = `
+            <div class="schedule-empty" >
+                <i class="far fa-calendar-times"></i>
+                <h4>No classes scheduled for ${capitalizeFirstLetter(day)}</h4>
+                <p>Check back later for updates</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = filteredSchedules.map(schedule => `
+        <div class="schedule-card" data-day="${schedule.day.toLowerCase()}">
+            <div class="schedule-card-header">
+                <span class="schedule-time">${schedule.startTime || '09:00'} - ${schedule.endTime || '10:00'}</span>
+                <span class="schedule-badge">${schedule.difficulty || 'All Levels'}</span>
+            </div>
+            <div class="schedule-card-body">
+                <h4 class="schedule-class-name">${schedule.className || 'Fitness Class'}</h4>
+                <div class="schedule-trainer">
+                    <i class="fas fa-user-tie"></i>
+                    <span>${schedule.trainerName || 'Professional Trainer'}</span>
+                </div>
+                <div class="schedule-capacity">
+                    <span class="schedule-slots">
+                        <i class="fas fa-users"></i>
+                        ${schedule.availableSlots !== undefined ? `${schedule.availableSlots} slots available` : 'Open enrollment'}
+                    </span>
+                    <button class="schedule-book-btn booking-btn ${auth.isLoggedIn() ? '' : 'disabled'}" 
+                            data-class-id="${schedule.classId}" 
+                            data-class-name="${schedule.className}"
+                            data-class-price="${schedule.price || 0}">
+                        Book Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join("");
+}
+
+function setupDayFilters() {
+    const dayButtons = document.querySelectorAll('.day-filter');
+    
+    dayButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            dayButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Get the day from data attribute
+            const day = this.getAttribute('data-day');
+            
+            // Render schedules for this day
+            renderSchedules(day);
+        });
+    });
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function showEmptySchedule(message = "No schedule available at the moment.") {

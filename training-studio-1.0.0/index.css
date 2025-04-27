@@ -195,7 +195,59 @@
         padding: 30px 20px;
     }
 }
+/* Schedule Filter Styles */
+.schedule-nav {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
 
+.schedule-nav .nav-tabs {
+    border-bottom: 2px solid #eee;
+    justify-content: center;
+}
+
+.schedule-nav .nav-link {
+    border: none;
+    color: #555;
+    font-weight: 600;
+    padding: 12px 25px;
+    margin: 0 5px;
+    border-radius: 0;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.schedule-nav .nav-link:hover {
+    color: #9c0d0d;
+}
+
+.schedule-nav .nav-link.active {
+    color: #9c0d0d;
+    background: transparent;
+    border-bottom: 3px solid #9c0d0d;
+}
+
+.schedule-items-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+    
+   
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .schedule-nav .nav-link {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+    
+    .schedule-items-container {
+        grid-template-columns: 1fr;
+       
+    }
+}
 /* ==================== Trainers Section ==================== */
 #trainers {
     padding: 100px 0;

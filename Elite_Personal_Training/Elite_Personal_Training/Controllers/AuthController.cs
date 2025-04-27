@@ -1,11 +1,18 @@
 ﻿using Elite_Personal_Training.Models;
+using Elite_Personal_Training.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using SendGrid;
+using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Elite_Personal_Training.Controllers
 {
@@ -16,18 +23,26 @@ namespace Elite_Personal_Training.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
+        private readonly ILogger<AuthController> _logger;
+        private readonly IWebHostEnvironment _environment;
 
         public AuthController(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IEmailService emailService,
+            ILogger<AuthController> logger,
+            IWebHostEnvironment environment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _configuration = configuration;
+            _emailService = emailService;
+            _logger = logger;
+            _environment = environment;
         }
 
-        // ✅ SIGN UP Endpoint
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp([FromBody] SignUpRequest request)
         {
@@ -56,8 +71,17 @@ namespace Elite_Personal_Training.Controllers
             if (!result.Succeeded)
                 return BadRequest(new { message = "User creation failed.", errors = result.Errors });
 
-            // Add default role if needed
             await _userManager.AddToRoleAsync(user, "Member");
+
+            // Send welcome email
+            try
+            {
+                await _emailService.SendWelcomeEmailAsync(user.Email, user.FullName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send welcome email to {Email}", user.Email);
+            }
 
             return Ok(new { message = "User created successfully!" });
         }
@@ -67,8 +91,7 @@ namespace Elite_Personal_Training.Controllers
         {
             try
             {
-                if (request == null || string.IsNullOrEmpty(request.Email)
-                    || string.IsNullOrEmpty(request.Password))
+                if (request == null || string.IsNullOrEmpty(request.Email) || string.IsNullOrEmpty(request.Password))
                     return BadRequest(new { message = "Email and password are required." });
 
                 var user = await _userManager.FindByEmailAsync(request.Email);
@@ -84,7 +107,6 @@ namespace Elite_Personal_Training.Controllers
                 if (!result.Succeeded)
                     return Unauthorized(new { message = "Invalid credentials." });
 
-                // Generate JWT token
                 var roles = await _userManager.GetRolesAsync(user);
                 var role = roles.FirstOrDefault() ?? "User";
                 var token = GenerateJwtToken(user, role);
@@ -104,9 +126,147 @@ namespace Elite_Personal_Training.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Login error: {ex}");
+                _logger.LogError(ex, "Login error for email {Email}", request.Email);
                 return StatusCode(500, new { message = "An internal server error occurred." });
             }
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Email))
+                return BadRequest("Email is required.");
+
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+                return Ok();
+
+            try
+            {
+                // Generate raw token
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                _logger.LogInformation("Generated raw token: {Token}", token);
+
+                // URL encode the token
+                var encodedToken = WebUtility.UrlEncode(token);
+                _logger.LogInformation("URL encoded token: {EncodedToken}", encodedToken);
+
+                // URL decode to verify
+                var decodedToken = WebUtility.UrlDecode(encodedToken);
+                _logger.LogInformation("URL decoded token: {DecodedToken}", decodedToken);
+
+                // Verify token before returning
+                var isValid = await _userManager.VerifyUserTokenAsync(
+                    user,
+                    _userManager.Options.Tokens.PasswordResetTokenProvider,
+                    "ResetPassword",
+                    token);
+
+                _logger.LogInformation("Token verification result: {IsValid}", isValid);
+
+                var resetLink = $"{_configuration["ClientUrl"]}/reset-password?token={encodedToken}&email={user.Email}";
+
+                return Ok(new
+                {
+                    Message = "Development details",
+                    RawToken = token,
+                    EncodedToken = encodedToken,
+                    DecodedToken = decodedToken,
+                    IsValid = isValid,
+                    ResetLink = resetLink
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Token generation error");
+                return StatusCode(500, new { ex.Message });
+            }
+        }
+
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            if (string.IsNullOrEmpty(request.Email) ||
+                string.IsNullOrEmpty(request.Token) ||
+                string.IsNullOrEmpty(request.NewPassword))
+            {
+                return BadRequest("All fields are required.");
+            }
+
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user == null)
+                return BadRequest("Invalid request.");
+
+            try
+            {
+                // Log the incoming token
+                _logger.LogInformation("Received token: {Token}", request.Token);
+
+                // Try both decoded and raw token
+                var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+
+                if (!result.Succeeded)
+                {
+                    _logger.LogError("Password reset failed. Errors: {Errors}",
+                        string.Join(", ", result.Errors.Select(e => e.Description)));
+                    return BadRequest(result.Errors);
+                }
+
+                return Ok("Password reset successfully!");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Password reset error");
+                return StatusCode(500, new { ex.Message });
+            }
+        }
+
+
+        [HttpPost("test-sendgrid")]
+        public async Task<IActionResult> TestSendGridConnection()
+        {
+            try
+            {
+                var apiKey = _configuration["SendGrid:ApiKey"];
+                if (string.IsNullOrEmpty(apiKey))
+                {
+                    return BadRequest("SendGrid API key is not configured");
+                }
+
+                var client = new SendGridClient(apiKey);
+                var response = await client.RequestAsync(
+                    method: SendGridClient.Method.GET,
+                    urlPath: "scopes");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var body = await response.Body.ReadAsStringAsync();
+                    return StatusCode((int)response.StatusCode, new
+                    {
+                        Status = response.StatusCode,
+                        Body = body
+                    });
+                }
+
+                return Ok("SendGrid connection successful");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "SendGrid connection test failed");
+                return StatusCode(500, new
+                {
+                    Message = "SendGrid connection test failed",
+                    Error = ex.Message
+                });
+            }
+        }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Ok(new { message = "Logged out successfully" });
         }
 
         private string GenerateJwtToken(User user, string role)
@@ -133,58 +293,8 @@ namespace Elite_Personal_Training.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
-        [HttpPost("forgot-password")]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
-        {
-            if (string.IsNullOrEmpty(request.Email))
-                return BadRequest("Email is required.");
-
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null)
-                return Ok(); // Security: don't reveal if user doesn't exist
-
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var resetLink = $"{_configuration["ClientUrl"]}/reset-password?token={WebUtility.UrlEncode(token)}&email={user.Email}";
-
-            // In production, send email instead of returning link
-            return Ok(new { ResetLink = resetLink });
-        }
-
-        [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
-        {
-            if (string.IsNullOrEmpty(request.Email) ||
-                string.IsNullOrEmpty(request.Token) ||
-                string.IsNullOrEmpty(request.NewPassword))
-            {
-                return BadRequest("All fields are required.");
-            }
-
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null)
-                return BadRequest("Invalid request.");
-
-            var result = await _userManager.ResetPasswordAsync(
-                user,
-                request.Token,
-                request.NewPassword);
-
-            if (!result.Succeeded)
-                return BadRequest(result.Errors);
-
-            return Ok("Password reset successfully!");
-        }
-
-        [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-            return Ok(new { message = "Logged out successfully" });
-        }
     }
 
-    // DTO Classes
     public class SignUpRequest
     {
         public string FullName { get; set; }
