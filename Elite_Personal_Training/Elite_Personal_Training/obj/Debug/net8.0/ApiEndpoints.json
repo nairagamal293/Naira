@@ -812,8 +812,8 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "schedule",
-        "Type": "Elite_Personal_Training.Models.Schedule",
+        "Name": "scheduleDto",
+        "Type": "Elite_Personal_Training.DTOs.ScheduleCreateDto",
         "IsRequired": true
       }
     ],
@@ -843,17 +843,7 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": [
-      {
-        "Type": "Elite_Personal_Training.Models.Schedule",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
+    "ReturnTypes": []
   },
   {
     "ContainingType": "Elite_Personal_Training.Controllers.ScheduleController",
@@ -869,8 +859,8 @@
         "IsRequired": true
       },
       {
-        "Name": "schedule",
-        "Type": "Elite_Personal_Training.Models.Schedule",
+        "Name": "scheduleUpdate",
+        "Type": "Elite_Personal_Training.Controllers.ScheduleUpdateDto",
         "IsRequired": true
       }
     ],

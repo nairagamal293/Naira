@@ -1,22 +1,11 @@
 
 
 // ✅ TimeSpan Helper Function (NEW - add this right after constants)
-function createTimeSpan(hours, minutes, seconds) {
-    return {
-        ticks: (hours * 3600 + minutes * 60 + seconds) * 10000000,
-        days: 0,
-        hours: hours,
-        milliseconds: 0,
-        minutes: minutes,
-        seconds: seconds,
-        totalDays: hours / 24 + minutes / 1440 + seconds / 86400,
-        totalHours: hours + minutes / 60 + seconds / 3600,
-        totalMilliseconds: (hours * 3600 + minutes * 60 + seconds) * 1000,
-        totalMinutes: hours * 60 + minutes + seconds / 60,
-        totalSeconds: hours * 3600 + minutes * 60 + seconds
-    };
+// Update the createTimeSpan function to match API expectations
+function createTimeSpan(hours, minutes, seconds = 0) {
+    // Return a string in the format "hh:mm:ss" that ASP.NET Core can parse
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
-
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -447,56 +436,74 @@ async function deleteMembership(membershipId) {
     }
 }
 
+
+
+// ✅ Add Membership Modal (Placeholder)
+function openMembershipModal() {
+    alert("🛠 Add Membership Form will be here!");
+}
+
+
 // ✅ Load Classes
 async function loadClasses() {
-    document.getElementById("dashboard-title").innerText = "Manage Classes";
+    document.getElementById("dashboard-title").innerText = "Class Management";
     const content = document.getElementById("admin-content");
     content.innerHTML = "<h4>Loading classes...</h4>";
 
     try {
-        const response = await fetch("https://localhost:7020/api/Class", { 
-            headers: getAuthHeaders() 
-        });
+        // Load classes and trainers in parallel
+        const [classesResponse, trainersResponse] = await Promise.all([
+            fetch("https://localhost:7020/api/Class", { 
+                headers: getAuthHeaders() 
+            }),
+            fetch("https://localhost:7020/api/Trainer", { 
+                headers: getAuthHeaders() 
+            })
+        ]);
 
-        if (response.status === 401) {
+        if (classesResponse.status === 401 || trainersResponse.status === 401) {
             alert("❌ Unauthorized! Please log in again.");
             window.location.href = "login.html";
             return;
         }
 
-        if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+        if (!classesResponse.ok) throw new Error(`HTTP Error ${classesResponse.status}`);
+        if (!trainersResponse.ok) throw new Error(`HTTP Error ${trainersResponse.status}`);
 
-        const classes = await response.json();
+        const classes = await classesResponse.json();
+        const trainers = await trainersResponse.json();
         
         content.innerHTML = `
             <button class="btn btn-success mb-3" onclick="showClassModal()">
                 <i class="fas fa-plus"></i> Add New Class
             </button>
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>Name</th>
                             <th>Description</th>
-                            <th>Trainer</th>
-                            <th>Schedule</th>
+                            <th>Capacity</th>
+                            <th>Duration</th>
                             <th>Price</th>
+                            <th>Trainer</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${classes.map(cls => `
                             <tr>
-                                <td>${cls.name || 'N/A'}</td>
+                                <td>${cls.name}</td>
                                 <td>${cls.description || 'N/A'}</td>
+                                <td>${cls.capacity}</td>
+                                <td>${cls.durationInMinutes} mins</td>
+                                <td>$${cls.price.toFixed(2)}</td>
                                 <td>${cls.trainerName || 'N/A'}</td>
-                                <td>${cls.daysOfWeek || 'N/A'}, ${cls.startTime} - ${cls.endTime}</td>
-                                <td>$${cls.price || '0'}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning me-2" onclick="showClassModal('${cls.id}')">
+                                    <button class="btn btn-sm btn-warning me-2" onclick="showClassModal(${cls.id})">
                                         <i class="fas fa-edit"></i> Edit
                                     </button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteClass('${cls.id}')">
+                                    <button class="btn btn-sm btn-danger" onclick="deleteClass(${cls.id})">
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
                                 </td>
@@ -504,6 +511,7 @@ async function loadClasses() {
                     </tbody>
                 </table>
             </div>
+            
             <!-- Class Modal -->
             <div class="modal fade" id="classModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
@@ -520,45 +528,36 @@ async function loadClasses() {
             </div>`;
     } catch (error) {
         console.error("❌ Error loading classes:", error);
-        content.innerHTML = `<div class='alert alert-danger'>Error loading classes: ${error.message}</div>`;
+        content.innerHTML = "<div class='alert alert-danger'>Error loading classes.</div>";
     }
 }
 
-
-
-// Show modal for adding/editing class
 // Show modal for adding/editing class
 async function showClassModal(classId = null) {
     const modalTitle = document.getElementById("classModalTitle");
     const modalBody = document.getElementById("classModalBody");
-    const modalElement = document.getElementById('classModal');
-    
-    // Fix accessibility issue
-    modalElement.removeAttribute('aria-hidden');
-    const modal = new bootstrap.Modal(modalElement);
+    const modal = new bootstrap.Modal(document.getElementById('classModal'));
     
     try {
-        // First load trainers for the dropdown
-        const [trainersResponse, classResponse] = await Promise.all([
-            fetch("https://localhost:7020/api/Trainer", { headers: getAuthHeaders() }),
-            classId ? fetch(`https://localhost:7020/api/Class/${classId}`, { headers: getAuthHeaders() }) : null
-        ]);
-
-        if (!trainersResponse.ok) {
-            throw new Error("Failed to load trainers");
-        }
+        // Load trainers for dropdown
+        const trainersResponse = await fetch("https://localhost:7020/api/Trainer", {
+            headers: getAuthHeaders()
+        });
+        
+        if (!trainersResponse.ok) throw new Error(`HTTP Error ${trainersResponse.status}`);
         const trainers = await trainersResponse.json();
 
         if (classId) {
             // Edit mode
             modalTitle.textContent = "Edit Class";
-            if (!classResponse || !classResponse.ok) {
-                const errorText = await classResponse?.text() || 'Unknown error';
-                throw new Error(`Failed to load class: ${errorText}`);
-            }
-
-            const cls = await classResponse.json();
-            modalBody.innerHTML = getClassForm(cls, trainers);
+            const classResponse = await fetch(`https://localhost:7020/api/Class/${classId}`, {
+                headers: getAuthHeaders()
+            });
+            
+            if (!classResponse.ok) throw new Error(`HTTP Error ${classResponse.status}`);
+            const classData = await classResponse.json();
+            
+            modalBody.innerHTML = getClassForm(classData, trainers);
         } else {
             // Add mode
             modalTitle.textContent = "Add New Class";
@@ -568,104 +567,98 @@ async function showClassModal(classId = null) {
         modal.show();
     } catch (error) {
         console.error("Error:", error);
-        modalBody.innerHTML = `
-            <div class="alert alert-danger">
-                <h5>Error loading class</h5>
-                <p>${error.message}</p>
-                <p>Please check:</p>
-                <ul>
-                    <li>Backend API is running</li>
-                    <li>You have proper permissions</li>
-                    <li>Class ID exists</li>
-                </ul>
-                <button class="btn btn-sm btn-secondary mt-2" onclick="showClassModal('${classId}')">
-                    <i class="fas fa-sync-alt"></i> Try Again
-                </button>
-            </div>`;
-        modal.show();
+        modalBody.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
     }
 }
 
-function getClassForm(cls = null, trainers = []) {
-    // Format time for input fields (HH:mm)
-    const startTime = cls?.startTime ? cls.startTime.substring(0, 5) : '08:00';
-    const endTime = cls?.endTime ? cls.endTime.substring(0, 5) : '09:00';
-    
+// Return HTML form for class
+function getClassForm(classData = null, trainers = []) {
     return `
         <form id="classForm" onsubmit="handleClassFormSubmit(event)">
-            <input type="hidden" id="classId" value="${cls?.id || ''}">
+            <input type="hidden" id="classId" value="${classData?.id || ''}">
             <div class="mb-3">
-                <label for="className" class="form-label">Class Name</label>
-                <input type="text" class="form-control" id="className" value="${cls?.name || ''}" required>
+                <label for="className" class="form-label">Class Name *</label>
+                <input type="text" class="form-control" id="className" 
+                       value="${classData?.name || ''}" required minlength="3" maxlength="100">
+                <div class="invalid-feedback">Please enter a class name (3-100 characters)</div>
             </div>
             <div class="mb-3">
                 <label for="classDescription" class="form-label">Description</label>
-                <textarea class="form-control" id="classDescription" rows="3">${cls?.description || ''}</textarea>
+                <textarea class="form-control" id="classDescription" rows="3">${classData?.description || ''}</textarea>
             </div>
-            <div class="mb-3">
-                <label for="classCapacity" class="form-label">Capacity</label>
-                <input type="number" class="form-control" id="classCapacity" value="${cls?.capacity || 20}" required>
-            </div>
-            <div class="mb-3">
-                <label for="classDays" class="form-label">Days of Week</label>
-                <input type="text" class="form-control" id="classDays" value="${cls?.daysOfWeek || ''}" 
-                       placeholder="e.g., Monday, Wednesday, Friday" required>
-            </div>
-            <div class="row mb-3">
-                <div class="col">
-                    <label for="classStartTime" class="form-label">Start Time</label>
-                    <input type="time" class="form-control" id="classStartTime" value="${startTime}" required>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="classCapacity" class="form-label">Capacity *</label>
+                    <input type="number" class="form-control" id="classCapacity" 
+                           value="${classData?.capacity || 10}" min="1" max="100" required>
+                    <div class="invalid-feedback">Please enter a capacity between 1 and 100</div>
                 </div>
-                <div class="col">
-                    <label for="classEndTime" class="form-label">End Time</label>
-                    <input type="time" class="form-control" id="classEndTime" value="${endTime}" required>
+                <div class="col-md-6 mb-3">
+                    <label for="classDuration" class="form-label">Duration (minutes) *</label>
+                    <input type="number" class="form-control" id="classDuration" 
+                           value="${classData?.durationInMinutes || 60}" min="1" max="480" required>
+                    <div class="invalid-feedback">Please enter a duration between 1 and 480 minutes</div>
                 </div>
             </div>
-            <div class="mb-3">
-                <label for="classPrice" class="form-label">Price ($)</label>
-                <input type="number" step="0.01" class="form-control" id="classPrice" value="${cls?.price || 0}" required>
-            </div>
-            <div class="mb-3">
-                <label for="classTrainer" class="form-label">Trainer</label>
-                <select class="form-select" id="classTrainer" required>
-                    ${trainers.map(trainer => `
-                        <option value="${trainer.id}" ${cls?.trainerId === trainer.id ? 'selected' : ''}>
-                            ${trainer.name}
-                        </option>
-                    `).join('')}
-                </select>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="classPrice" class="form-label">Price ($) *</label>
+                    <input type="number" step="0.01" class="form-control" id="classPrice" 
+                           value="${classData?.price || 0}" min="0" max="1000" required>
+                    <div class="invalid-feedback">Please enter a valid price (0-1000)</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="classTrainer" class="form-label">Trainer *</label>
+                    <select class="form-select" id="classTrainer" required>
+                        <option value="">-- Select Trainer --</option>
+                        ${trainers.map(trainer => `
+                            <option value="${trainer.id}" ${classData?.trainerId === trainer.id ? 'selected' : ''}>
+                                ${trainer.name}
+                            </option>
+                        `).join('')}
+                    </select>
+                    <div class="invalid-feedback">Please select a trainer</div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>
-        </form>`;
+        </form>
+        <script>
+            // Client-side validation
+            document.getElementById('classForm').addEventListener('submit', function(event) {
+                const form = event.target;
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            });
+        </script>`;
 }
 
-
-// Handle form submission
+// Handle class form submission
 async function handleClassFormSubmit(event) {
     event.preventDefault();
     
     const classId = document.getElementById("classId").value;
     const isEdit = !!classId;
     
-    // Get form values
     const classData = {
         name: document.getElementById("className").value,
         description: document.getElementById("classDescription").value,
         capacity: parseInt(document.getElementById("classCapacity").value),
-        daysOfWeek: document.getElementById("classDays").value,
-        startTime: document.getElementById("classStartTime").value + ":00",
-        endTime: document.getElementById("classEndTime").value + ":00",
+        durationInMinutes: parseInt(document.getElementById("classDuration").value),
         price: parseFloat(document.getElementById("classPrice").value),
-        trainerId: parseInt(document.getElementById("classTrainer").value),
-        date: null
+        trainerId: parseInt(document.getElementById("classTrainer").value)
     };
 
-    // For edit, we need to include the ID
-    if (isEdit) {
-        classData.id = parseInt(classId);
+    // Validate trainer selection
+    if (isNaN(classData.trainerId)) {
+        const trainerSelect = document.getElementById("classTrainer");
+        trainerSelect.classList.add('is-invalid');
+        return;
     }
 
     try {
@@ -688,12 +681,14 @@ async function handleClassFormSubmit(event) {
             const errorData = await response.json();
             console.error("API Error:", errorData);
             
-            // Build a more detailed error message
-            let errorMessage = `HTTP Error ${response.status}`;
+            let errorMessage = "Validation failed:";
             if (errorData.errors) {
-                errorMessage += ": " + Object.entries(errorData.errors)
-                    .map(([field, errors]) => `${field}: ${errors.join(', ')}`)
-                    .join('; ');
+                // Handle model validation errors
+                for (const [field, errors] of Object.entries(errorData.errors)) {
+                    errorMessage += `\n${field}: ${errors.join(', ')}`;
+                }
+            } else {
+                errorMessage = errorData.title || errorData.message || 'Failed to save class';
             }
             
             throw new Error(errorMessage);
@@ -702,136 +697,17 @@ async function handleClassFormSubmit(event) {
         // Close modal and refresh list
         bootstrap.Modal.getInstance(document.getElementById('classModal')).hide();
         loadClasses();
+        showToast('Class saved successfully!', 'success');
         
     } catch (error) {
         console.error("Error saving class:", error);
-        alert(`Error saving class: ${error.message}`);
+        showToast(`Error saving class: ${error.message}`, 'danger');
     }
 }
 
-
-
-
-// Return HTML form for class
-/* function getClassForm(cls = null, trainers = []) {
-    return `
-        <form id="classForm" onsubmit="handleClassFormSubmit(event)">
-            <input type="hidden" id="classId" value="${cls?.id || ''}">
-            <div class="mb-3">
-                <label for="className" class="form-label">Class Name</label>
-                <input type="text" class="form-control" id="className" value="${cls?.name || ''}" required>
-            </div>
-            <div class="mb-3">
-                <label for="classDescription" class="form-label">Description</label>
-                <textarea class="form-control" id="classDescription" rows="3">${cls?.description || ''}</textarea>
-            </div>
-            <div class="mb-3">
-                <label for="classCapacity" class="form-label">Capacity</label>
-                <input type="number" class="form-control" id="classCapacity" value="${cls?.capacity || 20}" required>
-            </div>
-            <div class="mb-3">
-                <label for="classDays" class="form-label">Days of Week</label>
-                <input type="text" class="form-control" id="classDays" value="${cls?.daysOfWeek || ''}" 
-                       placeholder="e.g., Monday, Wednesday, Friday" required>
-            </div>
-            <div class="row mb-3">
-                <div class="col">
-                    <label for="classStartTime" class="form-label">Start Time</label>
-                    <input type="time" class="form-control" id="classStartTime" value="${cls?.startTime?.substring(0, 5) || '08:00'}" required>
-                </div>
-                <div class="col">
-                    <label for="classEndTime" class="form-label">End Time</label>
-                    <input type="time" class="form-control" id="classEndTime" value="${cls?.endTime?.substring(0, 5) || '09:00'}" required>
-                </div>
-            </div>
-            <div class="mb-3">
-                <label for="classPrice" class="form-label">Price ($)</label>
-                <input type="number" step="0.01" class="form-control" id="classPrice" value="${cls?.price || 0}" required>
-            </div>
-            <div class="mb-3">
-                <label for="classTrainer" class="form-label">Trainer</label>
-                <select class="form-select" id="classTrainer" required>
-                    ${trainers.map(trainer => `
-                        <option value="${trainer.id}" ${cls?.trainerId === trainer.id ? 'selected' : ''}>
-                            ${trainer.name}
-                        </option>
-                    `).join('')}
-                </select>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-        </form>`;
-}
- */
-
-// Handle form submission
-async function handleClassFormSubmit(event) {
-    event.preventDefault();
-    
-    const classId = document.getElementById("classId").value;
-    const isEdit = !!classId;
-    
-    // Parse time values properly
-    const startTimeValue = document.getElementById("classStartTime").value;
-    const endTimeValue = document.getElementById("classEndTime").value;
-    
-    // Convert time strings to format "HH:mm:ss"
-    const startTime = `${startTimeValue}:00`;
-    const endTime = `${endTimeValue}:00`;
-    
-    const classData = {
-        id: classId ? parseInt(classId) : 0,
-        name: document.getElementById("className").value,
-        description: document.getElementById("classDescription").value,
-        capacity: parseInt(document.getElementById("classCapacity").value),
-        daysOfWeek: document.getElementById("classDays").value,
-        startTime: startTime,
-        endTime: endTime,
-        price: parseFloat(document.getElementById("classPrice").value),
-        trainerId: parseInt(document.getElementById("classTrainer").value),
-        date: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-    };
-
-    try {
-        const url = isEdit 
-            ? `https://localhost:7020/api/Class/${classId}` 
-            : 'https://localhost:7020/api/Class';
-            
-        const method = isEdit ? 'PUT' : 'POST';
-        
-        const response = await fetch(url, {
-            method: method,
-            headers: {
-                ...getAuthHeaders(),
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(classData)
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error("API Error:", errorData);
-            throw new Error(`HTTP Error ${response.status}: ${JSON.stringify(errorData)}`);
-        }
-
-        // Close modal and refresh list
-        bootstrap.Modal.getInstance(document.getElementById('classModal')).hide();
-        loadClasses();
-        
-    } catch (error) {
-        console.error("Error saving class:", error);
-        alert(`Error saving class: ${error.message}`);
-    }
-}
-
-
-
+// Delete class
 async function deleteClass(classId) {
-    if (!confirm("Are you sure you want to delete this class? This action cannot be undone.")) {
+    if (!confirm("Are you sure you want to delete this class? This will also delete all related schedules.")) {
         return;
     }
 
@@ -841,24 +717,48 @@ async function deleteClass(classId) {
             headers: getAuthHeaders()
         });
 
-        if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.title || errorData.message || 'Failed to delete class');
+        }
 
         // Refresh the classes list
         loadClasses();
-        alert("Class deleted successfully!");
+        showToast('Class deleted successfully!', 'success');
     } catch (error) {
         console.error("Error deleting class:", error);
-        alert(`Error deleting class: ${error.message}`);
+        showToast(`Error deleting class: ${error.message}`, 'danger');
     }
-}  
-
-
-
-
-// ✅ Add Membership Modal (Placeholder)
-function openMembershipModal() {
-    alert("🛠 Add Membership Form will be here!");
 }
+
+// Helper function for toast notifications
+function showToast(message, type = 'info') {
+    const toastContainer = document.getElementById('toast-container') || document.createElement('div');
+    toastContainer.id = 'toast-container';
+    toastContainer.style.position = 'fixed';
+    toastContainer.style.top = '20px';
+    toastContainer.style.right = '20px';
+    toastContainer.style.zIndex = '9999';
+    document.body.appendChild(toastContainer);
+
+    const toast = document.createElement('div');
+    toast.className = `toast show align-items-center text-white bg-${type} border-0`;
+    toast.role = 'alert';
+    toast.innerHTML = `
+        <div class="d-flex">
+            <div class="toast-body">${message}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    `;
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+
 
 // ✅ Add Class Modal (Placeholder)
 function openClassModal() {
@@ -1652,50 +1552,58 @@ function loadBookings() {
 }
 
 
+// Helper function to format date
+/* function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+} */
 
-//
+
+
 // ✅ Load Schedules
 async function loadSchedules() {
-    document.getElementById("dashboard-title").innerText = "Class Schedules";
+    document.getElementById("dashboard-title").innerText = "Schedule Management";
     const content = document.getElementById("admin-content");
     content.innerHTML = "<h4>Loading schedules...</h4>";
 
     try {
-        const response = await fetch("https://localhost:7020/api/Schedule", { 
-            headers: getAuthHeaders() 
-        });
+        // Load schedules, classes, and trainers in parallel
+        const [schedulesResponse, classesResponse, trainersResponse] = await Promise.all([
+            fetch("https://localhost:7020/api/Schedule", { 
+                headers: getAuthHeaders() 
+            }),
+            fetch("https://localhost:7020/api/Class", { 
+                headers: getAuthHeaders() 
+            }),
+            fetch("https://localhost:7020/api/Trainer", { 
+                headers: getAuthHeaders() 
+            })
+        ]);
 
-        if (response.status === 401) {
+        if (schedulesResponse.status === 401 || classesResponse.status === 401 || trainersResponse.status === 401) {
             alert("❌ Unauthorized! Please log in again.");
             window.location.href = "login.html";
             return;
         }
 
-        if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+        if (!schedulesResponse.ok) throw new Error(`HTTP Error ${schedulesResponse.status}`);
+        if (!classesResponse.ok) throw new Error(`HTTP Error ${classesResponse.status}`);
+        if (!trainersResponse.ok) throw new Error(`HTTP Error ${trainersResponse.status}`);
 
-        const schedules = await response.json();
+        const schedules = await schedulesResponse.json();
+        const classes = await classesResponse.json();
+        const trainers = await trainersResponse.json();
         
         content.innerHTML = `
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <button class="btn btn-success" onclick="showScheduleModal()">
-                        <i class="fas fa-plus"></i> Add New Schedule
-                    </button>
-                </div>
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <input type="date" id="scheduleFilterDate" class="form-control">
-                        <button class="btn btn-primary" onclick="filterSchedules()">
-                            <i class="fas fa-filter"></i> Filter
-                        </button>
-                        <button class="btn btn-secondary" onclick="clearScheduleFilter()">
-                            <i class="fas fa-times"></i> Clear
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <button class="btn btn-success mb-3" onclick="showScheduleModal()">
+                <i class="fas fa-plus"></i> Add New Schedule
+            </button>
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -1705,30 +1613,29 @@ async function loadSchedules() {
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="schedulesTableBody">
+                    <tbody>
                         ${schedules.map(schedule => `
                             <tr>
                                 <td>${formatDate(schedule.scheduleDate)}</td>
-                                <td>${schedule.startTime} - ${schedule.endTime}</td>
+                                <td>${formatTime(schedule.startTime)} - ${formatTime(schedule.endTime)}</td>
                                 <td>${schedule.className || 'N/A'}</td>
                                 <td>${schedule.trainerName || 'N/A'}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning me-2" onclick="showScheduleModal('${schedule.id}')">
+                                    <button class="btn btn-sm btn-warning me-2" onclick="showScheduleModal(${schedule.id})">
                                         <i class="fas fa-edit"></i> Edit
                                     </button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteSchedule('${schedule.id}')">
+                                    <button class="btn btn-sm btn-danger" onclick="deleteSchedule(${schedule.id})">
                                         <i class="fas fa-trash"></i> Delete
                                     </button>
                                 </td>
-                            </tr>
-                        `).join('')}
+                            </tr>`).join('')}
                     </tbody>
                 </table>
             </div>
             
             <!-- Schedule Modal -->
             <div class="modal fade" id="scheduleModal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="scheduleModalTitle">Add New Schedule</h5>
@@ -1742,9 +1649,32 @@ async function loadSchedules() {
             </div>`;
     } catch (error) {
         console.error("❌ Error loading schedules:", error);
-        content.innerHTML = `<div class='alert alert-danger'>Error loading schedules: ${error.message}</div>`;
+        content.innerHTML = "<div class='alert alert-danger'>Error loading schedules.</div>";
     }
 }
+
+// Helper function to format time from TimeSpan
+function formatTime(timeSpan) {
+    if (!timeSpan) return '';
+    
+    // Convert TimeSpan to a time string (e.g., "14:30")
+    const hours = timeSpan.hours || 0;
+    const minutes = timeSpan.minutes || 0;
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const hours12 = hours % 12 || 12;
+    return `${hours12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+}
+
+// Helper function to format date
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+}
+
 
 // Show modal for adding/editing schedule
 async function showScheduleModal(scheduleId = null) {
@@ -1757,6 +1687,8 @@ async function showScheduleModal(scheduleId = null) {
         const classesResponse = await fetch("https://localhost:7020/api/Class", {
             headers: getAuthHeaders()
         });
+        
+        if (!classesResponse.ok) throw new Error(`HTTP Error ${classesResponse.status}`);
         const classes = await classesResponse.json();
 
         if (scheduleId) {
@@ -1765,9 +1697,11 @@ async function showScheduleModal(scheduleId = null) {
             const scheduleResponse = await fetch(`https://localhost:7020/api/Schedule/${scheduleId}`, {
                 headers: getAuthHeaders()
             });
-            const schedule = await scheduleResponse.json();
             
-            modalBody.innerHTML = getScheduleForm(schedule, classes);
+            if (!scheduleResponse.ok) throw new Error(`HTTP Error ${scheduleResponse.status}`);
+            const scheduleData = await scheduleResponse.json();
+            
+            modalBody.innerHTML = getScheduleForm(scheduleData, classes);
         } else {
             // Add mode
             modalTitle.textContent = "Add New Schedule";
@@ -1787,69 +1721,100 @@ function getScheduleForm(schedule = null, classes = []) {
         ? new Date(schedule.scheduleDate).toISOString().split('T')[0] 
         : new Date().toISOString().split('T')[0];
     
+    // Convert TimeSpan to time inputs
     const startTime = schedule?.startTime 
-        ? schedule.startTime.substring(0, 5) 
-        : '08:00';
-        
-    const endTime = schedule?.endTime 
-        ? schedule.endTime.substring(0, 5) 
+        ? `${String(schedule.startTime.hours).padStart(2, '0')}:${String(schedule.startTime.minutes).padStart(2, '0')}`
         : '09:00';
+    
+    const endTime = schedule?.endTime 
+        ? `${String(schedule.endTime.hours).padStart(2, '0')}:${String(schedule.endTime.minutes).padStart(2, '0')}`
+        : '10:00';
 
     return `
-        <form id="scheduleForm" onsubmit="handleScheduleFormSubmit(event)">
+        <form id="scheduleForm" onsubmit="handleScheduleFormSubmit(event)" novalidate>
             <input type="hidden" id="scheduleId" value="${schedule?.id || ''}">
+            <div class="mb-3">
+                <label for="scheduleClass" class="form-label">Class *</label>
+                <select class="form-select" id="scheduleClass" required>
+                    <option value="">-- Select Class --</option>
+                    ${classes.map(cls => `
+                        <option value="${cls.id}" ${schedule?.classId === cls.id ? 'selected' : ''}>
+                            ${cls.name} (${cls.trainerName || 'No trainer'})
+                        </option>
+                    `).join('')}
+                </select>
+                <div class="invalid-feedback">Please select a class</div>
+            </div>
+            <div class="mb-3">
+                <label for="scheduleDate" class="form-label">Date *</label>
+                <input type="date" class="form-control" id="scheduleDate" 
+                       value="${scheduleDate}" required>
+                <div class="invalid-feedback">Please select a valid date</div>
+            </div>
             <div class="row">
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="scheduleClass" class="form-label">Class</label>
-                        <select class="form-select" id="scheduleClass" required>
-                            ${classes.map(cls => `
-                                <option value="${cls.id}" ${schedule?.classId === cls.id ? 'selected' : ''}>
-                                    ${cls.name} (${cls.trainerName})
-                                </option>
-                            `).join('')}
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="scheduleDate" class="form-label">Date</label>
-                        <input type="date" class="form-control" id="scheduleDate" 
-                               value="${scheduleDate}" required>
-                    </div>
+                <div class="col-md-6 mb-3">
+                    <label for="startTime" class="form-label">Start Time *</label>
+                    <input type="time" class="form-control" id="startTime" 
+                           value="${startTime}" required>
+                    <div class="invalid-feedback">Please select a start time</div>
                 </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label for="scheduleStartTime" class="form-label">Start Time</label>
-                        <input type="time" class="form-control" id="scheduleStartTime" 
-                               value="${startTime}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="scheduleEndTime" class="form-label">End Time</label>
-                        <input type="time" class="form-control" id="scheduleEndTime" 
-                               value="${endTime}" required>
-                    </div>
+                <div class="col-md-6 mb-3">
+                    <label for="endTime" class="form-label">End Time *</label>
+                    <input type="time" class="form-control" id="endTime" 
+                           value="${endTime}" required>
+                    <div class="invalid-feedback">Please select an end time</div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>
-        </form>`;
+        </form>
+        <script>
+            // Client-side validation
+            document.getElementById('scheduleForm').addEventListener('submit', function(event) {
+                const form = event.target;
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            });
+        </script>`;
 }
 
-// Handle form submission
+// Handle schedule form submission
+// Handle schedule form submission
 async function handleScheduleFormSubmit(event) {
     event.preventDefault();
     
     const scheduleId = document.getElementById("scheduleId").value;
     const isEdit = !!scheduleId;
     
+    // Parse time inputs
+    const [startHours, startMinutes] = document.getElementById("startTime").value.split(':').map(Number);
+    const [endHours, endMinutes] = document.getElementById("endTime").value.split(':').map(Number);
+    
+    // Prepare the schedule data object
     const scheduleData = {
-        id: scheduleId ? parseInt(scheduleId) : 0,
         classId: parseInt(document.getElementById("scheduleClass").value),
         scheduleDate: document.getElementById("scheduleDate").value,
-        startTime: document.getElementById("scheduleStartTime").value + ":00",
-        endTime: document.getElementById("scheduleEndTime").value + ":00"
+        startTime: createTimeSpan(startHours, startMinutes),
+        endTime: createTimeSpan(endHours, endMinutes)
     };
+
+    // For edit, add the ID to the data
+    if (isEdit) {
+        scheduleData.id = parseInt(scheduleId);
+    }
+
+    // Validate end time is after start time
+    const startTotal = startHours * 60 + startMinutes;
+    const endTotal = endHours * 60 + endMinutes;
+    if (endTotal <= startTotal) {
+        alert("End time must be after start time");
+        return;
+    }
 
     try {
         const url = isEdit 
@@ -1870,22 +1835,43 @@ async function handleScheduleFormSubmit(event) {
         if (!response.ok) {
             const errorData = await response.json();
             console.error("API Error:", errorData);
-            throw new Error(`HTTP Error ${response.status}: ${JSON.stringify(errorData)}`);
+            
+            let errorMessage = "Failed to save schedule";
+            if (errorData.errors) {
+                errorMessage = Object.values(errorData.errors).flat().join('\n');
+            } else if (errorData.title) {
+                errorMessage = errorData.title;
+            }
+            
+            throw new Error(errorMessage);
         }
 
         // Close modal and refresh list
         bootstrap.Modal.getInstance(document.getElementById('scheduleModal')).hide();
         loadSchedules();
+        showToast(`Schedule ${isEdit ? 'updated' : 'created'} successfully!`, 'success');
         
     } catch (error) {
         console.error("Error saving schedule:", error);
-        alert(`Error saving schedule: ${error.message}`);
+        showToast(`Error: ${error.message}`, 'danger');
     }
 }
 
+
+
+function createTimeSpan(hours, minutes, seconds = 0) {
+    // Return a string in format "hh:mm:ss" that ASP.NET Core can parse
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+
+
+
 // Delete schedule
 async function deleteSchedule(scheduleId) {
-    if (!confirm("Are you sure you want to delete this schedule?")) return;
+    if (!confirm("Are you sure you want to delete this schedule? This action cannot be undone.")) {
+        return;
+    }
 
     try {
         const response = await fetch(`https://localhost:7020/api/Schedule/${scheduleId}`, {
@@ -1893,64 +1879,18 @@ async function deleteSchedule(scheduleId) {
             headers: getAuthHeaders()
         });
 
-        if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.title || errorData.message || 'Failed to delete schedule');
+        }
 
+        // Refresh the schedules list
         loadSchedules();
-        alert("Schedule deleted successfully!");
+        showToast('Schedule deleted successfully!', 'success');
     } catch (error) {
         console.error("Error deleting schedule:", error);
-        alert(`Error deleting schedule: ${error.message}`);
+        showToast(`Error deleting schedule: ${error.message}`, 'danger');
     }
-}
-
-// Filter schedules by date
-async function filterSchedules() {
-    const dateFilter = document.getElementById("scheduleFilterDate").value;
-    if (!dateFilter) return;
-
-    try {
-        const response = await fetch(`https://localhost:7020/api/Schedule?date=${dateFilter}`, {
-            headers: getAuthHeaders()
-        });
-        const schedules = await response.json();
-        
-        document.getElementById("schedulesTableBody").innerHTML = 
-            schedules.map(schedule => `
-                <tr>
-                    <td>${formatDate(schedule.scheduleDate)}</td>
-                    <td>${schedule.startTime} - ${schedule.endTime}</td>
-                    <td>${schedule.className || 'N/A'}</td>
-                    <td>${schedule.trainerName || 'N/A'}</td>
-                    <td>
-                        <button class="btn btn-sm btn-warning me-2" onclick="showScheduleModal('${schedule.id}')">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteSchedule('${schedule.id}')">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-    } catch (error) {
-        console.error("Error filtering schedules:", error);
-        alert(`Error filtering schedules: ${error.message}`);
-    }
-}
-
-// Clear schedule filter
-function clearScheduleFilter() {
-    document.getElementById("scheduleFilterDate").value = '';
-    loadSchedules();
-}
-
-// Helper function to format date
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
 }
 
 

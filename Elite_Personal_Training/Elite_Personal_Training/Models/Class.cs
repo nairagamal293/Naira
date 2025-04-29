@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System;
-using System.Collections.Generic;
 
 namespace Elite_Personal_Training.Models
 {
@@ -10,32 +8,29 @@ namespace Elite_Personal_Training.Models
         public int Id { get; set; }
 
         [Required]
+        [StringLength(100)]
         public string Name { get; set; }
 
-        public string Description { get; set; }
-
-        [ForeignKey("Trainer")]
-        public int TrainerId { get; set; }
-        public Trainer Trainer { get; set; }
+        public string? Description { get; set; }
 
         [Required]
         public int Capacity { get; set; }
 
-        public DateTime? Date { get; set; }
+        [Required]
+        public TimeSpan Duration { get; set; }
 
         [Required]
-        public TimeSpan StartTime { get; set; }
-
-        [Required]
-        public TimeSpan EndTime { get; set; }
-
-        public string DaysOfWeek { get; set; }
-
+        [Range(0, 1000)]
         public decimal Price { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        [Required]
+        public int TrainerId { get; set; }
+        public Trainer Trainer { get; set; }
 
-        public List<Schedule> Schedules { get; set; } = new List<Schedule>();
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+
+        // ✅ Add this to fix your issue
+        public ICollection<Schedule> Schedules { get; set; }
     }
 }

@@ -218,11 +218,9 @@ namespace Elite_Personal_Training.Controllers
         [HttpGet("available-classes")]
         public async Task<IActionResult> GetAvailableClasses()
         {
-            var now = DateTime.UtcNow.Date;
-
             var availableClasses = await _context.Classes
+                .Include(c => c.Schedules)
                 .Where(c =>
-                    c.Date >= now &&
                     !_context.Bookings
                         .Where(b => b.ClassId == c.Id && b.Status != "Cancelled")
                         .GroupBy(b => b.ClassId)
@@ -233,6 +231,7 @@ namespace Elite_Personal_Training.Controllers
 
             return Ok(availableClasses);
         }
+
 
         [HttpGet("available-online-sessions")]
         public async Task<IActionResult> GetAvailableOnlineSessions()

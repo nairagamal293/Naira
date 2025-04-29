@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Elite_Personal_Training.Models
@@ -9,7 +10,7 @@ namespace Elite_Personal_Training.Models
 
         [ForeignKey("Class")]
         public int ClassId { get; set; }
-        public Class Class { get; set; } = new Class();
+        public Class Class { get; set; }
 
         public DateTime ScheduleDate { get; set; }
         public TimeSpan StartTime { get; set; }

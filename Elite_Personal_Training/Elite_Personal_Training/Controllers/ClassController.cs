@@ -18,7 +18,6 @@ namespace Elite_Personal_Training.Controllers
             _context = context;
         }
 
-        // ✅ Allow public access to get all classes
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetClasses()
@@ -31,10 +30,7 @@ namespace Elite_Personal_Training.Controllers
                     c.Name,
                     c.Description,
                     c.Capacity,
-                    c.Date,
-                    StartTime = DateTime.Today.Add(c.StartTime).ToString("hh:mm tt"),
-                    EndTime = DateTime.Today.Add(c.EndTime).ToString("hh:mm tt"),
-                    c.DaysOfWeek,
+                    DurationInMinutes = (int)c.Duration.TotalMinutes,
                     TrainerName = c.Trainer.Name,
                     c.Price
                 })
@@ -43,7 +39,6 @@ namespace Elite_Personal_Training.Controllers
             return Ok(classes);
         }
 
-        // ✅ Allow public access to get a single class by ID
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetClass(int id)
@@ -61,10 +56,7 @@ namespace Elite_Personal_Training.Controllers
                 classModel.Name,
                 classModel.Description,
                 classModel.Capacity,
-                Date = classModel.Date?.ToString("yyyy-MM-dd"),
-                StartTime = classModel.StartTime.ToString(@"hh\:mm\:ss"),
-                EndTime = classModel.EndTime.ToString(@"hh\:mm\:ss"),
-                classModel.DaysOfWeek,
+                DurationInMinutes = (int)classModel.Duration.TotalMinutes,
                 TrainerName = classModel.Trainer?.Name,
                 TrainerId = classModel.Trainer?.Id,
                 classModel.Price
@@ -73,8 +65,8 @@ namespace Elite_Personal_Training.Controllers
             return Ok(result);
         }
 
-        // ✅ Protected - requires authentication
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateClass([FromBody] ClassFormModel classModel)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -84,12 +76,9 @@ namespace Elite_Personal_Training.Controllers
                 Name = classModel.Name,
                 Description = classModel.Description,
                 Capacity = classModel.Capacity,
-                DaysOfWeek = classModel.DaysOfWeek,
-                StartTime = TimeSpan.Parse(classModel.StartTime),
-                EndTime = TimeSpan.Parse(classModel.EndTime),
+                Duration = TimeSpan.FromMinutes(classModel.DurationInMinutes),
                 Price = classModel.Price,
                 TrainerId = classModel.TrainerId,
-                Date = classModel.Date,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
@@ -100,8 +89,8 @@ namespace Elite_Personal_Training.Controllers
             return CreatedAtAction(nameof(GetClass), new { id = newClass.Id }, newClass);
         }
 
-        // ✅ Protected - requires authentication
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateClass(int id, [FromBody] ClassFormModel updatedClass)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -112,9 +101,7 @@ namespace Elite_Personal_Training.Controllers
             existingClass.Name = updatedClass.Name;
             existingClass.Description = updatedClass.Description;
             existingClass.Capacity = updatedClass.Capacity;
-            existingClass.DaysOfWeek = updatedClass.DaysOfWeek;
-            existingClass.StartTime = TimeSpan.Parse(updatedClass.StartTime);
-            existingClass.EndTime = TimeSpan.Parse(updatedClass.EndTime);
+            existingClass.Duration = TimeSpan.FromMinutes(updatedClass.DurationInMinutes);
             existingClass.Price = updatedClass.Price;
             existingClass.TrainerId = updatedClass.TrainerId;
             existingClass.UpdatedAt = DateTime.UtcNow;
@@ -123,8 +110,8 @@ namespace Elite_Personal_Training.Controllers
             return NoContent();
         }
 
-        // ✅ Protected - requires authentication
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteClass(int id)
         {
             var classModel = await _context.Classes.FindAsync(id);
@@ -135,30 +122,21 @@ namespace Elite_Personal_Training.Controllers
             return NoContent();
         }
 
-        // ✅ Form model used for creation and updates
         public class ClassFormModel
         {
             [Required]
             [StringLength(100)]
             public string Name { get; set; }
 
-            public string Description { get; set; }
+            public string? Description { get; set; }
 
             [Required]
             [Range(1, 100)]
             public int Capacity { get; set; }
 
-            public string DaysOfWeek { get; set; }
-
             [Required]
-            [RegularExpression(@"^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$",
-                ErrorMessage = "Time must be in HH:mm:ss format")]
-            public string StartTime { get; set; }
-
-            [Required]
-            [RegularExpression(@"^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$",
-                ErrorMessage = "Time must be in HH:mm:ss format")]
-            public string EndTime { get; set; }
+            [Range(1, 480)] // Max 8 hours
+            public int DurationInMinutes { get; set; }
 
             [Required]
             [Range(0, 1000)]
@@ -166,8 +144,6 @@ namespace Elite_Personal_Training.Controllers
 
             [Required]
             public int TrainerId { get; set; }
-
-            public DateTime? Date { get; set; }
         }
     }
 }
