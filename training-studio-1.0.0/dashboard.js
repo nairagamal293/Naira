@@ -1657,12 +1657,24 @@ async function loadSchedules() {
 function formatTime(timeSpan) {
     if (!timeSpan) return '';
     
-    // Convert TimeSpan to a time string (e.g., "14:30")
-    const hours = timeSpan.hours || 0;
-    const minutes = timeSpan.minutes || 0;
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const hours12 = hours % 12 || 12;
-    return `${hours12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+    // Handle string format from API (hh:mm:ss)
+    if (typeof timeSpan === 'string') {
+        const [hours, minutes] = timeSpan.split(':').map(Number);
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const hours12 = hours % 12 || 12;
+        return `${hours12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+    }
+    
+    // Handle TimeSpan object from API
+    if (timeSpan.hours !== undefined) {
+        const hours = timeSpan.hours || 0;
+        const minutes = timeSpan.minutes || 0;
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const hours12 = hours % 12 || 12;
+        return `${hours12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+    }
+    
+    return '';
 }
 
 // Helper function to format date
@@ -1721,14 +1733,28 @@ function getScheduleForm(schedule = null, classes = []) {
         ? new Date(schedule.scheduleDate).toISOString().split('T')[0] 
         : new Date().toISOString().split('T')[0];
     
-    // Convert TimeSpan to time inputs
-    const startTime = schedule?.startTime 
-        ? `${String(schedule.startTime.hours).padStart(2, '0')}:${String(schedule.startTime.minutes).padStart(2, '0')}`
-        : '09:00';
-    
-    const endTime = schedule?.endTime 
-        ? `${String(schedule.endTime.hours).padStart(2, '0')}:${String(schedule.endTime.minutes).padStart(2, '0')}`
-        : '10:00';
+    // Improved time formatting function
+    const formatTimeForInput = (timeString) => {
+        if (!timeString) return '09:00'; // Default time
+        
+        // Handle "hh:mm" format (from API)
+        if (typeof timeString === 'string' && timeString.includes(':')) {
+            const parts = timeString.split(':');
+            if (parts.length >= 2) {
+                return `${parts[0].padStart(2, '0')}:${parts[1].padStart(2, '0')}`;
+            }
+        }
+        
+        // Handle TimeSpan object (if it comes through somehow)
+        if (typeof timeString === 'object' && timeString.hours !== undefined) {
+            return `${String(timeString.hours).padStart(2, '0')}:${String(timeString.minutes || 0).padStart(2, '0')}`;
+        }
+        
+        return '09:00'; // Fallback default
+    };
+
+    const startTime = formatTimeForInput(schedule?.StartTime || schedule?.startTime);
+    const endTime = formatTimeForInput(schedule?.EndTime || schedule?.endTime);
 
     return `
         <form id="scheduleForm" onsubmit="handleScheduleFormSubmit(event)" novalidate>
@@ -1751,7 +1777,7 @@ function getScheduleForm(schedule = null, classes = []) {
                        value="${scheduleDate}" required>
                 <div class="invalid-feedback">Please select a valid date</div>
             </div>
-            <div class="row">
+             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="startTime" class="form-label">Start Time *</label>
                     <input type="time" class="form-control" id="startTime" 
@@ -1765,6 +1791,7 @@ function getScheduleForm(schedule = null, classes = []) {
                     <div class="invalid-feedback">Please select an end time</div>
                 </div>
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Save</button>
@@ -1784,16 +1811,18 @@ function getScheduleForm(schedule = null, classes = []) {
 }
 
 // Handle schedule form submission
-// Handle schedule form submission
 async function handleScheduleFormSubmit(event) {
     event.preventDefault();
     
     const scheduleId = document.getElementById("scheduleId").value;
     const isEdit = !!scheduleId;
     
-    // Parse time inputs
-    const [startHours, startMinutes] = document.getElementById("startTime").value.split(':').map(Number);
-    const [endHours, endMinutes] = document.getElementById("endTime").value.split(':').map(Number);
+    // Parse time inputs - now more robust
+    const startTimeValue = document.getElementById("startTime").value;
+    const endTimeValue = document.getElementById("endTime").value;
+    
+    const [startHours, startMinutes] = startTimeValue.split(':').map(Number);
+    const [endHours, endMinutes] = endTimeValue.split(':').map(Number);
     
     // Prepare the schedule data object
     const scheduleData = {

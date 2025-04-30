@@ -37,12 +37,13 @@ namespace Elite_Personal_Training.Controllers
                     .ThenInclude(c => c.Trainer)
                 .ToListAsync();
 
+            // In your GetSchedules method
             var result = schedules.Select(s => new
             {
                 s.Id,
                 s.ScheduleDate,
-                StartTime = DateTime.Today.Add(s.StartTime).ToString("hh:mm tt"),
-                EndTime = DateTime.Today.Add(s.EndTime).ToString("hh:mm tt"),
+                StartTime = s.StartTime.ToString(), // This will output "hh:mm:ss"
+                EndTime = s.EndTime.ToString(),     // This will output "hh:mm:ss"
                 ClassName = s.Class?.Name,
                 TrainerName = s.Class?.Trainer?.Name
             });
@@ -50,6 +51,7 @@ namespace Elite_Personal_Training.Controllers
             return Ok(result);
         }
 
+        // ✅ Get schedule by ID
         // ✅ Get schedule by ID
         [HttpGet("{id}")]
         public async Task<ActionResult<object>> GetSchedule(int id)
@@ -68,8 +70,8 @@ namespace Elite_Personal_Training.Controllers
             {
                 schedule.Id,
                 schedule.ScheduleDate,
-                StartTime = DateTime.Today.Add(schedule.StartTime).ToString("hh:mm tt"),
-                EndTime = DateTime.Today.Add(schedule.EndTime).ToString("hh:mm tt"),
+                StartTime = schedule.StartTime.ToString(@"hh\:mm"), // Return as "hh:mm" string
+                EndTime = schedule.EndTime.ToString(@"hh\:mm"),     // Return as "hh:mm" string
                 ClassName = schedule.Class?.Name,
                 TrainerName = schedule.Class?.Trainer?.Name,
                 ClassId = schedule.ClassId

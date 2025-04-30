@@ -7,12 +7,12 @@
       "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\controllers\\schedulecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\dtos\\scheduleupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\dtos\\scheduleupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\models\\schedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\models\\schedule.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\dtos\\scheduleupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|solutionrelative:elite_personal_training\\dtos\\scheduleupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{C125FDBB-C7C5-4ED6-B7CB-52A108431EB3}|Elite_Personal_Training\\Elite_Personal_Training.csproj|d:\\naira\\new website\\elite_gym-master\\elite_personal_training\\elite_personal_training\\models\\booking.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -172,7 +172,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "ScheduleUpdateDto.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\DTOs\\ScheduleUpdateDto.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\DTOs\\ScheduleUpdateDto.cs",
@@ -180,8 +180,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\DTOs\\ScheduleUpdateDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T11:59:06.773Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-29T11:59:06.773Z"
             },
             {
               "$type": "Document",
@@ -193,12 +192,11 @@
               "RelativeToolTip": "Elite_Personal_Training\\Models\\Class.cs",
               "ViewState": "AgIAABIAAAAAAAAAAAAqwCQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-25T08:03:35.442Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-25T08:03:35.442Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Schedule.cs",
               "DocumentMoniker": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Models\\Schedule.cs",
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Models\\Schedule.cs",
@@ -219,8 +217,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Controllers\\ClassController.cs",
               "ViewState": "AgIAAHwAAAAAAAAAAAA4wH4AAAAWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-05T07:55:08.362Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-05T07:55:08.362Z"
             },
             {
               "$type": "Document",
@@ -232,8 +229,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAwA8AAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-03-23T11:45:34.034Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-23T11:45:34.034Z"
             },
             {
               "$type": "Document",
@@ -243,7 +239,7 @@
               "RelativeDocumentMoniker": "Elite_Personal_Training\\Controllers\\ScheduleController.cs",
               "ToolTip": "D:\\Naira\\New Website\\Elite_Gym-master\\Elite_Personal_Training\\Elite_Personal_Training\\Controllers\\ScheduleController.cs",
               "RelativeToolTip": "Elite_Personal_Training\\Controllers\\ScheduleController.cs",
-              "ViewState": "AgIAAJ8AAAAAAAAAAAAQwKsAAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAADQAAAAAAAAAAAAAAEEAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-08T06:31:13.706Z",
               "EditorCaption": ""
@@ -258,8 +254,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Models\\Booking.cs",
               "ViewState": "AgIAACkAAAAAAAAAAAAiwDkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-05T12:22:58.152Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-05T12:22:58.152Z"
             },
             {
               "$type": "Document",
@@ -271,8 +266,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Controllers\\BookingController.cs",
               "ViewState": "AgIAAOEAAAAAAAAAAAAgwPgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-05T06:46:12.82Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-05T06:46:12.82Z"
             },
             {
               "$type": "Document",
@@ -284,8 +278,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Program.cs",
               "ViewState": "AgIAACMAAAAAAAAAAAAiwDIAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-21T13:03:31.31Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-21T13:03:31.31Z"
             },
             {
               "$type": "Document",
@@ -297,8 +290,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Controllers\\AuthController.cs",
               "ViewState": "AgIAADEBAAAAAAAAAADwvzUBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-26T06:47:20.223Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-26T06:47:20.223Z"
             },
             {
               "$type": "Document",
@@ -310,8 +302,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Services\\IEmailService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T09:35:08.934Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-27T09:35:08.934Z"
             },
             {
               "$type": "Document",
@@ -323,8 +314,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Services\\EmailService.cs",
               "ViewState": "AgIAAGIAAAAAAAAAAAASwG4AAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T09:35:26.7Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-27T09:35:26.7Z"
             },
             {
               "$type": "Document",
@@ -336,8 +326,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Elite_Personal_Training.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-04-27T09:34:24.655Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-27T09:34:24.655Z"
             },
             {
               "$type": "Document",
@@ -349,8 +338,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\DTOs\\UpdateProfileDto.cs",
               "ViewState": "AgIAAAoAAAAAAAAAAAA3wA0AAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-26T09:46:00.436Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-26T09:46:00.436Z"
             },
             {
               "$type": "Document",
@@ -362,8 +350,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Controllers\\UserController.cs",
               "ViewState": "AgIAAGUAAAAAAAAAAAAcwHkAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-24T07:07:06.38Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-24T07:07:06.38Z"
             },
             {
               "$type": "Document",
@@ -375,8 +362,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Models\\User.cs",
               "ViewState": "AgIAAA0AAAAAAAAAAAA7wBsAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-23T12:21:40.928Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-23T12:21:40.928Z"
             },
             {
               "$type": "Document",
@@ -388,8 +374,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Models\\SeedAdminUser.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAIBZwCAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-26T09:20:45.409Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-26T09:20:45.409Z"
             },
             {
               "$type": "Document",
@@ -401,8 +386,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Migrations\\20250426100038_AddUserProfileFields.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-26T10:00:38.395Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-26T10:00:38.395Z"
             },
             {
               "$type": "Document",
@@ -414,8 +398,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Models\\Membership.cs",
               "ViewState": "AgIAAAcAAAAAAAAAAAAcwA4AAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-05T12:22:32.919Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-05T12:22:32.919Z"
             },
             {
               "$type": "Document",
@@ -427,8 +410,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Controllers\\MembershipController.cs",
               "ViewState": "AgIAAFgAAAAAAAAAAAAgwGwAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-05T12:25:15.457Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-05T12:25:15.457Z"
             },
             {
               "$type": "Document",
@@ -440,8 +422,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Controllers\\AdminController.cs",
               "ViewState": "AgIAAH8AAAAAAAAAAAAowI8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-24T07:06:19.866Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-24T07:06:19.866Z"
             },
             {
               "$type": "Document",
@@ -453,8 +434,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Models\\OnlineSession.cs",
               "ViewState": "AgIAABcAAAAAAAAAAAAuwAMAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-05T06:45:22.948Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-05T06:45:22.948Z"
             },
             {
               "$type": "Document",
@@ -477,8 +457,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Migrations\\20250422093437_InitialCreate.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-22T09:34:37.905Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-22T09:34:37.905Z"
             },
             {
               "$type": "Document",
@@ -501,8 +480,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Data\\ApplicationDbContext.cs",
               "ViewState": "AgIAAF4AAAAAAAAAAAAuwHAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-24T06:20:54.293Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-24T06:20:54.293Z"
             },
             {
               "$type": "Document",
@@ -514,8 +492,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Controllers\\SessionBookingController.cs",
               "ViewState": "AgIAADkAAAAAAAAAAIBZwGsAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-23T12:27:36.573Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-23T12:27:36.573Z"
             },
             {
               "$type": "Document",
@@ -527,8 +504,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Models\\SessionBooking.cs",
               "ViewState": "AgIAAAgAAAAAAAAAAAAEwBIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-22T06:43:33.443Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-22T06:43:33.443Z"
             },
             {
               "$type": "Document",
@@ -540,8 +516,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Models\\Payment.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-25T09:35:58.809Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-25T09:35:58.809Z"
             },
             {
               "$type": "Document",
@@ -553,8 +528,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Models\\Notification.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-09T06:34:18.055Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-09T06:34:18.055Z"
             },
             {
               "$type": "Document",
@@ -566,8 +540,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Models\\Contact.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-23T12:23:58.508Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-23T12:23:58.508Z"
             },
             {
               "$type": "Document",
@@ -579,8 +552,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Models\\Attendance.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-09T06:33:29.021Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-09T06:33:29.021Z"
             },
             {
               "$type": "Document",
@@ -592,8 +564,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Models\\Trainer.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAIBJwBgAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-24T07:11:56.438Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-24T07:11:56.438Z"
             },
             {
               "$type": "Document",
@@ -605,8 +576,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Controllers\\TrainerController.cs",
               "ViewState": "AgIAAH0AAAAAAAAAAEBdwJkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-08T06:31:34.402Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-08T06:31:34.402Z"
             },
             {
               "$type": "Document",
@@ -618,8 +588,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\DTOs\\OnlineSessionUpdateDto.cs",
               "ViewState": "AgIAABEAAAAAAAAAAAAkwCAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-08T06:32:57.445Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-08T06:32:57.445Z"
             },
             {
               "$type": "Document",
@@ -631,8 +600,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\DTOs\\OnlineSessionCreateDto.cs",
               "ViewState": "AgIAABEAAAAAAAAAAAAgwB8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-08T06:32:47.325Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-08T06:32:47.325Z"
             },
             {
               "$type": "Document",
@@ -644,8 +612,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Controllers\\OnlineSessionController.cs",
               "ViewState": "AgIAAHgAAAAAAAAAAAAwwIoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-05T12:25:34.103Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-05T12:25:34.103Z"
             },
             {
               "$type": "Document",
@@ -668,8 +635,7 @@
               "RelativeToolTip": "Elite_Personal_Training\\Data\\ApplicationDbContextFactory.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAYwBcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-24T08:00:23.013Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-24T08:00:23.013Z"
             },
             {
               "$type": "Document",
