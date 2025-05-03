@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Elite_Personal_Training.Controllers
 {
-    [Authorize(Roles = "Admin")]  // ✅ Ensuring only Admins can access
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
@@ -24,7 +24,6 @@ namespace Elite_Personal_Training.Controllers
             _userManager = userManager;
         }
 
-        // ✅ Get Dashboard Analytics
         [HttpGet("analytics")]
         public async Task<IActionResult> GetAnalytics()
         {
@@ -49,7 +48,6 @@ namespace Elite_Personal_Training.Controllers
             }
         }
 
-        // ✅ Get all users
         [HttpGet("users")]
         public async Task<IActionResult> GetUsers()
         {
@@ -64,7 +62,6 @@ namespace Elite_Personal_Training.Controllers
             }
         }
 
-        // ✅ Get all bookings with user and class details
         [HttpGet("bookings")]
         public async Task<IActionResult> GetBookings()
         {
@@ -72,9 +69,33 @@ namespace Elite_Personal_Training.Controllers
             {
                 var bookings = await _context.Bookings
                     .Include(b => b.User)
-                    .Include(b => b.Class)
+                    .Include(b => b.Schedule)
+                        .ThenInclude(s => s.Class)
+                    .Include(b => b.Schedule)
+                        .ThenInclude(s => s.Trainer)
+                    .Include(b => b.OnlineSession)
                     .ToListAsync();
-                return Ok(bookings);
+
+                var result = bookings.Select(b => new
+                {
+                    b.Id,
+                    b.BookingDate,
+                    b.Status,
+                    b.PaymentStatus,
+                    User = b.User != null ? new { b.User.Id, b.User.Email, b.User.UserName } : null,
+                    Schedule = b.Schedule != null ? new
+                    {
+                        b.Schedule.Id,
+                        b.Schedule.ScheduleDate,
+                        StartTime = b.Schedule.StartTime.ToString(@"hh\:mm"),
+                        EndTime = b.Schedule.EndTime.ToString(@"hh\:mm"),
+                        ClassName = b.Schedule.Class?.Name,
+                        TrainerName = b.Schedule.Trainer?.Name
+                    } : null,
+                    OnlineSession = b.OnlineSession != null ? new { b.OnlineSession.Id, b.OnlineSession.Title } : null
+                });
+
+                return Ok(result);
             }
             catch (System.Exception ex)
             {
@@ -82,7 +103,6 @@ namespace Elite_Personal_Training.Controllers
             }
         }
 
-        // ✅ Get all session bookings
         [HttpGet("session-bookings")]
         public async Task<IActionResult> GetSessionBookings()
         {
@@ -100,7 +120,6 @@ namespace Elite_Personal_Training.Controllers
             }
         }
 
-        // ✅ Promote a user to Admin
         [HttpPost("promote/{userId}")]
         public async Task<IActionResult> PromoteUserToAdmin(string userId)
         {
@@ -122,7 +141,6 @@ namespace Elite_Personal_Training.Controllers
             }
         }
 
-        // ✅ Delete a user
         [HttpDelete("users/{userId}")]
         public async Task<IActionResult> DeleteUser(string userId)
         {
@@ -137,6 +155,39 @@ namespace Elite_Personal_Training.Controllers
             catch (System.Exception ex)
             {
                 return StatusCode(500, new { message = "Error deleting user", error = ex.Message });
+            }
+        }
+
+        [HttpGet("available-schedules")]
+        public async Task<IActionResult> GetAvailableSchedules()
+        {
+            try
+            {
+                var now = DateTime.UtcNow;
+
+                var availableSchedules = await _context.Schedules
+                    .Include(s => s.Class)
+                    .Include(s => s.Trainer)
+                    .Where(s => s.ScheduleDate > now.Date ||
+                               (s.ScheduleDate == now.Date && s.EndTime > now.TimeOfDay))
+                    .Select(s => new
+                    {
+                        s.Id,
+                        s.ScheduleDate,
+                        StartTime = s.StartTime.ToString(@"hh\:mm"),
+                        EndTime = s.EndTime.ToString(@"hh\:mm"),
+                        ClassName = s.Class.Name,
+                        TrainerName = s.Trainer.Name,
+                        AvailableSpots = s.Class.Capacity - _context.Bookings.Count(b => b.ScheduleId == s.Id && b.Status != "Cancelled")
+                    })
+                    .Where(s => s.AvailableSpots > 0)
+                    .ToListAsync();
+
+                return Ok(availableSchedules);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, new { message = "Error fetching available schedules", error = ex.Message });
             }
         }
     }

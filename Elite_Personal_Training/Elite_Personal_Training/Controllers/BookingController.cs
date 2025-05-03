@@ -1,6 +1,5 @@
 ﻿using Elite_Personal_Training.Data;
 using Elite_Personal_Training.DTOs;
-using Elite_Personal_Training.DTOs.Elite_Personal_Training.DTOs;
 using Elite_Personal_Training.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +25,10 @@ namespace Elite_Personal_Training.Controllers
         {
             var booking = await _context.Bookings
                 .Include(b => b.Membership)
-                .Include(b => b.Class)
+                .Include(b => b.Schedule)
+                    .ThenInclude(s => s.Class)
+                .Include(b => b.Schedule)
+                    .ThenInclude(s => s.Trainer)
                 .Include(b => b.OnlineSession)
                 .Include(b => b.User)
                 .FirstOrDefaultAsync(b => b.Id == id);
@@ -35,35 +37,43 @@ namespace Elite_Personal_Training.Controllers
             return Ok(booking);
         }
 
-
-
         [HttpPost]
         public async Task<IActionResult> CreateBooking([FromBody] BookingRequest request)
         {
             if (request == null || request.UserId == Guid.Empty)
                 return BadRequest("Invalid booking data.");
 
+            // Check for existing bookings
             bool alreadyBooked = await _context.Bookings.AnyAsync(b =>
-                b.UserId == request.UserId &&  // Now using Guid comparison
+                b.UserId == request.UserId &&
                 (
                     (request.MembershipId != null && b.MembershipId == request.MembershipId) ||
-                    (request.ClassId != null && b.ClassId == request.ClassId) ||
+                    (request.ScheduleId != null && b.ScheduleId == request.ScheduleId) ||
                     (request.OnlineSessionId != null && b.OnlineSessionId == request.OnlineSessionId)
                 ) &&
                 b.Status != "Cancelled");
 
-
             if (alreadyBooked)
                 return BadRequest("You already have an active booking for this item.");
 
-            if (request.ClassId != null)
+            // Check schedule availability
+            if (request.ScheduleId != null)
             {
-                var classBookings = await _context.Bookings.CountAsync(b => b.ClassId == request.ClassId && b.Status != "Cancelled");
-                var gymClass = await _context.Classes.FindAsync(request.ClassId);
-                if (gymClass != null && classBookings >= gymClass.Capacity)
-                    return BadRequest("Class is fully booked.");
+                var schedule = await _context.Schedules
+                    .Include(s => s.Class)
+                    .FirstOrDefaultAsync(s => s.Id == request.ScheduleId);
+
+                if (schedule == null)
+                    return BadRequest("Schedule not found.");
+
+                var bookingsCount = await _context.Bookings
+                    .CountAsync(b => b.ScheduleId == request.ScheduleId && b.Status != "Cancelled");
+
+                if (schedule.Class != null && bookingsCount >= schedule.Class.Capacity)
+                    return BadRequest("This schedule is fully booked.");
             }
 
+            // Handle membership dates
             DateTime? membershipStart = null;
             DateTime? membershipEnd = null;
 
@@ -81,7 +91,7 @@ namespace Elite_Personal_Training.Controllers
             {
                 UserId = request.UserId,
                 MembershipId = request.MembershipId,
-                ClassId = request.ClassId,
+                ScheduleId = request.ScheduleId,
                 OnlineSessionId = request.OnlineSessionId,
                 Price = request.AmountPaid,
                 PaymentMethod = request.PaymentMethod,
@@ -100,6 +110,77 @@ namespace Elite_Personal_Training.Controllers
 
             return CreatedAtAction(nameof(GetBooking), new { id = booking.Id }, booking);
         }
+
+        // ... [Keep all other existing methods but update any references to ClassId to ScheduleId]
+
+        [HttpGet("available-online-sessions")]
+        public async Task<IActionResult> GetAvailableOnlineSessions()
+        {
+            var now = DateTime.UtcNow;
+
+            var availableSessions = await _context.OnlineSessions
+                .Where(s => s.SessionDateTime > now)
+                .ToListAsync();
+
+            return Ok(availableSessions);
+        }
+
+
+        [HttpGet("next-session/{userId}")]
+        public async Task<IActionResult> GetNextSession(Guid userId)  // Changed from string to Guid
+        {
+            var nextSession = await _context.Bookings
+                .Where(b => b.UserId == userId && b.Status != "Cancelled" && b.BookingDate >= DateTime.UtcNow)
+                .OrderBy(b => b.BookingDate)
+                .FirstOrDefaultAsync();
+
+            if (nextSession == null) return NotFound("No upcoming sessions found.");
+            return Ok(nextSession);
+        }
+        // Update the FilterBookings method:
+        [HttpGet("filter")]
+        public async Task<IActionResult> FilterBookings([FromQuery] string? status, [FromQuery] string? type)
+        {
+            var query = _context.Bookings
+                .Include(b => b.User)
+                .Include(b => b.Membership)
+                .Include(b => b.Schedule)
+                    .ThenInclude(s => s.Class)
+                .Include(b => b.Schedule)
+                    .ThenInclude(s => s.Trainer)
+                .Include(b => b.OnlineSession)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(status))
+                query = query.Where(b => b.Status == status);
+
+            if (!string.IsNullOrEmpty(type))
+                query = query.Where(b => b.BookingType.ToString() == type);
+
+            var bookings = await query.OrderByDescending(b => b.BookingDate).ToListAsync();
+            return Ok(bookings);
+        }
+
+        // Update the GetBookingsByUser method:
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetBookingsByUser(Guid userId)
+        {
+            var bookings = await _context.Bookings
+                .Where(b => b.UserId == userId)
+                .Include(b => b.Membership)
+                .Include(b => b.Schedule)
+                    .ThenInclude(s => s.Class)
+                .Include(b => b.Schedule)
+                    .ThenInclude(s => s.Trainer)
+                .Include(b => b.OnlineSession)
+                .OrderByDescending(b => b.BookingDate)
+                .ToListAsync();
+
+            return bookings.Any() ? Ok(bookings) : NotFound($"No bookings found for user with ID: {userId}");
+        }
+
+
+
 
         [HttpPost("confirm/{id}")]
         public async Task<IActionResult> ConfirmBooking(int id)
@@ -133,25 +214,6 @@ namespace Elite_Personal_Training.Controllers
             return Ok(booking);
         }
 
-        [HttpGet("filter")]
-        public async Task<IActionResult> FilterBookings([FromQuery] string? status, [FromQuery] string? type)
-        {
-            var query = _context.Bookings
-                .Include(b => b.User)
-                .Include(b => b.Membership)
-                .Include(b => b.Class)
-                .Include(b => b.OnlineSession)
-                .AsQueryable();
-
-            if (!string.IsNullOrEmpty(status))
-                query = query.Where(b => b.Status == status);
-
-            if (!string.IsNullOrEmpty(type))
-                query = query.Where(b => b.BookingType.ToString() == type);
-
-            var bookings = await query.OrderByDescending(b => b.BookingDate).ToListAsync();
-            return Ok(bookings);
-        }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBooking(int id, [FromBody] BookingRequest request)
@@ -171,78 +233,31 @@ namespace Elite_Personal_Training.Controllers
             await _context.SaveChangesAsync();
             return Ok(booking);
         }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBooking(int id)
-        {
-            var booking = await _context.Bookings.FindAsync(id);
-            if (booking == null) return NotFound();
-
-            _context.Bookings.Remove(booking);
-            await _context.SaveChangesAsync();
-            return NoContent();
-        }
-
-
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetBookingsByUser(Guid userId)
-        {
-            var bookings = await _context.Bookings
-                .Where(b => b.UserId == userId)
-                .Include(b => b.Membership)
-                .Include(b => b.Class)
-                .Include(b => b.OnlineSession)
-                .OrderByDescending(b => b.BookingDate)
-                .ToListAsync();
-
-            if (!bookings.Any())
-            {
-                return NotFound($"No bookings found for user with ID: {userId}");
-            }
-
-            return Ok(bookings);
-        }
-
-        [HttpGet("next-session/{userId}")]
-        public async Task<IActionResult> GetNextSession(Guid userId)  // Changed from string to Guid
-        {
-            var nextSession = await _context.Bookings
-                .Where(b => b.UserId == userId && b.Status != "Cancelled" && b.BookingDate >= DateTime.UtcNow)
-                .OrderBy(b => b.BookingDate)
-                .FirstOrDefaultAsync();
-
-            if (nextSession == null) return NotFound("No upcoming sessions found.");
-            return Ok(nextSession);
-        }
-
-        [HttpGet("available-classes")]
-        public async Task<IActionResult> GetAvailableClasses()
-        {
-            var availableClasses = await _context.Classes
-                .Include(c => c.Schedules)
-                .Where(c =>
-                    !_context.Bookings
-                        .Where(b => b.ClassId == c.Id && b.Status != "Cancelled")
-                        .GroupBy(b => b.ClassId)
-                        .Select(g => new { ClassId = g.Key, Count = g.Count() })
-                        .Any(g => g.ClassId == c.Id && g.Count >= c.Capacity)
-                )
-                .ToListAsync();
-
-            return Ok(availableClasses);
-        }
-
-
-        [HttpGet("available-online-sessions")]
-        public async Task<IActionResult> GetAvailableOnlineSessions()
+        // Add a new endpoint for available schedules:
+        [HttpGet("available-schedules")]
+        public async Task<IActionResult> GetAvailableSchedules()
         {
             var now = DateTime.UtcNow;
 
-            var availableSessions = await _context.OnlineSessions
-                .Where(s => s.SessionDateTime > now)
+            var availableSchedules = await _context.Schedules
+                .Include(s => s.Class)
+                .Include(s => s.Trainer)
+                .Where(s => s.ScheduleDate > now.Date ||
+                           (s.ScheduleDate == now.Date && s.EndTime > now.TimeOfDay))
+                .Select(s => new
+                {
+                    s.Id,
+                    s.ScheduleDate,
+                    StartTime = s.StartTime.ToString(@"hh\:mm"),
+                    EndTime = s.EndTime.ToString(@"hh\:mm"),
+                    ClassName = s.Class.Name,
+                    TrainerName = s.Trainer.Name,
+                    AvailableSpots = s.Class.Capacity - _context.Bookings.Count(b => b.ScheduleId == s.Id && b.Status != "Cancelled")
+                })
+                .Where(s => s.AvailableSpots > 0)
                 .ToListAsync();
 
-            return Ok(availableSessions);
+            return Ok(availableSchedules);
         }
     }
 }

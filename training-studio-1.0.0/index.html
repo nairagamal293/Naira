@@ -237,6 +237,35 @@ https://templatemo.com/tm-548-training-studio
     grid-template-columns: 1fr;
   }
 }
+
+/* Add to your existing CSS */
+#timeSlotSelect {
+    margin-top: 15px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.schedule-option {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.schedule-option:last-child {
+    border-bottom: none;
+}
+
+.schedule-time {
+    font-weight: bold;
+    color: #9c0d0d;
+}
+
+.schedule-trainer {
+    color: #555;
+    font-size: 0.9em;
+}
+
     </style>
     <body>
     
@@ -308,15 +337,16 @@ https://templatemo.com/tm-548-training-studio
                 <select class="form-control" id="bookingType" required>
                   <option value="">Select Type</option>
                   <option value="Membership">Membership</option>
-                  <option value="Class">Class</option>
+                  <option value="Schedule" selected>Class Schedule</option>
                   <option value="OnlineSession">Online Session</option>
                 </select>
               </div>
               <div class="col-md-4">
-                <label for="bookingItem">Select Item</label>
+                <label for="bookingItem">Select Schedule</label>
                 <select class="form-control" id="bookingItem" required>
-                  <option value="">Select an item</option>
+                  <option value="">Select a schedule</option>
                 </select>
+                <!-- Schedule details will be inserted here -->
               </div>
               <div class="col-md-4">
                 <label for="paymentMethod">Payment Method</label>
@@ -328,7 +358,7 @@ https://templatemo.com/tm-548-training-studio
                 </select>
               </div>
             </div>
-      
+            
             <div class="row mb-3">
               <div class="col-md-4">
                 <label for="name">Name</label>
@@ -565,6 +595,9 @@ https://templatemo.com/tm-548-training-studio
       <!-- Schedule Navigation Tabs -->
       <div class="schedule-nav">
           <ul class="nav nav-tabs" id="scheduleTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link day-filter" data-day="sunday">Sunday</button>
+          </li>
               <li class="nav-item" role="presentation">
                   <button class="nav-link active day-filter" data-day="monday">Monday</button>
               </li>
@@ -654,6 +687,7 @@ https://templatemo.com/tm-548-training-studio
     </div>
   </section>    
 
+  
 <style>
    
 </style>    
@@ -737,8 +771,7 @@ https://templatemo.com/tm-548-training-studio
             new bootstrap.Dropdown(dropdownToggle);
         }
     });
-
-</script>
+    </script>
 
 
     <!-- jQuery -->

@@ -23,3 +23,4 @@ namespace Elite_Personal_Training.Models
         public List<Class> Classes { get; set; } = new List<Class>();
     }
 }
+

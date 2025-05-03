@@ -486,7 +486,7 @@ async function loadClasses() {
                             <th>Capacity</th>
                             <th>Duration</th>
                             <th>Price</th>
-                            <th>Trainer</th>
+                            
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -498,7 +498,7 @@ async function loadClasses() {
                                 <td>${cls.capacity}</td>
                                 <td>${cls.durationInMinutes} mins</td>
                                 <td>$${cls.price.toFixed(2)}</td>
-                                <td>${cls.trainerName || 'N/A'}</td>
+                                
                                 <td>
                                     <button class="btn btn-sm btn-warning me-2" onclick="showClassModal(${cls.id})">
                                         <i class="fas fa-edit"></i> Edit
@@ -572,7 +572,8 @@ async function showClassModal(classId = null) {
 }
 
 // Return HTML form for class
-function getClassForm(classData = null, trainers = []) {
+// In your dashboard.js, update the getClassForm function:
+function getClassForm(classData = null) {
     return `
         <form id="classForm" onsubmit="handleClassFormSubmit(event)">
             <input type="hidden" id="classId" value="${classData?.id || ''}">
@@ -580,62 +581,33 @@ function getClassForm(classData = null, trainers = []) {
                 <label for="className" class="form-label">Class Name *</label>
                 <input type="text" class="form-control" id="className" 
                        value="${classData?.name || ''}" required minlength="3" maxlength="100">
-                <div class="invalid-feedback">Please enter a class name (3-100 characters)</div>
             </div>
             <div class="mb-3">
                 <label for="classDescription" class="form-label">Description</label>
                 <textarea class="form-control" id="classDescription" rows="3">${classData?.description || ''}</textarea>
             </div>
             <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="classCapacity" class="form-label">Capacity *</label>
                     <input type="number" class="form-control" id="classCapacity" 
                            value="${classData?.capacity || 10}" min="1" max="100" required>
-                    <div class="invalid-feedback">Please enter a capacity between 1 and 100</div>
                 </div>
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="classDuration" class="form-label">Duration (minutes) *</label>
                     <input type="number" class="form-control" id="classDuration" 
                            value="${classData?.durationInMinutes || 60}" min="1" max="480" required>
-                    <div class="invalid-feedback">Please enter a duration between 1 and 480 minutes</div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="classPrice" class="form-label">Price ($) *</label>
                     <input type="number" step="0.01" class="form-control" id="classPrice" 
                            value="${classData?.price || 0}" min="0" max="1000" required>
-                    <div class="invalid-feedback">Please enter a valid price (0-1000)</div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label for="classTrainer" class="form-label">Trainer *</label>
-                    <select class="form-select" id="classTrainer" required>
-                        <option value="">-- Select Trainer --</option>
-                        ${trainers.map(trainer => `
-                            <option value="${trainer.id}" ${classData?.trainerId === trainer.id ? 'selected' : ''}>
-                                ${trainer.name}
-                            </option>
-                        `).join('')}
-                    </select>
-                    <div class="invalid-feedback">Please select a trainer</div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>
-        </form>
-        <script>
-            // Client-side validation
-            document.getElementById('classForm').addEventListener('submit', function(event) {
-                const form = event.target;
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            });
-        </script>`;
+        </form>`;
 }
 
 // Handle class form submission
@@ -650,16 +622,8 @@ async function handleClassFormSubmit(event) {
         description: document.getElementById("classDescription").value,
         capacity: parseInt(document.getElementById("classCapacity").value),
         durationInMinutes: parseInt(document.getElementById("classDuration").value),
-        price: parseFloat(document.getElementById("classPrice").value),
-        trainerId: parseInt(document.getElementById("classTrainer").value)
+        price: parseFloat(document.getElementById("classPrice").value)
     };
-
-    // Validate trainer selection
-    if (isNaN(classData.trainerId)) {
-        const trainerSelect = document.getElementById("classTrainer");
-        trainerSelect.classList.add('is-invalid');
-        return;
-    }
 
     try {
         const url = isEdit 
@@ -679,31 +643,19 @@ async function handleClassFormSubmit(event) {
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.error("API Error:", errorData);
-            
-            let errorMessage = "Validation failed:";
-            if (errorData.errors) {
-                // Handle model validation errors
-                for (const [field, errors] of Object.entries(errorData.errors)) {
-                    errorMessage += `\n${field}: ${errors.join(', ')}`;
-                }
-            } else {
-                errorMessage = errorData.title || errorData.message || 'Failed to save class';
-            }
-            
-            throw new Error(errorMessage);
+            throw new Error(errorData.title || errorData.message || 'Failed to save class');
         }
 
         // Close modal and refresh list
         bootstrap.Modal.getInstance(document.getElementById('classModal')).hide();
         loadClasses();
         showToast('Class saved successfully!', 'success');
-        
     } catch (error) {
         console.error("Error saving class:", error);
         showToast(`Error saving class: ${error.message}`, 'danger');
     }
 }
+
 
 // Delete class
 async function deleteClass(classId) {
@@ -1599,54 +1551,55 @@ async function loadSchedules() {
         const trainers = await trainersResponse.json();
         
         content.innerHTML = `
-            <button class="btn btn-success mb-3" onclick="showScheduleModal()">
-                <i class="fas fa-plus"></i> Add New Schedule
-            </button>
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Class</th>
-                            <th>Trainer</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${schedules.map(schedule => `
-                            <tr>
-                                <td>${formatDate(schedule.scheduleDate)}</td>
-                                <td>${formatTime(schedule.startTime)} - ${formatTime(schedule.endTime)}</td>
-                                <td>${schedule.className || 'N/A'}</td>
-                                <td>${schedule.trainerName || 'N/A'}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning me-2" onclick="showScheduleModal(${schedule.id})">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteSchedule(${schedule.id})">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
-                                </td>
-                            </tr>`).join('')}
-                    </tbody>
-                </table>
-            </div>
-            
-            <!-- Schedule Modal -->
-            <div class="modal fade" id="scheduleModal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="scheduleModalTitle">Add New Schedule</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body" id="scheduleModalBody">
-                            <!-- Form will be loaded here -->
-                        </div>
-                    </div>
+    <button class="btn btn-success mb-3" onclick="showScheduleModal()">
+        <i class="fas fa-plus"></i> Add New Schedule
+    </button>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Class</th>
+                    <th>Trainer</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${schedules.map(schedule => `
+                    <tr>
+                        <td>${formatDate(schedule.scheduleDate)}</td>
+                        <td>${formatTime(schedule.startTime)} - ${formatTime(schedule.endTime)}</td>
+                        <td>${schedule.className || 'N/A'}</td>
+                        <td>${schedule.trainerName || 'N/A'}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning me-2" onclick="showScheduleModal(${schedule.id})">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteSchedule(${schedule.id})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Schedule Modal -->
+    <div class="modal fade" id="scheduleModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="scheduleModalTitle">Add New Schedule</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </div>`;
+                <div class="modal-body" id="scheduleModalBody">
+                    <!-- Form will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>`;
     } catch (error) {
         console.error("❌ Error loading schedules:", error);
         content.innerHTML = "<div class='alert alert-danger'>Error loading schedules.</div>";
@@ -1695,29 +1648,26 @@ async function showScheduleModal(scheduleId = null) {
     const modal = new bootstrap.Modal(document.getElementById('scheduleModal'));
     
     try {
-        // Load classes for dropdown
-        const classesResponse = await fetch("https://localhost:7020/api/Class", {
-            headers: getAuthHeaders()
-        });
+        // Load both classes and trainers in parallel
+        const [classesResponse, trainersResponse] = await Promise.all([
+            fetch("https://localhost:7020/api/Class", { headers: getAuthHeaders() }),
+            fetch("https://localhost:7020/api/Trainer", { headers: getAuthHeaders() })
+        ]);
         
-        if (!classesResponse.ok) throw new Error(`HTTP Error ${classesResponse.status}`);
         const classes = await classesResponse.json();
+        const trainers = await trainersResponse.json();
 
         if (scheduleId) {
-            // Edit mode
-            modalTitle.textContent = "Edit Schedule";
+            // Edit mode - load the specific schedule
             const scheduleResponse = await fetch(`https://localhost:7020/api/Schedule/${scheduleId}`, {
                 headers: getAuthHeaders()
             });
-            
-            if (!scheduleResponse.ok) throw new Error(`HTTP Error ${scheduleResponse.status}`);
             const scheduleData = await scheduleResponse.json();
             
-            modalBody.innerHTML = getScheduleForm(scheduleData, classes);
+            modalBody.innerHTML = getScheduleForm(scheduleData, classes, trainers);
         } else {
             // Add mode
-            modalTitle.textContent = "Add New Schedule";
-            modalBody.innerHTML = getScheduleForm(null, classes);
+            modalBody.innerHTML = getScheduleForm(null, classes, trainers);
         }
         
         modal.show();
@@ -1728,36 +1678,22 @@ async function showScheduleModal(scheduleId = null) {
 }
 
 // Return HTML form for schedule
-function getScheduleForm(schedule = null, classes = []) {
+// In your dashboard.js, update the getScheduleForm function:
+function getScheduleForm(schedule = null, classes = [], trainers = []) {
     const scheduleDate = schedule?.scheduleDate 
         ? new Date(schedule.scheduleDate).toISOString().split('T')[0] 
         : new Date().toISOString().split('T')[0];
     
-    // Improved time formatting function
-    const formatTimeForInput = (timeString) => {
-        if (!timeString) return '09:00'; // Default time
+    const startTime = schedule?.startTime 
+        ? convertTimeSpanToTimeInput(schedule.startTime)
+        : '09:00';
         
-        // Handle "hh:mm" format (from API)
-        if (typeof timeString === 'string' && timeString.includes(':')) {
-            const parts = timeString.split(':');
-            if (parts.length >= 2) {
-                return `${parts[0].padStart(2, '0')}:${parts[1].padStart(2, '0')}`;
-            }
-        }
-        
-        // Handle TimeSpan object (if it comes through somehow)
-        if (typeof timeString === 'object' && timeString.hours !== undefined) {
-            return `${String(timeString.hours).padStart(2, '0')}:${String(timeString.minutes || 0).padStart(2, '0')}`;
-        }
-        
-        return '09:00'; // Fallback default
-    };
-
-    const startTime = formatTimeForInput(schedule?.StartTime || schedule?.startTime);
-    const endTime = formatTimeForInput(schedule?.EndTime || schedule?.endTime);
+    const endTime = schedule?.endTime 
+        ? convertTimeSpanToTimeInput(schedule.endTime)
+        : '10:00';
 
     return `
-        <form id="scheduleForm" onsubmit="handleScheduleFormSubmit(event)" novalidate>
+        <form id="scheduleForm" onsubmit="handleScheduleFormSubmit(event)">
             <input type="hidden" id="scheduleId" value="${schedule?.id || ''}">
             <div class="mb-3">
                 <label for="scheduleClass" class="form-label">Class *</label>
@@ -1765,85 +1701,90 @@ function getScheduleForm(schedule = null, classes = []) {
                     <option value="">-- Select Class --</option>
                     ${classes.map(cls => `
                         <option value="${cls.id}" ${schedule?.classId === cls.id ? 'selected' : ''}>
-                            ${cls.name} (${cls.trainerName || 'No trainer'})
+                            ${cls.name}
                         </option>
                     `).join('')}
                 </select>
-                <div class="invalid-feedback">Please select a class</div>
+            </div>
+            <div class="mb-3">
+                <label for="scheduleTrainer" class="form-label">Trainer *</label>
+                <select class="form-select" id="scheduleTrainer" required>
+                    <option value="">-- Select Trainer --</option>
+                    ${trainers.map(trainer => `
+                        <option value="${trainer.id}" ${schedule?.trainerId === trainer.id ? 'selected' : ''}>
+                            ${trainer.name}
+                        </option>
+                    `).join('')}
+                </select>
             </div>
             <div class="mb-3">
                 <label for="scheduleDate" class="form-label">Date *</label>
                 <input type="date" class="form-control" id="scheduleDate" 
                        value="${scheduleDate}" required>
-                <div class="invalid-feedback">Please select a valid date</div>
             </div>
-             <div class="row">
+            <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="startTime" class="form-label">Start Time *</label>
                     <input type="time" class="form-control" id="startTime" 
                            value="${startTime}" required>
-                    <div class="invalid-feedback">Please select a start time</div>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="endTime" class="form-label">End Time *</label>
                     <input type="time" class="form-control" id="endTime" 
                            value="${endTime}" required>
-                    <div class="invalid-feedback">Please select an end time</div>
                 </div>
             </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>
-        </form>
-        <script>
-            // Client-side validation
-            document.getElementById('scheduleForm').addEventListener('submit', function(event) {
-                const form = event.target;
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            });
-        </script>`;
+        </form>`;
 }
 
-// Handle schedule form submission
+// Helper function to convert TimeSpan to time input format
+function convertTimeSpanToTimeInput(timeSpan) {
+    if (typeof timeSpan === 'string') {
+        // Handle "hh:mm:ss" format
+        const [hours, minutes] = timeSpan.split(':');
+        return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+    }
+    // Handle TimeSpan object if needed
+    const hours = timeSpan?.hours || 0;
+    const minutes = timeSpan?.minutes || 0;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+}
+
 async function handleScheduleFormSubmit(event) {
     event.preventDefault();
     
     const scheduleId = document.getElementById("scheduleId").value;
     const isEdit = !!scheduleId;
     
-    // Parse time inputs - now more robust
+    // Parse time inputs
     const startTimeValue = document.getElementById("startTime").value;
     const endTimeValue = document.getElementById("endTime").value;
     
     const [startHours, startMinutes] = startTimeValue.split(':').map(Number);
     const [endHours, endMinutes] = endTimeValue.split(':').map(Number);
     
-    // Prepare the schedule data object
+    // Create the schedule date object
+    const scheduleDate = new Date(document.getElementById("scheduleDate").value);
+    
+    // Prepare the data object
     const scheduleData = {
         classId: parseInt(document.getElementById("scheduleClass").value),
-        scheduleDate: document.getElementById("scheduleDate").value,
+        trainerId: parseInt(document.getElementById("scheduleTrainer").value),
+        scheduleDate: scheduleDate.toISOString(),
         startTime: createTimeSpan(startHours, startMinutes),
         endTime: createTimeSpan(endHours, endMinutes)
     };
 
-    // For edit, add the ID to the data
+    // For updates, include the ID
     if (isEdit) {
         scheduleData.id = parseInt(scheduleId);
     }
 
-    // Validate end time is after start time
-    const startTotal = startHours * 60 + startMinutes;
-    const endTotal = endHours * 60 + endMinutes;
-    if (endTotal <= startTotal) {
-        alert("End time must be after start time");
-        return;
-    }
+    console.log("Sending data:", scheduleData);
 
     try {
         const url = isEdit 
@@ -1862,36 +1803,40 @@ async function handleScheduleFormSubmit(event) {
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
-            console.error("API Error:", errorData);
-            
-            let errorMessage = "Failed to save schedule";
-            if (errorData.errors) {
-                errorMessage = Object.values(errorData.errors).flat().join('\n');
-            } else if (errorData.title) {
-                errorMessage = errorData.title;
+            let errorMessage = 'Failed to save schedule';
+            try {
+                const errorData = await response.json();
+                errorMessage = errorData.title || errorData.message || JSON.stringify(errorData);
+                
+                if (errorData.errors) {
+                    errorMessage = Object.entries(errorData.errors)
+                        .map(([field, errors]) => `${field}: ${errors.join(', ')}`)
+                        .join('\n');
+                }
+            } catch (e) {
+                const errorText = await response.text();
+                errorMessage = errorText || errorMessage;
             }
-            
             throw new Error(errorMessage);
         }
 
         // Close modal and refresh list
         bootstrap.Modal.getInstance(document.getElementById('scheduleModal')).hide();
         loadSchedules();
-        showToast(`Schedule ${isEdit ? 'updated' : 'created'} successfully!`, 'success');
-        
+        showToast('Schedule saved successfully!', 'success');
     } catch (error) {
-        console.error("Error saving schedule:", error);
-        showToast(`Error: ${error.message}`, 'danger');
+        console.error("Error details:", error);
+        showToast(`Error saving schedule: ${error.message}`, 'danger');
     }
 }
 
-
-
+// Helper function to create TimeSpan string
 function createTimeSpan(hours, minutes, seconds = 0) {
-    // Return a string in format "hh:mm:ss" that ASP.NET Core can parse
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
+
+
+
 
 
 
@@ -1921,6 +1866,420 @@ async function deleteSchedule(scheduleId) {
         showToast(`Error deleting schedule: ${error.message}`, 'danger');
     }
 }
+
+// ✅ Load Reports
+async function loadReports() {
+    document.getElementById("dashboard-title").innerText = "Reports & Analytics";
+    const content = document.getElementById("admin-content");
+    content.innerHTML = "<h4>Loading reports...</h4>";
+    
+    try {
+        // Load all report data in parallel
+        const [bookingResponse, paymentResponse, memberResponse, financialResponse] = await Promise.all([
+            fetch("https://localhost:7020/api/Report/bookings/summary", { headers: getAuthHeaders() }),
+            fetch("https://localhost:7020/api/Report/payments/summary", { headers: getAuthHeaders() }),
+            fetch("https://localhost:7020/api/Report/member-activity", { headers: getAuthHeaders() }),
+            fetch("https://localhost:7020/api/Report/financial", { headers: getAuthHeaders() })
+        ]);
+
+        if (!bookingResponse.ok || !paymentResponse.ok || !memberResponse.ok || !financialResponse.ok) {
+            throw new Error("Failed to load report data");
+        }
+
+        const bookingData = await bookingResponse.json();
+        const paymentData = await paymentResponse.json();
+        const memberData = await memberResponse.json();
+        const financialData = await financialResponse.json();
+
+        // Safe number formatting function
+        const formatCurrency = (value) => {
+            if (value === undefined || value === null || isNaN(value)) return '$0.00';
+            return `$${parseFloat(value).toFixed(2)}`;
+        };
+
+        // Safe number display function
+        const formatNumber = (value) => {
+            if (value === undefined || value === null || isNaN(value)) return '0';
+            return value.toString();
+        };
+
+        // Render the reports page
+        content.innerHTML = `
+            <div class="report-filters mb-4">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="reportStartDate" class="form-label">Start Date</label>
+                        <input type="date" class="form-control" id="reportStartDate">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="reportEndDate" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="reportEndDate" value="${new Date().toISOString().split('T')[0]}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="reportType" class="form-label">Report Type</label>
+                        <select class="form-select" id="reportType">
+                            <option value="overview">Overview</option>
+                            <option value="bookings">Bookings</option>
+                            <option value="payments">Payments</option>
+                            <option value="members">Member Activity</option>
+                            <option value="financial">Financial</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
+                        <button class="btn btn-success ms-2" onclick="exportReport()">
+                            <i class="fas fa-file-export"></i> Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-container">
+                <!-- Overview Section -->
+                <div class="report-section" id="overviewSection">
+                    <h3 class="mb-4"><i class="fas fa-chart-pie me-2"></i>Overview</h3>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header bg-primary text-white">
+                                    <i class="fas fa-calendar-check me-2"></i> Booking Summary
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="bookingChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header bg-success text-white">
+                                    <i class="fas fa-dollar-sign me-2"></i> Revenue Breakdown
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="revenueChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header bg-info text-white">
+                                    <i class="fas fa-users me-2"></i> Member Activity
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="memberChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header bg-warning text-dark">
+                                    <i class="fas fa-credit-card me-2"></i> Payment Methods
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="paymentChart" height="250"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Reports Sections -->
+                <div class="report-section d-none" id="bookingsSection">
+                    <h3 class="mb-4"><i class="fas fa-calendar-check me-2"></i>Booking Reports</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Booking Type</th>
+                                    <th>Total</th>
+                                    <th>Revenue</th>
+                                    <th>Pending</th>
+                                    <th>Confirmed</th>
+                                    <th>Cancelled</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingsTableBody">
+                                ${bookingData.map(b => `
+                                    <tr>
+                                        <td>${b.BookingType || 'N/A'}</td>
+                                        <td>${formatNumber(b.TotalBookings)}</td>
+                                        <td>${formatCurrency(b.TotalRevenue)}</td>
+                                        <td>${formatNumber(b.Pending)}</td>
+                                        <td>${formatNumber(b.Confirmed)}</td>
+                                        <td>${formatNumber(b.Cancelled)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="report-section d-none" id="paymentsSection">
+                    <h3 class="mb-4"><i class="fas fa-money-bill-wave me-2"></i>Payment Reports</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Count</th>
+                                    <th>Total Amount</th>
+                                    <th>Payment Methods</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentsTableBody">
+                                ${paymentData.map(p => `
+                                    <tr>
+                                        <td>${p.Status || 'N/A'}</td>
+                                        <td>${formatNumber(p.Count)}</td>
+                                        <td>${formatCurrency(p.TotalAmount)}</td>
+                                        <td>
+                                            ${(p.PaymentMethods || []).map(m => `
+                                                ${m.Method || 'N/A'}: ${formatCurrency(m.Amount)} (${formatNumber(m.Count)})
+                                            `).join('<br>')}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="report-section d-none" id="membersSection">
+                    <h3 class="mb-4"><i class="fas fa-user-friends me-2"></i>Member Activity Reports</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Member</th>
+                                    <th>Total Bookings</th>
+                                    <th>Classes</th>
+                                    <th>Online Sessions</th>
+                                    <th>Membership</th>
+                                    <th>Total Spent</th>
+                                </tr>
+                            </thead>
+                            <tbody id="membersTableBody">
+                                ${memberData.map(m => `
+                                    <tr>
+                                        <td>${m.MemberName || 'N/A'}</td>
+                                        <td>${formatNumber(m.TotalBookings)}</td>
+                                        <td>${formatNumber(m.ClassesAttended)}</td>
+                                        <td>${formatNumber(m.OnlineSessions)}</td>
+                                        <td>${m.CurrentMembership || 'None'}</td>
+                                        <td>${formatCurrency(m.TotalSpent)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="report-section d-none" id="financialSection">
+                    <h3 class="mb-4"><i class="fas fa-chart-line me-2"></i>Financial Reports</h3>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="financialTableBody">
+                                <tr>
+                                    <td>Total Revenue</td>
+                                    <td>${formatCurrency(financialData.TotalRevenue)}</td>
+                                </tr>
+                                <tr>
+                                    <td>Received Payments</td>
+                                    <td>${formatCurrency(financialData.ReceivedPayments)}</td>
+                                </tr>
+                                <tr>
+                                    <td>Outstanding Payments</td>
+                                    <td>${formatCurrency(financialData.OutstandingPayments)}</td>
+                                </tr>
+                                ${(financialData.RevenueByType || []).map(r => `
+                                    <tr>
+                                        <td>${r.Type || 'N/A'} Revenue</td>
+                                        <td>${formatCurrency(r.Amount)} (${formatNumber(r.Count)})</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Initialize charts with safe data
+        renderBookingChart(bookingData || []);
+        renderRevenueChart(financialData || { RevenueByType: [] });
+        renderMemberChart(memberData || []);
+        renderPaymentChart(paymentData || []);
+
+    } catch (error) {
+        console.error("Error loading reports:", error);
+        content.innerHTML = `
+            <div class="alert alert-danger">
+                Failed to load reports: ${error.message}
+                <button class="btn btn-sm btn-secondary mt-2" onclick="loadReports()">
+                    Try Again
+                </button>
+            </div>
+        `;
+    }
+}
+
+// Update chart rendering functions to handle undefined data
+function renderBookingChart(data = []) {
+    const ctx = document.getElementById('bookingChart')?.getContext('2d');
+    if (!ctx) return;
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.map(b => b?.BookingType || 'Unknown'),
+            datasets: [
+                {
+                    label: 'Total Bookings',
+                    data: data.map(b => b?.TotalBookings || 0),
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                },
+                {
+                    label: 'Confirmed',
+                    data: data.map(b => b?.Confirmed || 0),
+                    backgroundColor: 'rgba(75, 192, 192, 0.7)'
+                },
+                {
+                    label: 'Cancelled',
+                    data: data.map(b => b?.Cancelled || 0),
+                    backgroundColor: 'rgba(255, 99, 132, 0.7)'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Booking Summary'
+                }
+            }
+        }
+    });
+}
+
+function renderRevenueChart(data = { RevenueByType: [] }) {
+    const ctx = document.getElementById('revenueChart')?.getContext('2d');
+    if (!ctx) return;
+
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: data.RevenueByType.map(r => r?.Type || 'Unknown'),
+            datasets: [{
+                data: data.RevenueByType.map(r => r?.Amount || 0),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 206, 86, 0.7)'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Revenue Breakdown'
+                }
+            }
+        }
+    });
+}
+
+// ... keep the other chart functions with similar safe data handling ...
+
+function renderMemberChart(data) {
+    // Sort members by total spent and take top 10
+    const sortedData = [...data].sort((a, b) => b.TotalSpent - a.TotalSpent).slice(0, 10);
+    
+    const ctx = document.getElementById('memberChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: sortedData.map(m => m.MemberName),
+            datasets: [{
+                label: 'Total Spent ($)',
+                data: sortedData.map(m => m.TotalSpent),
+                backgroundColor: 'rgba(153, 102, 255, 0.7)'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Top Members by Spending'
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Amount Spent ($)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function renderPaymentChart(data) {
+    const paymentMethods = [];
+    const amounts = [];
+    
+    data.forEach(p => {
+        p.PaymentMethods.forEach(m => {
+            paymentMethods.push(`${m.Method} (${p.Status})`);
+            amounts.push(m.Amount);
+        });
+    });
+
+    const ctx = document.getElementById('paymentChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: paymentMethods,
+            datasets: [{
+                data: amounts,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 206, 86, 0.7)',
+                    'rgba(75, 192, 192, 0.7)',
+                    'rgba(153, 102, 255, 0.7)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Payment Methods Breakdown'
+                },
+                legend: {
+                    position: 'right'
+                }
+            }
+        }
+    });
+}
+
 
 
 // ✅ Logout Function

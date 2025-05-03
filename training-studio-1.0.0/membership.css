@@ -93,7 +93,7 @@
 
  /* Membership Page Specific Styles */
  .membership-hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('assets/images/training-image-03.jpg') no-repeat center center;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), #232d39), url('assets/images/training-image-03.jpg') no-repeat center center;
     background-size: cover;
     padding: 150px 0 100px;
     text-align: center;
@@ -103,7 +103,7 @@
 .membership-hero h1 {
     font-size: 3rem;
     font-weight: 800;
-    margin-bottom: 20px;
+    margin-bottom: 4px;
     text-transform: uppercase;
 }
 

@@ -97,6 +97,18 @@
         }
       }
     },
+    "/api/Admin/available-schedules": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Auth/signup": {
       "post": {
         "tags": [
@@ -306,27 +318,6 @@
             "description": "OK"
           }
         }
-      },
-      "delete": {
-        "tags": [
-          "Booking"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
       }
     },
     "/api/Booking": {
@@ -360,21 +351,10 @@
         }
       }
     },
-    "/api/Booking/confirm/{id}": {
-      "post": {
+    "/api/Booking/available-online-sessions": {
+      "get": {
         "tags": [
           "Booking"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
         ],
         "responses": {
           "200": {
@@ -383,19 +363,19 @@
         }
       }
     },
-    "/api/Booking/cancel/{id}": {
-      "post": {
+    "/api/Booking/next-session/{userId}": {
+      "get": {
         "tags": [
           "Booking"
         ],
         "parameters": [
           {
-            "name": "id",
+            "name": "userId",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -457,19 +437,19 @@
         }
       }
     },
-    "/api/Booking/next-session/{userId}": {
-      "get": {
+    "/api/Booking/confirm/{id}": {
+      "post": {
         "tags": [
           "Booking"
         ],
         "parameters": [
           {
-            "name": "userId",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -480,10 +460,21 @@
         }
       }
     },
-    "/api/Booking/available-classes": {
-      "get": {
+    "/api/Booking/cancel/{id}": {
+      "post": {
         "tags": [
           "Booking"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -492,7 +483,7 @@
         }
       }
     },
-    "/api/Booking/available-online-sessions": {
+    "/api/Booking/available-schedules": {
       "get": {
         "tags": [
           "Booking"
@@ -1248,6 +1239,126 @@
         }
       }
     },
+    "/api/Report/bookings/summary": {
+      "get": {
+        "tags": [
+          "Report"
+        ],
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Report/payments/summary": {
+      "get": {
+        "tags": [
+          "Report"
+        ],
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Report/financial": {
+      "get": {
+        "tags": [
+          "Report"
+        ],
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Report/attendance/summary": {
+      "get": {
+        "tags": [
+          "Report"
+        ],
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Schedule": {
       "get": {
         "tags": [
@@ -1406,6 +1517,54 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Schedule/available": {
+      "get": {
+        "tags": [
+          "Schedule"
+        ],
+        "parameters": [
+          {
+            "name": "classId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScheduleDto"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1972,13 +2131,13 @@
           "membership": {
             "$ref": "#/components/schemas/Membership"
           },
-          "classId": {
+          "scheduleId": {
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
-          "class": {
-            "$ref": "#/components/schemas/Class"
+          "schedule": {
+            "$ref": "#/components/schemas/Schedule"
           },
           "onlineSessionId": {
             "type": "integer",
@@ -2073,7 +2232,7 @@
             "format": "int32",
             "nullable": true
           },
-          "classId": {
+          "scheduleId": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -2135,8 +2294,7 @@
           "capacity",
           "duration",
           "name",
-          "price",
-          "trainerId"
+          "price"
         ],
         "type": "object",
         "properties": {
@@ -2167,13 +2325,6 @@
             "type": "number",
             "format": "double"
           },
-          "trainerId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "trainer": {
-            "$ref": "#/components/schemas/Trainer"
-          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -2197,8 +2348,7 @@
           "capacity",
           "durationInMinutes",
           "name",
-          "price",
-          "trainerId"
+          "price"
         ],
         "type": "object",
         "properties": {
@@ -2228,10 +2378,6 @@
             "minimum": 0,
             "type": "number",
             "format": "double"
-          },
-          "trainerId": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -2556,6 +2702,13 @@
           "class": {
             "$ref": "#/components/schemas/Class"
           },
+          "trainerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "trainer": {
+            "$ref": "#/components/schemas/Trainer"
+          },
           "scheduleDate": {
             "type": "string",
             "format": "date-time"
@@ -2578,6 +2731,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "trainerId": {
+            "type": "integer",
+            "format": "int32"
+          },
           "scheduleDate": {
             "type": "string",
             "format": "date-time"
@@ -2593,6 +2750,48 @@
         },
         "additionalProperties": false
       },
+      "ScheduleDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scheduleDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "startTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "endTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "className": {
+            "type": "string",
+            "nullable": true
+          },
+          "trainerName": {
+            "type": "string",
+            "nullable": true
+          },
+          "trainerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "price": {
+            "type": "number",
+            "format": "double"
+          },
+          "availableSpots": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "ScheduleUpdateDto": {
         "type": "object",
         "properties": {
@@ -2601,6 +2800,10 @@
             "format": "int32"
           },
           "classId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "trainerId": {
             "type": "integer",
             "format": "int32"
           },

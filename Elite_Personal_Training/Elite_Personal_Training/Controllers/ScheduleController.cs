@@ -22,79 +22,80 @@ namespace Elite_Personal_Training.Controllers
             _context = context;
         }
 
-        // Helper method to check if schedule exists
-        private bool ScheduleExists(int id)
+        private bool ScheduleExists(int id) => _context.Schedules.Any(e => e.Id == id);
+
+        private async Task<bool> IsTrainerAvailable(int trainerId, DateTime date, TimeSpan startTime, TimeSpan endTime)
         {
-            return _context.Schedules.Any(e => e.Id == id);
+            return !await _context.Schedules.AnyAsync(s =>
+                s.TrainerId == trainerId &&
+                s.ScheduleDate == date &&
+                ((s.StartTime <= startTime && s.EndTime > startTime) ||
+                (s.StartTime < endTime && s.EndTime >= endTime) ||
+                (s.StartTime >= startTime && s.EndTime <= endTime)));
         }
 
-        // ✅ Get all schedules
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetSchedules()
         {
             var schedules = await _context.Schedules
                 .Include(s => s.Class)
-                    .ThenInclude(c => c.Trainer)
+                .Include(s => s.Trainer)
                 .ToListAsync();
 
-            // In your GetSchedules method
             var result = schedules.Select(s => new
             {
                 s.Id,
                 s.ScheduleDate,
-                StartTime = s.StartTime.ToString(), // This will output "hh:mm:ss"
-                EndTime = s.EndTime.ToString(),     // This will output "hh:mm:ss"
+                StartTime = s.StartTime.ToString(),
+                EndTime = s.EndTime.ToString(),
                 ClassName = s.Class?.Name,
-                TrainerName = s.Class?.Trainer?.Name
+                TrainerName = s.Trainer?.Name
             });
 
             return Ok(result);
         }
 
-        // ✅ Get schedule by ID
-        // ✅ Get schedule by ID
         [HttpGet("{id}")]
         public async Task<ActionResult<object>> GetSchedule(int id)
         {
             var schedule = await _context.Schedules
                 .Include(s => s.Class)
-                    .ThenInclude(c => c.Trainer)
+                .Include(s => s.Trainer)
                 .FirstOrDefaultAsync(s => s.Id == id);
 
-            if (schedule == null)
-            {
-                return NotFound();
-            }
+            if (schedule == null) return NotFound();
 
             return new
             {
                 schedule.Id,
                 schedule.ScheduleDate,
-                StartTime = schedule.StartTime.ToString(@"hh\:mm"), // Return as "hh:mm" string
-                EndTime = schedule.EndTime.ToString(@"hh\:mm"),     // Return as "hh:mm" string
+                StartTime = schedule.StartTime.ToString(@"hh\:mm"),
+                EndTime = schedule.EndTime.ToString(@"hh\:mm"),
                 ClassName = schedule.Class?.Name,
-                TrainerName = schedule.Class?.Trainer?.Name,
-                ClassId = schedule.ClassId
+                TrainerName = schedule.Trainer?.Name,
+                ClassId = schedule.ClassId,
+                TrainerId = schedule.TrainerId
             };
         }
-
-        // ✅ Create a schedule (Admin Only)
-        // In ScheduleController.cs
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Schedule>> CreateSchedule(ScheduleCreateDto scheduleDto)
         {
-            // Validate the class exists
-            var classExists = await _context.Classes.AnyAsync(c => c.Id == scheduleDto.ClassId);
-            if (!classExists)
-            {
+            if (!await _context.Classes.AnyAsync(c => c.Id == scheduleDto.ClassId))
                 return BadRequest("Invalid ClassId");
-            }
+
+            if (!await _context.Trainers.AnyAsync(t => t.Id == scheduleDto.TrainerId))
+                return BadRequest("Invalid TrainerId");
+
+            if (!await IsTrainerAvailable(scheduleDto.TrainerId, scheduleDto.ScheduleDate,
+                                        scheduleDto.StartTime, scheduleDto.EndTime))
+                return BadRequest("Trainer is not available");
 
             var schedule = new Schedule
             {
                 ClassId = scheduleDto.ClassId,
+                TrainerId = scheduleDto.TrainerId,
                 ScheduleDate = scheduleDto.ScheduleDate,
                 StartTime = scheduleDto.StartTime,
                 EndTime = scheduleDto.EndTime
@@ -106,27 +107,20 @@ namespace Elite_Personal_Training.Controllers
             return CreatedAtAction(nameof(GetSchedule), new { id = schedule.Id }, schedule);
         }
 
-        // Add this DTO to your project
-       
-
-        // ✅ Update a schedule (Admin Only)
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateSchedule(int id, ScheduleUpdateDto scheduleUpdate)
         {
-            if (id != scheduleUpdate.Id)
-            {
-                return BadRequest();
-            }
+            if (id != scheduleUpdate.Id) return BadRequest();
 
             var schedule = await _context.Schedules.FindAsync(id);
-            if (schedule == null)
-            {
-                return NotFound();
-            }
+            if (schedule == null) return NotFound();
 
-            // Only update the fields we want to allow updating
+            if (!await _context.Trainers.AnyAsync(t => t.Id == scheduleUpdate.TrainerId))
+                return BadRequest("Invalid TrainerId");
+
             schedule.ClassId = scheduleUpdate.ClassId;
+            schedule.TrainerId = scheduleUpdate.TrainerId;
             schedule.ScheduleDate = scheduleUpdate.ScheduleDate;
             schedule.StartTime = scheduleUpdate.StartTime;
             schedule.EndTime = scheduleUpdate.EndTime;
@@ -137,43 +131,79 @@ namespace Elite_Personal_Training.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ScheduleExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                if (!ScheduleExists(id)) return NotFound();
+                throw;
             }
 
             return NoContent();
         }
 
-        // ✅ Delete a schedule (Admin Only)
+        // In your ScheduleController.cs
+
+        [HttpGet("available")]
+        public async Task<ActionResult<IEnumerable<ScheduleDto>>> GetAvailableSchedules([FromQuery] int? classId)
+        {
+            var now = DateTime.UtcNow;
+
+            var query = _context.Schedules
+                .Include(s => s.Class)
+                .Include(s => s.Trainer)
+                .Where(s => s.ScheduleDate > now.Date ||
+                           (s.ScheduleDate == now.Date && s.EndTime > now.TimeOfDay));
+
+            if (classId.HasValue)
+            {
+                query = query.Where(s => s.ClassId == classId.Value);
+            }
+
+            var schedules = await query
+                .Select(s => new ScheduleDto
+                {
+                    Id = s.Id,
+                    ScheduleDate = s.ScheduleDate,
+                    StartTime = s.StartTime.ToString(@"hh\:mm"),
+                    EndTime = s.EndTime.ToString(@"hh\:mm"),
+                    ClassName = s.Class.Name,
+                    TrainerName = s.Trainer.Name,
+                    TrainerId = s.Trainer.Id,
+                    Price = s.Class.Price,
+                    AvailableSpots = s.Class.Capacity - _context.Bookings
+                        .Count(b => b.ScheduleId == s.Id && b.Status != "Cancelled")
+                })
+                .Where(s => s.AvailableSpots > 0)
+                .ToListAsync();
+
+            return Ok(schedules);
+        }
+
+        
+
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteSchedule(int id)
         {
             var schedule = await _context.Schedules.FindAsync(id);
-            if (schedule == null)
-            {
-                return NotFound();
-            }
+            if (schedule == null) return NotFound();
 
             _context.Schedules.Remove(schedule);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
     }
 
-    public class ScheduleUpdateDto
+
+
+
+    public class ScheduleDto
     {
         public int Id { get; set; }
-        public int ClassId { get; set; }
         public DateTime ScheduleDate { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
+        public string ClassName { get; set; }
+        public string TrainerName { get; set; }
+        public int TrainerId { get; set; }
+        public decimal Price { get; set; }
+        public int AvailableSpots { get; set; }
     }
 }

@@ -23,14 +23,9 @@ namespace Elite_Personal_Training.Models
         [Range(0, 1000)]
         public decimal Price { get; set; }
 
-        [Required]
-        public int TrainerId { get; set; }
-        public Trainer Trainer { get; set; }
-
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
-        // ✅ Add this to fix your issue
         public ICollection<Schedule> Schedules { get; set; }
     }
 }

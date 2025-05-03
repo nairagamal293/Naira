@@ -4,6 +4,7 @@ using Elite_Personal_Training.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Elite_Personal_Training.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250503071356_RemoveTrainerFromClassAddToSchedule")]
+    partial class RemoveTrainerFromClassAddToSchedule
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,6 +37,9 @@ namespace Elite_Personal_Training.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("BookingType")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ClassId")
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
@@ -79,9 +85,6 @@ namespace Elite_Personal_Training.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("ScheduleId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -92,11 +95,11 @@ namespace Elite_Personal_Training.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClassId");
+
                     b.HasIndex("MembershipId");
 
                     b.HasIndex("OnlineSessionId");
-
-                    b.HasIndex("ScheduleId");
 
                     b.HasIndex("UserId");
 
@@ -629,6 +632,10 @@ namespace Elite_Personal_Training.Migrations
 
             modelBuilder.Entity("Elite_Personal_Training.Models.Booking", b =>
                 {
+                    b.HasOne("Elite_Personal_Training.Models.Class", "Class")
+                        .WithMany()
+                        .HasForeignKey("ClassId");
+
                     b.HasOne("Elite_Personal_Training.Models.Membership", "Membership")
                         .WithMany("Bookings")
                         .HasForeignKey("MembershipId");
@@ -637,21 +644,17 @@ namespace Elite_Personal_Training.Migrations
                         .WithMany()
                         .HasForeignKey("OnlineSessionId");
 
-                    b.HasOne("Elite_Personal_Training.Models.Schedule", "Schedule")
-                        .WithMany()
-                        .HasForeignKey("ScheduleId");
-
                     b.HasOne("Elite_Personal_Training.Models.User", "User")
                         .WithMany("Bookings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Class");
+
                     b.Navigation("Membership");
 
                     b.Navigation("OnlineSession");
-
-                    b.Navigation("Schedule");
 
                     b.Navigation("User");
                 });

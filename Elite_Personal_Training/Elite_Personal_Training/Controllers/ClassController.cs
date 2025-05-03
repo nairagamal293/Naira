@@ -23,7 +23,6 @@ namespace Elite_Personal_Training.Controllers
         public async Task<IActionResult> GetClasses()
         {
             var classes = await _context.Classes
-                .Include(c => c.Trainer)
                 .Select(c => new
                 {
                     c.Id,
@@ -31,7 +30,6 @@ namespace Elite_Personal_Training.Controllers
                     c.Description,
                     c.Capacity,
                     DurationInMinutes = (int)c.Duration.TotalMinutes,
-                    TrainerName = c.Trainer.Name,
                     c.Price
                 })
                 .ToListAsync();
@@ -43,10 +41,7 @@ namespace Elite_Personal_Training.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> GetClass(int id)
         {
-            var classModel = await _context.Classes
-                .Include(c => c.Trainer)
-                .FirstOrDefaultAsync(c => c.Id == id);
-
+            var classModel = await _context.Classes.FindAsync(id);
             if (classModel == null)
                 return NotFound();
 
@@ -57,8 +52,6 @@ namespace Elite_Personal_Training.Controllers
                 classModel.Description,
                 classModel.Capacity,
                 DurationInMinutes = (int)classModel.Duration.TotalMinutes,
-                TrainerName = classModel.Trainer?.Name,
-                TrainerId = classModel.Trainer?.Id,
                 classModel.Price
             };
 
@@ -78,7 +71,6 @@ namespace Elite_Personal_Training.Controllers
                 Capacity = classModel.Capacity,
                 Duration = TimeSpan.FromMinutes(classModel.DurationInMinutes),
                 Price = classModel.Price,
-                TrainerId = classModel.TrainerId,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
@@ -88,6 +80,8 @@ namespace Elite_Personal_Training.Controllers
 
             return CreatedAtAction(nameof(GetClass), new { id = newClass.Id }, newClass);
         }
+
+        // Update ClassFormModel to remove TrainerId
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
@@ -103,8 +97,7 @@ namespace Elite_Personal_Training.Controllers
             existingClass.Capacity = updatedClass.Capacity;
             existingClass.Duration = TimeSpan.FromMinutes(updatedClass.DurationInMinutes);
             existingClass.Price = updatedClass.Price;
-            existingClass.TrainerId = updatedClass.TrainerId;
-            existingClass.UpdatedAt = DateTime.UtcNow;
+            existingClass.UpdatedAt = DateTime.UtcNow;  // Removed TrainerId assignment
 
             await _context.SaveChangesAsync();
             return NoContent();
@@ -135,15 +128,12 @@ namespace Elite_Personal_Training.Controllers
             public int Capacity { get; set; }
 
             [Required]
-            [Range(1, 480)] // Max 8 hours
+            [Range(1, 480)]
             public int DurationInMinutes { get; set; }
 
             [Required]
             [Range(0, 1000)]
             public decimal Price { get; set; }
-
-            [Required]
-            public int TrainerId { get; set; }
         }
     }
 }
