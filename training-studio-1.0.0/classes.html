@@ -610,11 +610,7 @@ async function loadClasses() {
                     <div class="class-img">
                         ${cls.image ? 
                             `<img src="data:image/jpeg;base64,${cls.image}" alt="${cls.name}" class="img-fluid">` : 
-                            `<div class="default-class-image d-flex flex-column align-items-center justify-content-center text-center p-3" style="height:100%; background: linear-gradient(135deg, #f8f9fa, #e9ecef);">
-                                <i class="fas fa-dumbbell fa-4x mb-3" style="color: #9c0d0d; opacity: 0.5;"></i>
-                                <h5 class="text-muted">${cls.name || 'Fitness Class'}</h5>
-                                <span class="sr-only">Default class image</span>
-                            </div>`
+                            `<img src="assets/images/default-class.jpg" alt="Default class image" class="img-fluid">`
                         }
                     </div>
                     <div class="class-body">
@@ -1047,7 +1043,7 @@ function setupBookingForm() {
             const result = await response.json();
             
             // Show success message
-            alert(`Booking confirmed successfully!\nReference: ${result.id}`);
+            alert(`Booking confirmed successfully!`);
             
             // Close the modal
             bookingModal.hide();

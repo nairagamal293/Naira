@@ -646,24 +646,31 @@
             // Render class/session bookings
             const bookingsTable = document.getElementById('upcomingBookings');
             if (classSessionBookings.length > 0) {
-                bookingsTable.innerHTML = classSessionBookings.map(booking => `
-                    <tr>
-                        <td>${formatDate(booking.bookingDate)}</td>
-                        <td>${booking.class?.startTime || booking.onlineSession?.startTime || 'N/A'}</td>
-                        <td>
-                            <strong>${booking.class?.name || booking.onlineSession?.title || 'N/A'}</strong>
-                            ${booking.membership ? `<br><small class="text-muted">Membership: ${booking.membership.name}</small>` : ''}
-                        </td>
-                        <td>${booking.class?.trainer?.name || booking.onlineSession?.trainer?.name || 'N/A'}</td>
-                        <td><span class="badge ${getStatusBadgeClass(booking.status)}">${booking.status}</span></td>
-                        <td>
-                            ${booking.status === 'Confirmed' ?
-                                `<button class="btn btn-sm btn-outline-danger cancel-booking" data-id="${booking.id}">Cancel</button>` :
-                                booking.status === 'Pending' ?
-                                `<button href="payment.html" class="btn btn-sm btn-outline-primary pay-now" data-id="${booking.id}">Pay Now</button>` : ''}
-                        </td>
-                    </tr>
-                `).join('');
+                bookingsTable.innerHTML = classSessionBookings.map(booking => `<tr>
+    <td>${formatDate(booking.bookingDate)}</td>
+    <td>${booking.schedule?.startTime || 
+        (booking.onlineSession?.sessionDateTime ? 
+         new Date(booking.onlineSession.sessionDateTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 
+         'N/A')}</td>
+    <td>
+        <strong>${booking.schedule?.class?.name || booking.onlineSession?.title || 'N/A'}</strong>
+        ${booking.membership ? `<br><small class="text-muted">Membership: ${booking.membership.name}</small>` : ''}
+        ${booking.onlineSession?.meetingLink && 
+          booking.status === 'Confirmed' && 
+          new Date(booking.onlineSession.sessionDateTime) > new Date() ?
+          `<br><a href="${booking.onlineSession.meetingLink}" target="_blank" class="btn btn-sm btn-success mt-1">
+              <i class="fas fa-video"></i> Join Session
+           </a>` : ''}
+    </td>
+    <td>${booking.schedule?.trainer?.name || booking.onlineSession?.trainer?.name || 'N/A'}</td>
+    <td><span class="badge ${getStatusBadgeClass(booking.status)}">${booking.status}</span></td>
+    <td>
+        ${booking.status === 'Confirmed' ?
+            `<button class="btn btn-sm btn-outline-danger cancel-booking" data-id="${booking.id}">Cancel</button>` :
+            booking.status === 'Pending' ?
+            `<button href="payment.html" class="btn btn-sm btn-outline-primary pay-now" data-id="${booking.id}">Pay Now</button>` : ''}
+    </td>
+</tr>`).join('');
             } else {
                 bookingsTable.innerHTML = `
                     <tr>
