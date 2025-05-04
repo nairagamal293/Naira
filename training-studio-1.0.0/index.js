@@ -247,7 +247,7 @@ function setupBookingForm() {
     
         try {
             if (type === "Schedule") {
-                // First load all available classes
+                // Step 1: First load all available classes
                 const classesResponse = await fetch(`${apiBase}/Class`);
                 if (!classesResponse.ok) throw new Error("Failed to fetch classes");
                 
@@ -270,49 +270,56 @@ function setupBookingForm() {
                     const classId = this.value;
                     if (!classId) return;
                     
-                    // Load schedules for this specific class
-                    const schedulesResponse = await fetch(`${apiBase}/Schedule/available?classId=${classId}`);
-                    if (!schedulesResponse.ok) throw new Error("Failed to fetch schedules");
+                    // Clear any existing time slot select
+                    const existingTimeSlotSelect = document.getElementById('timeSlotSelect');
+                    if (existingTimeSlotSelect) existingTimeSlotSelect.remove();
                     
-                    const schedules = await schedulesResponse.json();
-                    
-                    // Create a new select element for time slots
+                    // Create loading message
                     const timeSlotSelect = document.createElement('select');
                     timeSlotSelect.id = 'timeSlotSelect';
                     timeSlotSelect.className = 'form-control mt-3';
-                    timeSlotSelect.innerHTML = `
-                        <option value="">Select a Time Slot</option>
-                        ${schedules.map(schedule => `
-                            <option value="${schedule.id}"
-                                    data-trainer-id="${schedule.trainerId}"
-                                    data-trainer-name="${schedule.trainerName}"
-                                    data-date="${schedule.scheduleDate}"
-                                    data-start="${schedule.startTime}"
-                                    data-end="${schedule.endTime}"
-                                    data-price="${schedule.price}">
-                                ${new Date(schedule.scheduleDate).toLocaleDateString()} - 
-                                ${schedule.startTime} to ${schedule.endTime} with 
-                                ${schedule.trainerName}
-                            </option>
-                        `).join('')}
-                    `;
-                    
-                    // Remove previous time slot select if exists
-                    const existingSelect = document.getElementById('timeSlotSelect');
-                    if (existingSelect) existingSelect.remove();
-                    
-                    // Insert after class select
+                    timeSlotSelect.innerHTML = '<option value="">Loading available time slots...</option>';
                     bookingItemSelect.parentNode.appendChild(timeSlotSelect);
                     
-                    // Update price when time slot is selected
-                    timeSlotSelect.addEventListener('change', function() {
-                        const selectedOption = this.options[this.selectedIndex];
-                        if (selectedOption && selectedOption.value) {
-                            totalPriceDisplay.textContent = selectedOption.dataset.price || '0';
-                        } else {
-                            totalPriceDisplay.textContent = '--';
-                        }
-                    });
+                    try {
+                        // Load schedules for this specific class
+                        const schedulesResponse = await fetch(`${apiBase}/Schedule/available?classId=${classId}`);
+                        if (!schedulesResponse.ok) throw new Error("Failed to fetch schedules");
+                        
+                        const schedules = await schedulesResponse.json();
+                        
+                        // Populate time slots
+                        timeSlotSelect.innerHTML = `
+                            <option value="">Select a Time Slot</option>
+                            ${schedules.map(schedule => `
+                                <option value="${schedule.id}"
+                                        data-trainer-id="${schedule.trainerId}"
+                                        data-trainer-name="${schedule.trainerName}"
+                                        data-date="${schedule.scheduleDate}"
+                                        data-start="${schedule.startTime}"
+                                        data-end="${schedule.endTime}"
+                                        data-price="${schedule.price}">
+                                    ${new Date(schedule.scheduleDate).toLocaleDateString()} - 
+                                    ${schedule.startTime} to ${schedule.endTime} with 
+                                    ${schedule.trainerName} (${schedule.price} SAR)
+                                </option>
+                            `).join('')}
+                        `;
+                        
+                        // Update price when time slot is selected
+                        timeSlotSelect.addEventListener('change', function() {
+                            const selectedOption = this.options[this.selectedIndex];
+                            if (selectedOption && selectedOption.value) {
+                                totalPriceDisplay.textContent = selectedOption.dataset.price || '0';
+                            } else {
+                                totalPriceDisplay.textContent = '--';
+                            }
+                        });
+                        
+                    } catch (error) {
+                        console.error("Error loading schedules:", error);
+                        timeSlotSelect.innerHTML = '<option value="">Error loading time slots</option>';
+                    }
                 });
             } else {
                 // Original handling for other types (Membership, OnlineSession)
@@ -347,6 +354,7 @@ function setupBookingForm() {
             bookingItemSelect.disabled = false;
         }
     }
+
     
 
     function formatScheduleTime(schedule) {
@@ -402,75 +410,142 @@ function setupBookingForm() {
     }
 
     async function handleBookingSubmit(e) {
-        e.preventDefault();
-    
-        if (!auth.isLoggedIn()) {
-            alert("Please log in to make a booking");
-            window.location.href = "SignUp.html";
+    e.preventDefault();
+
+    if (!auth.isLoggedIn()) {
+        alert("Please log in to make a booking");
+        window.location.href = "SignUp.html";
+        return;
+    }
+
+    const type = bookingTypeSelect.value;
+    const userData = auth.currentUser();
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const notes = document.getElementById("notes").value.trim();
+    const paymentMethod = document.getElementById("paymentMethod").value;
+
+    // Validate required fields
+    if (!name || !email || !phone || !paymentMethod) {
+        alert("Please fill in all required fields");
+        return;
+    }
+
+    let itemId, price;
+
+    // Handle different booking types
+    if (type === "Schedule") {
+        const timeSlotSelect = document.getElementById('timeSlotSelect');
+        if (!timeSlotSelect || !timeSlotSelect.value) {
+            alert("Please select a time slot");
             return;
         }
-    
-        const type = bookingTypeSelect.value;
-        const itemId = bookingItemSelect.value;
-        const selectedOption = bookingItemSelect.selectedOptions[0];
-        const price = selectedOption?.dataset.price || "0";
-    
-        if (!itemId || itemId === "") {
-            alert("Please select an item to book");
+        itemId = timeSlotSelect.value;
+        const selectedOption = timeSlotSelect.options[timeSlotSelect.selectedIndex];
+        price = selectedOption?.dataset.price || "0";
+    } else {
+        // For Membership and OnlineSession
+        if (!bookingItemSelect.value) {
+            alert(`Please select a ${type.toLowerCase()}`);
             return;
         }
-    
-        const bookingData = {
-            userId: userData.id,
-            bookingType: type,
-            name: nameInput.value.trim(),
-            email: emailInput.value.trim(),
-            phone: phoneInput.value.trim(),
-            notes: notesInput.value.trim(),
-            paymentMethod: paymentMethodSelect.value,
-            amountPaid: parseFloat(price),
-            status: "Pending",
-            paymentStatus: "Unpaid"
-        };
-    
-        // Add type-specific reference
-        if (type === "Membership") bookingData.membershipId = itemId;
-        if (type === "Schedule") bookingData.scheduleId = itemId;
-        if (type === "OnlineSession") bookingData.onlineSessionId = itemId;
-    
-        try {
-            const response = await fetch(`${apiBase}/Booking`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
-                },
-                body: JSON.stringify(bookingData)
-            });
-    
-            if (response.ok) {
-                const result = await response.json();
-                alert("Booking confirmed successfully!");
-                
-                // Close the modal
-                const bookingModal = bootstrap.Modal.getInstance(document.getElementById('bookingModal'));
-                bookingModal.hide();
-                
-                // Reset form
-                bookingForm.reset();
-                document.getElementById("totalPrice").textContent = "--";
-                
-                // Refresh schedules to update availability
-                loadSchedules();
-            } else {
-                const error = await response.json().catch(() => ({ message: "Unknown error occurred" }));
-                throw new Error(error.message || "Booking failed");
+        itemId = bookingItemSelect.value;
+        const selectedOption = bookingItemSelect.options[bookingItemSelect.selectedIndex];
+        price = selectedOption?.dataset.price || "0";
+    }
+
+    // Prepare booking data
+    const bookingData = {
+        userId: userData.id,
+        bookingType: type === "Membership" ? 1 : type === "Schedule" ? 2 : 3,
+        name: name,
+        email: email,
+        phone: phone,
+        notes: notes,
+        paymentMethod: paymentMethod,
+        amountPaid: parseFloat(price),
+        status: "Pending",
+        paymentStatus: "Unpaid"
+    };
+
+    // Add type-specific reference
+    if (type === "Membership") {
+        bookingData.membershipId = parseInt(itemId);
+    } 
+    else if (type === "Schedule") {
+        bookingData.scheduleId = parseInt(itemId);
+        
+        // Add schedule details to notes (optional)
+        const timeSlotSelect = document.getElementById('timeSlotSelect');
+        const selectedOption = timeSlotSelect.options[timeSlotSelect.selectedIndex];
+        if (selectedOption) {
+            bookingData.notes = (notes ? notes + "\n\n" : "") +
+                `Schedule Details:\n` +
+                `- Class: ${selectedOption.parentElement?.querySelector('option[value="' + bookingItemSelect.value + '"]')?.textContent}\n` +
+                `- Time: ${selectedOption.dataset.start} to ${selectedOption.dataset.end}\n` +
+                `- Date: ${new Date(selectedOption.dataset.date).toLocaleDateString()}\n` +
+                `- Trainer: ${selectedOption.dataset.trainerName}`;
+        }
+    } 
+    else if (type === "OnlineSession") {
+        bookingData.onlineSessionId = parseInt(itemId);
+    }
+
+    try {
+        const response = await fetch(`${apiBase}/Booking`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+            },
+            body: JSON.stringify(bookingData)
+        });
+
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({ message: "Unknown error occurred" }));
+            throw new Error(error.message || "Booking failed with status " + response.status);
+        }
+
+        const result = await response.json();
+        
+        // Show success message
+        alert(`Booking confirmed successfully!\nReference: ${result.id}`);
+        
+        // Close the modal
+        const bookingModal = bootstrap.Modal.getInstance(document.getElementById('bookingModal'));
+        bookingModal.hide();
+        
+        // Reset form
+        bookingForm.reset();
+        document.getElementById("totalPrice").textContent = "--";
+        
+        // Remove any time slot select if exists
+        const timeSlotSelect = document.getElementById('timeSlotSelect');
+        if (timeSlotSelect) timeSlotSelect.remove();
+        
+        // Refresh schedules to update availability
+        if (type === "Schedule") {
+            loadSchedules();
+        }
+
+    } catch (error) {
+        console.error("Booking error:", error);
+        alert(`Booking failed: ${error.message}\nPlease try again or contact support.`);
+        
+        // For schedule booking errors, reload the time slots
+        if (type === "Schedule") {
+            const classId = bookingItemSelect.value;
+            if (classId) {
+                const timeSlotSelect = document.getElementById('timeSlotSelect');
+                if (timeSlotSelect) {
+                    timeSlotSelect.innerHTML = '<option value="">Loading available time slots...</option>';
+                    // You might want to reload the time slots here
+                }
             }
-        } catch (error) {
-            console.error("Booking error:", error);
-            alert(`Booking failed: ${error.message}`);
         }
-    }}
+    }
+}}
 
 
 

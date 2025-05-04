@@ -220,6 +220,16 @@
   },
   {
     "ContainingType": "Elite_Personal_Training.Controllers.BookingController",
+    "Method": "GetAllBookings",
+    "RelativePath": "api/Booking/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elite_Personal_Training.Controllers.BookingController",
     "Method": "GetAvailableOnlineSessions",
     "RelativePath": "api/Booking/available-online-sessions",
     "HttpMethod": "GET",

@@ -2346,7 +2346,7 @@ function showBookingNotification() {
 
 
 function fetchBookings() {
-    fetch("https://localhost:7020/api/Booking/filter")
+    fetch("https://localhost:7020/api/Booking/all")
         .then(res => res.json())
         .then(bookings => {
             const tbody = document.querySelector("#bookingsTable tbody");

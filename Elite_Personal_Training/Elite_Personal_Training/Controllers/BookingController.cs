@@ -19,6 +19,18 @@ namespace Elite_Personal_Training.Controllers
         {
             _context = context;
         }
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllBookings()
+        {
+            var bookings = await _context.Bookings
+                .Include(b => b.Membership)
+                .Include(b => b.Schedule)
+                .Include(b => b.OnlineSession)
+                .ToListAsync();
+
+            return Ok(bookings);
+        }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBooking(int id)
@@ -139,27 +151,28 @@ namespace Elite_Personal_Training.Controllers
         }
         // Update the FilterBookings method:
         [HttpGet("filter")]
-        public async Task<IActionResult> FilterBookings([FromQuery] string? status, [FromQuery] string? type)
+        public async Task<IActionResult> FilterBookings(string status, string type)
         {
-            var query = _context.Bookings
-                .Include(b => b.User)
-                .Include(b => b.Membership)
-                .Include(b => b.Schedule)
-                    .ThenInclude(s => s.Class)
-                .Include(b => b.Schedule)
-                    .ThenInclude(s => s.Trainer)
-                .Include(b => b.OnlineSession)
-                .AsQueryable();
+            try
+            {
+                // Parse enum value safely
+                if (!Enum.TryParse<BookingType>(type, true, out var bookingTypeEnum))
+                {
+                    return BadRequest("Invalid booking type.");
+                }
 
-            if (!string.IsNullOrEmpty(status))
-                query = query.Where(b => b.Status == status);
+                var filteredBookings = await _context.Bookings
+                    .Where(b => b.Status == status && b.BookingType == bookingTypeEnum)
+                    .ToListAsync();
 
-            if (!string.IsNullOrEmpty(type))
-                query = query.Where(b => b.BookingType.ToString() == type);
-
-            var bookings = await query.OrderByDescending(b => b.BookingDate).ToListAsync();
-            return Ok(bookings);
+                return Ok(filteredBookings);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
+
 
         // Update the GetBookingsByUser method:
         [HttpGet("user/{userId}")]

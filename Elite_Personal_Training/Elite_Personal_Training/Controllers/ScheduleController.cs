@@ -176,7 +176,7 @@ namespace Elite_Personal_Training.Controllers
             return Ok(schedules);
         }
 
-        
+
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
