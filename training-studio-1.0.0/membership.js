@@ -1,7 +1,7 @@
+// Update the DOMContentLoaded event listener
 document.addEventListener("DOMContentLoaded", function () {
     // Initialize all functionality
     checkAuthStatus();
-    setupBookingButtons();
     loadMemberships();
     setupBookingForm();
     
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (auth.isLoggedIn()) {
                 openBookingModal(button);
             } else {
-                redirectToSignup();
+                showSignupAlert();
             }
         }
     });
@@ -143,6 +143,7 @@ function redirectToSignup() {
 // ✅ Load Memberships
  // Update the loadMemberships function to work with the slider
  // In membership.js, update the loadMemberships function to include data attributes:
+// Update the loadMemberships function to handle click events
 async function loadMemberships() {
     const membershipSlider = document.querySelector(".membership-slider");
     if (!membershipSlider) return;
@@ -170,7 +171,7 @@ async function loadMemberships() {
                         <li>${membership.classAccess ? '✔' : '✕'} Group classes</li>
                         <li>${membership.lockerAccess ? '✔' : '✕'} Locker access</li>
                     </ul>
-                    <button class="btn-main booking-btn" 
+                    <button class="btn-main join-btn" 
                             data-id="${membership.id}" 
                             data-name="${membership.name}"
                             data-price="${membership.price}"
@@ -182,11 +183,24 @@ async function loadMemberships() {
             
         // Initialize slider navigation
         setupSliderNavigation();
+        
+        // Add click handlers to all join buttons
+        document.querySelectorAll('.join-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!auth.isLoggedIn()) {
+                    showSignupAlert();
+                } else {
+                    openBookingModal(this);
+                }
+            });
+        });
     } catch (error) {
         console.error("Error loading memberships:", error);
         membershipSlider.innerHTML = `<p class="text-danger text-center">Error loading memberships. Please try again later.</p>`;
     }
 }
+
 
 function setupSliderNavigation() {
     const slider = document.querySelector('.membership-slider');
@@ -387,3 +401,36 @@ function setupBookingForm() {
         }
     }
 }
+
+// Add this function to show the signup alert
+function showSignupAlert() {
+    const alertModal = document.getElementById('signupAlert');
+    alertModal.classList.add('active');
+    
+    // Close button handler
+    document.getElementById('cancelAlertBtn').addEventListener('click', function() {
+        alertModal.classList.remove('active');
+    }, { once: true });
+    
+    // Signup button handler
+    document.getElementById('signupAlertBtn').addEventListener('click', function() {
+        redirectToSignup();
+    }, { once: true });
+    
+    // Close when clicking outside content
+    alertModal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.classList.remove('active');
+        }
+    });
+    
+    // Close with escape key
+    document.addEventListener('keydown', function closeOnEscape(e) {
+        if (e.key === 'Escape') {
+            alertModal.classList.remove('active');
+            document.removeEventListener('keydown', closeOnEscape);
+        }
+    }, { once: true });
+}
+
+

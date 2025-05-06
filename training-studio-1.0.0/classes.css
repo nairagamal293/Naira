@@ -1,0 +1,390 @@
+
+/* 
+---------------------------------------------
+Classes Page Styles
+--------------------------------------------- 
+*/
+/* Alert Modal Styles */
+
+/* Alert Icons */
+.fa-exclamation-triangle {
+    color: #dc3545;
+}
+
+.fa-check-circle {
+    color: #28a745;
+}
+
+/* Single Button Alert */
+.alert-actions.single-button {
+    justify-content: center;
+}
+.alert-modal {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0,0,0,0.7);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 9999;
+opacity: 0;
+visibility: hidden;
+transition: all 0.3s ease;
+}
+
+.alert-modal.active {
+opacity: 1;
+visibility: visible;
+}
+
+.alert-content {
+background-color: #fff;
+border-radius: 10px;
+max-width: 400px;
+width: 90%;
+padding: 30px;
+text-align: center;
+box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+transform: translateY(-20px);
+transition: all 0.3s ease;
+}
+
+.alert-modal.active .alert-content {
+transform: translateY(0);
+}
+
+.alert-icon {
+font-size: 50px;
+color: #9c0d0d;
+margin-bottom: 20px;
+}
+
+.alert-title {
+font-size: 24px;
+font-weight: 700;
+margin-bottom: 15px;
+color: #232d39;
+}
+
+.alert-message {
+font-size: 16px;
+color: #7a7a7a;
+margin-bottom: 25px;
+line-height: 1.6;
+}
+
+.alert-actions {
+display: flex;
+justify-content: center;
+gap: 15px;
+}
+
+.alert-btn {
+padding: 10px 25px;
+border-radius: 5px;
+font-weight: 600;
+text-transform: uppercase;
+cursor: pointer;
+transition: all 0.3s;
+border: none;
+font-size: 14px;
+}
+
+.alert-btn-primary {
+background-color: #9c0d0d;
+color: #fff;
+}
+
+.alert-btn-primary:hover {
+background-color: #7a0a0a;
+}
+
+.alert-btn-secondary {
+background-color: #f5f5f5;
+color: #232d39;
+}
+
+.alert-btn-secondary:hover {
+background-color: #e0e0e0;
+}
+/* Hero Section */
+.classes-hero {
+background: linear-gradient(rgba(0, 0, 0, 0.7), #232d39), 
+        url('assets/images/training-image-03.jpg') center/cover no-repeat;
+padding: 150px 0 100px;
+text-align: center;
+color: #fff;
+}
+
+.classes-hero h1 {
+font-size: 48px;
+font-weight: 800;
+margin-bottom: 20px;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+.classes-hero h1 em {
+font-style: normal;
+color: rgb(156, 13, 13);
+}
+
+.classes-hero p {
+font-size: 18px;
+margin-bottom: 8px;
+}
+
+/* Class Filters */
+.class-filters {
+margin-top: 40px;
+margin-bottom: 40px;
+text-align: center;
+}
+
+.filter-btn {
+display: inline-block;
+padding: 10px 25px;
+margin: 0 5px 10px;
+background-color: #fff;
+color: #232d39;
+border: none;
+border-radius: 50px;
+font-size: 14px;
+font-weight: 600;
+text-transform: uppercase;
+cursor: pointer;
+transition: all 0.3s;
+box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.filter-btn:hover {
+background-color: rgb(156, 13, 13);
+color: #fff;
+}
+
+.filter-btn.active {
+background-color: rgb(156, 13, 13);
+color: #fff;
+}
+
+/* Class Cards */
+.class-card {
+background: #fff;
+border-radius: 5px;
+overflow: hidden;
+margin-bottom: 30px;
+box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+transition: all 0.3s ease;
+}
+
+.class-card:hover {
+transform: translateY(-10px);
+box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+.class-img {
+height: 250px;
+overflow: hidden;
+position: relative;
+}
+
+.class-img img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+transition: transform 0.5s ease;
+}
+
+.class-card:hover .class-img img {
+transform: scale(1.05);
+}
+
+.default-class-image {
+height: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+background: #f5f5f5;
+}
+
+.default-class-image i {
+font-size: 60px;
+color: #9c0d0d;
+opacity: 0.7;
+}
+
+.class-body {
+padding: 25px;
+}
+
+.class-category {
+display: inline-block;
+font-size: 12px;
+font-weight: 600;
+color: rgb(156, 13, 13);
+text-transform: uppercase;
+letter-spacing: 1px;
+margin-bottom: 10px;
+}
+
+.class-title {
+font-size: 20px;
+font-weight: 700;
+color: #232d39;
+margin-bottom: 15px;
+}
+
+.difficulty {
+display: flex;
+align-items: center;
+margin-bottom: 15px;
+}
+
+.difficulty-badge {
+display: inline-block;
+width: 15px;
+height: 15px;
+border-radius: 50%;
+margin-right: 8px;
+}
+
+.difficulty-badge.beginner {
+background-color: #28a745;
+}
+
+.difficulty-badge.intermediate {
+background-color: #ffc107;
+}
+
+.difficulty-badge.advanced {
+background-color: #dc3545;
+}
+
+.class-meta {
+display: flex;
+justify-content: space-between;
+margin-bottom: 15px;
+color: #7a7a7a;
+font-size: 14px;
+}
+
+.class-meta span {
+display: flex;
+align-items: center;
+}
+
+.class-meta i {
+margin-right: 5px;
+color: rgb(156, 13, 13);
+}
+
+.class-card p {
+font-size: 14px;
+color: #7a7a7a;
+margin-bottom: 20px;
+line-height: 1.6;
+}
+
+.btn-book {
+display: inline-block;
+width: 100%;
+padding: 12px;
+background-color: rgb(156, 13, 13);
+color: #fff;
+border: none;
+border-radius: 5px;
+font-size: 14px;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 1px;
+cursor: pointer;
+transition: all 0.3s;
+}
+
+.btn-book:hover {
+background-color: rgba(156, 13, 13, 0.9);
+color: #fff;
+}
+
+/* Schedule CTA */
+.schedule-cta {
+background: linear-gradient(rgba(35, 45, 57, 0.9), rgba(35, 45, 57, 0.9)), 
+        url('assets/images/training-image-03.jpg') center/cover no-repeat;
+padding: 80px 0;
+text-align: center;
+}
+
+.schedule-cta h2 {
+font-size: 36px;
+font-weight: 800;
+margin-bottom: 20px;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+.schedule-cta p {
+font-size: 16px;
+margin-bottom: 30px;
+}
+
+/* Loading States */
+.loading-spinner {
+width: 50px;
+height: 50px;
+border: 5px solid rgba(156, 13, 13, 0.2);
+border-radius: 50%;
+border-top-color: rgb(156, 13, 13);
+animation: spin 1s ease-in-out infinite;
+margin: 0 auto;
+}
+
+@keyframes spin {
+to { transform: rotate(360deg); }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+.classes-hero {
+padding: 120px 0 80px;
+}
+
+.classes-hero h1 {
+font-size: 36px;
+}
+}
+
+@media (max-width: 768px) {
+.classes-hero {
+padding: 100px 0 60px;
+}
+
+.filter-btn {
+padding: 8px 15px;
+font-size: 12px;
+}
+
+.class-img {
+height: 200px;
+}
+}
+
+@media (max-width: 576px) {
+.classes-hero h1 {
+font-size: 28px;
+}
+
+.class-card {
+margin-bottom: 20px;
+}
+
+.schedule-cta {
+padding: 60px 0;
+}
+
+.schedule-cta h2 {
+font-size: 28px;
+}
+}

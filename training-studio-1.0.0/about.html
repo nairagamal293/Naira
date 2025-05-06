@@ -121,6 +121,30 @@
             padding: 100px 0;
             color: white;
         }
+        .social-links {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.social-links a {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.social-links a:hover {
+    transform: translateY(-3px);
+}
+
+.no-image-placeholder {
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    color: #9c0d0d;
+    font-size: 5rem;
+}
         
         @media (max-width: 768px) {
             .about-hero {
@@ -457,32 +481,46 @@ async function loadTrainers() {
         }
         
         trainersListContainer.innerHTML = trainers.map(trainer => `
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="trainer-item card h-100">
-                    <div class="card-img-top trainer-image">
-                        ${trainer.image ? 
-                            `<img src="data:image/jpeg;base64,${trainer.image}" class="card-img-top" alt="${trainer.name}">` : 
-                            `<div class="no-image-placeholder">
-                                <i class="fas fa-user-tie"></i>
-                            </div>`
-                        }
-                    </div>
-                    <div class="card-body">
-                        <h4 class="card-title">${trainer.name || 'Professional Trainer'}</h4>
-                        
-                        <p class="card-text text-muted">${trainer.description || "Certified professional trainer with years of experience."}</p>
-                        
-                    </div>
-                    <div class="card-footer bg-transparent">
-                        <div class="social-links">
-                            
-                            <a href="#" class="text-info"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="text-danger"><i class="fab fa-instagram"></i></a>
-                        </div>
-                    </div>
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="trainer-item card h-100">
+            <div class="card-img-top trainer-image">
+                ${trainer.image ? 
+                    `<img src="data:image/jpeg;base64,${trainer.image}" class="card-img-top" alt="${trainer.name}">` : 
+                    `<div class="no-image-placeholder">
+                        <i class="fas fa-user-tie"></i>
+                    </div>`
+                }
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">${trainer.name || 'Professional Trainer'}</h4>
+                <p class="card-text text-muted">${trainer.description || "Certified professional trainer with years of experience."}</p>
+            </div>
+            <div class="card-footer bg-transparent">
+                <div class="social-links">
+                    ${trainer.snapchatUrl ? 
+                        `<a href="${trainer.snapchatUrl}" target="_blank" class="text-warning" title="Snapchat">
+                            <i class="fab fa-snapchat"></i>
+                        </a>` : ''
+                    }
+                    ${trainer.instagramUrl ? 
+                        `<a href="${trainer.instagramUrl}" target="_blank" class="text-danger" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>` : ''
+                    }
+                    ${trainer.twitterUrl ? 
+                        `<a href="${trainer.twitterUrl}" target="_blank" class="text-info" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>` : ''
+                    }
+                    ${!trainer.snapchatUrl && !trainer.instagramUrl && !trainer.twitterUrl ? 
+                        '<small class="text-muted">No social links available</small>' : ''
+                    }
                 </div>
             </div>
-        `).join("");
+        </div>
+    </div>
+`).join("");
+
     } catch (error) {
         console.error("Error loading trainers:", error);
         trainersListContainer.innerHTML = `

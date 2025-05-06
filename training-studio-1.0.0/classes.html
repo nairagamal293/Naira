@@ -13,293 +13,8 @@
     <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.css">
     <link rel="stylesheet" type="text/css" href="index.css">
     <link rel="stylesheet" href="assets/css/templatemo-training-studio.css">
-    
-    <style>
-        /* 
----------------------------------------------
-Classes Page Styles
---------------------------------------------- 
-*/
-
-/* Hero Section */
-.classes-hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), #232d39), 
-                url('assets/images/training-image-03.jpg') center/cover no-repeat;
-    padding: 150px 0 100px;
-    text-align: center;
-    color: #fff;
-}
-
-.classes-hero h1 {
-    font-size: 48px;
-    font-weight: 800;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.classes-hero h1 em {
-    font-style: normal;
-    color: rgb(156, 13, 13);
-}
-
-.classes-hero p {
-    font-size: 18px;
-    margin-bottom: 8px;
-}
-
-/* Class Filters */
-.class-filters {
-    margin-top: 40px;
-    margin-bottom: 40px;
-    text-align: center;
-}
-
-.filter-btn {
-    display: inline-block;
-    padding: 10px 25px;
-    margin: 0 5px 10px;
-    background-color: #fff;
-    color: #232d39;
-    border: none;
-    border-radius: 50px;
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.filter-btn:hover {
-    background-color: rgb(156, 13, 13);
-    color: #fff;
-}
-
-.filter-btn.active {
-    background-color: rgb(156, 13, 13);
-    color: #fff;
-}
-
-/* Class Cards */
-.class-card {
-    background: #fff;
-    border-radius: 5px;
-    overflow: hidden;
-    margin-bottom: 30px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-}
-
-.class-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-}
-
-.class-img {
-    height: 250px;
-    overflow: hidden;
-    position: relative;
-}
-
-.class-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.class-card:hover .class-img img {
-    transform: scale(1.05);
-}
-
-.default-class-image {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #f5f5f5;
-}
-
-.default-class-image i {
-    font-size: 60px;
-    color: #9c0d0d;
-    opacity: 0.7;
-}
-
-.class-body {
-    padding: 25px;
-}
-
-.class-category {
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 600;
-    color: rgb(156, 13, 13);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-}
-
-.class-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #232d39;
-    margin-bottom: 15px;
-}
-
-.difficulty {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.difficulty-badge {
-    display: inline-block;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    margin-right: 8px;
-}
-
-.difficulty-badge.beginner {
-    background-color: #28a745;
-}
-
-.difficulty-badge.intermediate {
-    background-color: #ffc107;
-}
-
-.difficulty-badge.advanced {
-    background-color: #dc3545;
-}
-
-.class-meta {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-    color: #7a7a7a;
-    font-size: 14px;
-}
-
-.class-meta span {
-    display: flex;
-    align-items: center;
-}
-
-.class-meta i {
-    margin-right: 5px;
-    color: rgb(156, 13, 13);
-}
-
-.class-card p {
-    font-size: 14px;
-    color: #7a7a7a;
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
-
-.btn-book {
-    display: inline-block;
-    width: 100%;
-    padding: 12px;
-    background-color: rgb(156, 13, 13);
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.btn-book:hover {
-    background-color: rgba(156, 13, 13, 0.9);
-    color: #fff;
-}
-
-/* Schedule CTA */
-.schedule-cta {
-    background: linear-gradient(rgba(35, 45, 57, 0.9), rgba(35, 45, 57, 0.9)), 
-                url('assets/images/training-image-03.jpg') center/cover no-repeat;
-    padding: 80px 0;
-    text-align: center;
-}
-
-.schedule-cta h2 {
-    font-size: 36px;
-    font-weight: 800;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.schedule-cta p {
-    font-size: 16px;
-    margin-bottom: 30px;
-}
-
-/* Loading States */
-.loading-spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid rgba(156, 13, 13, 0.2);
-    border-radius: 50%;
-    border-top-color: rgb(156, 13, 13);
-    animation: spin 1s ease-in-out infinite;
-    margin: 0 auto;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* Responsive Adjustments */
-@media (max-width: 992px) {
-    .classes-hero {
-        padding: 120px 0 80px;
-    }
-    
-    .classes-hero h1 {
-        font-size: 36px;
-    }
-}
-
-@media (max-width: 768px) {
-    .classes-hero {
-        padding: 100px 0 60px;
-    }
-    
-    .filter-btn {
-        padding: 8px 15px;
-        font-size: 12px;
-    }
-    
-    .class-img {
-        height: 200px;
-    }
-}
-
-@media (max-width: 576px) {
-    .classes-hero h1 {
-        font-size: 28px;
-    }
-    
-    .class-card {
-        margin-bottom: 20px;
-    }
-    
-    .schedule-cta {
-        padding: 60px 0;
-    }
-    
-    .schedule-cta h2 {
-        font-size: 28px;
-    }
-}
-    </style>
+    <link rel="stylesheet" href="classes.css">
+   
 </head>
 
 <body>
@@ -441,6 +156,26 @@ Classes Page Styles
         </div>
     </section>
 
+<!-- Signup Alert Modal -->
+<div class="alert-modal" id="signupAlert">
+    <div class="alert-content">
+        <div class="alert-icon">
+            <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <h3 class="alert-title">Sign Up Required</h3>
+        <p class="alert-message">
+            You need to be a member to book classes. Sign up now to access all our 
+            fitness classes and start your fitness journey with Elite Studio.
+        </p>
+        <div class="alert-actions">
+            <button class="alert-btn alert-btn-secondary" id="cancelAlertBtn">Maybe Later</button>
+            <button class="alert-btn alert-btn-primary" id="signupAlertBtn">Sign Up Now</button>
+        </div>
+    </div>
+</div>
+
+
+
     <!-- ***** Footer ***** -->
     <footer>
         <div class="container">
@@ -509,13 +244,15 @@ Classes Page Styles
     
     <!-- Main Classes Script -->
    <script>
-    document.addEventListener("DOMContentLoaded", function () {
+
+document.addEventListener("DOMContentLoaded", function () {
     // Initialize all functionality
     checkAuthStatus();
     loadClasses();
     setupClassFilters();
     setupBookingForm();
     setupMobileMenu();
+    setupAlertModal();
 });
 
 // ✅ Authentication State Management
@@ -603,14 +340,19 @@ async function loadClasses() {
             return;
         }
 
-        // Map API data to HTML
-        classesContainer.innerHTML = classes.map(cls => `
+        // Map API data to HTML with cycling default images
+        classesContainer.innerHTML = classes.map((cls, index) => {
+            // Calculate which default image to use (1-4) based on index
+            const defaultImageNumber = (index % 4) + 1;
+            const defaultImageUrl = `assets/images/default-class-${defaultImageNumber}.jpg`;
+            
+            return `
             <div class="col-lg-4 col-md-6" data-category="${getCategoryClass(cls.category)}">
                 <div class="class-card">
                     <div class="class-img">
                         ${cls.image ? 
                             `<img src="data:image/jpeg;base64,${cls.image}" alt="${cls.name}" class="img-fluid">` : 
-                            `<img src="assets/images/default-class.jpg" alt="Default class image" class="img-fluid">`
+                            `<img src="${defaultImageUrl}" alt="Default class image" class="img-fluid">`
                         }
                     </div>
                     <div class="class-body">
@@ -635,7 +377,8 @@ async function loadClasses() {
                     </div>
                 </div>
             </div>
-        `).join("");
+            `;
+        }).join("");
 
     } catch (error) {
         console.error("Error loading classes:", error);
@@ -697,6 +440,46 @@ function setupClassFilters() {
     });
 }
 
+// ✅ Setup Alert Modal
+function setupAlertModal() {
+    const alertModal = document.getElementById('signupAlert');
+    
+    // Close modal when clicking outside content
+    alertModal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.classList.remove('active');
+        }
+    });
+    
+    // Close with escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && alertModal.classList.contains('active')) {
+            alertModal.classList.remove('active');
+        }
+    });
+}
+
+// ✅ Show Signup Alert
+function showSignupAlert() {
+    const alertModal = document.getElementById('signupAlert');
+    alertModal.classList.add('active');
+    
+    // Close button handler
+    document.getElementById('cancelAlertBtn').addEventListener('click', function() {
+        alertModal.classList.remove('active');
+    }, { once: true });
+    
+    // Signup button handler
+    document.getElementById('signupAlertBtn').addEventListener('click', function() {
+        redirectToSignup();
+    }, { once: true });
+}
+
+// ✅ Redirect to Signup
+function redirectToSignup() {
+    window.location.href = `SignUp.html?redirect=${encodeURIComponent(window.location.href)}`;
+}
+
 // ✅ Setup Booking Form and Modal
 function setupBookingForm() {
     const apiBase = "https://localhost:7020/api";
@@ -718,7 +501,7 @@ function setupBookingForm() {
             e.preventDefault();
             
             if (!auth.isLoggedIn()) {
-                redirectToSignup();
+                showSignupAlert();
                 return;
             }
             
@@ -884,7 +667,7 @@ function setupBookingForm() {
             
             // Populate time slots
             timeSlotSelect.innerHTML = `
-                <option value="">Select a Time Slot</option>
+                <option value="" >Select a Time Slot</option>
                 ${schedules.map(schedule => `
                     <option value="${schedule.id}"
                             data-trainer-id="${schedule.trainerId}"
@@ -930,143 +713,192 @@ function setupBookingForm() {
         }
     }
     
-    async function handleBookingSubmit(e) {
-        e.preventDefault();
-    
-        if (!auth.isLoggedIn()) {
-            alert("Please log in to make a booking");
-            window.location.href = "SignUp.html";
+    // Update the handleBookingSubmit function to include time slot validation
+async function handleBookingSubmit(e) {
+    e.preventDefault();
+
+    if (!auth.isLoggedIn()) {
+        showSignupAlert();
+        return;
+    }
+
+    const type = document.getElementById("bookingType").value;
+    const userData = auth.currentUser();
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const notes = document.getElementById("notes").value.trim();
+    const paymentMethod = document.getElementById("paymentMethod").value;
+    const timeSlotSelect = document.getElementById('timeSlotSelect');
+
+    // Validate required fields
+    if (!name || !email || !phone || !paymentMethod) {
+        showErrorAlert("Please fill in all required fields");
+        return;
+    }
+
+    // Special validation for Schedule bookings
+    if (type === "Schedule") {
+        if (!timeSlotSelect || !timeSlotSelect.value) {
+            showErrorAlert("Please select a time slot for your class");
             return;
         }
-    
-        const type = document.getElementById("bookingType").value;
-        const userData = auth.currentUser();
-        const name = document.getElementById("name").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const phone = document.getElementById("phone").value.trim();
-        const notes = document.getElementById("notes").value.trim();
-        const paymentMethod = document.getElementById("paymentMethod").value;
-    
-        // Validate required fields
-        if (!name || !email || !phone || !paymentMethod) {
-            alert("Please fill in all required fields");
+    }
+
+    let itemId, price, bookingData;
+
+    if (type === "Schedule") {
+        // Use time slot if selected
+        itemId = timeSlotSelect.value;
+        const selectedOption = timeSlotSelect.options[timeSlotSelect.selectedIndex];
+        price = selectedOption?.dataset.price || "0";
+        
+        bookingData = {
+            userId: userData.id,
+            bookingType: 2, // Schedule
+            scheduleId: parseInt(itemId),
+            name: name,
+            email: email,
+            phone: phone,
+            notes: notes + `\n\nClass: ${document.getElementById("bookingItem").options[document.getElementById("bookingItem").selectedIndex]?.textContent}`,
+            paymentMethod: paymentMethod,
+            amountPaid: parseFloat(price),
+            status: "Pending",
+            paymentStatus: "Unpaid"
+        };
+    } else {
+        // For Membership and OnlineSession
+        if (!document.getElementById("bookingItem").value) {
+            showErrorAlert(`Please select a ${type.toLowerCase()}`);
             return;
         }
-    
-        let itemId, price, bookingData;
-    
-        if (type === "Schedule") {
-            const timeSlotSelect = document.getElementById('timeSlotSelect');
-            if (timeSlotSelect && timeSlotSelect.value) {
-                // Use time slot if selected
-                itemId = timeSlotSelect.value;
-                const selectedOption = timeSlotSelect.options[timeSlotSelect.selectedIndex];
-                price = selectedOption?.dataset.price || "0";
-                
-                bookingData = {
-                    userId: userData.id,
-                    bookingType: 2, // Schedule
-                    scheduleId: parseInt(itemId),
-                    name: name,
-                    email: email,
-                    phone: phone,
-                    notes: notes + `\n\nClass: ${document.getElementById("bookingItem").options[document.getElementById("bookingItem").selectedIndex]?.textContent}`,
-                    paymentMethod: paymentMethod,
-                    amountPaid: parseFloat(price),
-                    status: "Pending",
-                    paymentStatus: "Unpaid"
-                };
-            } else {
-                // Fall back to class booking if no time slot selected
-                if (!document.getElementById("bookingItem").value) {
-                    alert("Please select a class");
-                    return;
-                }
-                itemId = document.getElementById("bookingItem").value;
-                const selectedOption = document.getElementById("bookingItem").options[document.getElementById("bookingItem").selectedIndex];
-                price = selectedOption?.dataset.price || "0";
-                
-                bookingData = {
-                    userId: userData.id,
-                    bookingType: 2, // Schedule
-                    classId: parseInt(itemId),
-                    name: name,
-                    email: email,
-                    phone: phone,
-                    notes: notes,
-                    paymentMethod: paymentMethod,
-                    amountPaid: parseFloat(price),
-                    status: "Pending",
-                    paymentStatus: "Unpaid"
-                };
-            }
-        } else {
-            // For Membership and OnlineSession
-            if (!document.getElementById("bookingItem").value) {
-                alert(`Please select a ${type.toLowerCase()}`);
-                return;
-            }
-            itemId = document.getElementById("bookingItem").value;
-            const selectedOption = document.getElementById("bookingItem").options[document.getElementById("bookingItem").selectedIndex];
-            price = selectedOption?.dataset.price || "0";
-            
-            bookingData = {
-                userId: userData.id,
-                bookingType: type === "Membership" ? 1 : 3, // 1 for Membership, 3 for OnlineSession
-                [type === "Membership" ? "membershipId" : "onlineSessionId"]: parseInt(itemId),
-                name: name,
-                email: email,
-                phone: phone,
-                notes: notes,
-                paymentMethod: paymentMethod,
-                amountPaid: parseFloat(price),
-                status: "Pending",
-                paymentStatus: "Unpaid"
-            };
+        itemId = document.getElementById("bookingItem").value;
+        const selectedOption = document.getElementById("bookingItem").options[document.getElementById("bookingItem").selectedIndex];
+        price = selectedOption?.dataset.price || "0";
+        
+        bookingData = {
+            userId: userData.id,
+            bookingType: type === "Membership" ? 1 : 3, // 1 for Membership, 3 for OnlineSession
+            [type === "Membership" ? "membershipId" : "onlineSessionId"]: parseInt(itemId),
+            name: name,
+            email: email,
+            phone: phone,
+            notes: notes,
+            paymentMethod: paymentMethod,
+            amountPaid: parseFloat(price),
+            status: "Pending",
+            paymentStatus: "Unpaid"
+        };
+    }
+
+    try {
+        const response = await fetch(`${apiBase}/Booking`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+            },
+            body: JSON.stringify(bookingData)
+        });
+
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({ message: "Unknown error occurred" }));
+            throw new Error(error.message || "Booking failed with status " + response.status);
         }
-    
-        try {
-            const response = await fetch(`${apiBase}/Booking`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`
-                },
-                body: JSON.stringify(bookingData)
-            });
-    
-            if (!response.ok) {
-                const error = await response.json().catch(() => ({ message: "Unknown error occurred" }));
-                throw new Error(error.message || "Booking failed with status " + response.status);
-            }
-    
-            const result = await response.json();
-            
-            // Show success message
-            alert(`Booking confirmed successfully!`);
-            
-            // Close the modal
-            bookingModal.hide();
-            
-            // Reset form
-            bookingForm.reset();
-            document.getElementById("totalPrice").textContent = "--";
-            
-            // Remove any time slot select if exists
-            const timeSlotSelect = document.getElementById('timeSlotSelect');
-            if (timeSlotSelect) timeSlotSelect.remove();
-            
-        } catch (error) {
-            console.error("Booking error:", error);
-            alert(`Booking failed: ${error.message}\nPlease try again or contact support.`);
-        }
+
+        const result = await response.json();
+        
+        // Show success message
+        showSuccessAlert(`Booking confirmed successfully!`);
+        
+        // Close the modal
+        bookingModal.hide();
+        
+        // Reset form
+        bookingForm.reset();
+        document.getElementById("totalPrice").textContent = "--";
+        
+        // Remove any time slot select if exists
+        if (timeSlotSelect) timeSlotSelect.remove();
+        
+    } catch (error) {
+        console.error("Booking error:", error);
+        showErrorAlert(`Booking failed: ${error.message}\nPlease try again or contact support.`);
     }
 }
 
-// ✅ Redirect to Signup
-function redirectToSignup() {
-    window.location.href = `SignUp.html?redirect=${encodeURIComponent(window.location.href)}`;
+// Add these new alert functions to your script
+function showErrorAlert(message) {
+    const alertModal = document.createElement('div');
+    alertModal.className = 'alert-modal active';
+    alertModal.innerHTML = `
+        <div class="alert-content">
+            <div class="alert-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="alert-title">Booking Error</h3>
+            <p class="alert-message">${message}</p>
+            <div class="alert-actions">
+                <button class="alert-btn alert-btn-primary" id="closeErrorBtn">OK</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(alertModal);
+    
+    document.getElementById('closeErrorBtn').addEventListener('click', function() {
+        alertModal.remove();
+    }, { once: true });
+    
+    alertModal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.remove();
+        }
+    });
+    
+    document.addEventListener('keydown', function closeOnEscape(e) {
+        if (e.key === 'Escape') {
+            alertModal.remove();
+            document.removeEventListener('keydown', closeOnEscape);
+        }
+    }, { once: true });
 }
+
+function showSuccessAlert(message) {
+    const alertModal = document.createElement('div');
+    alertModal.className = 'alert-modal active';
+    alertModal.innerHTML = `
+        <div class="alert-content">
+            <div class="alert-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3 class="alert-title">Booking Confirmed</h3>
+            <p class="alert-message">${message}</p>
+            <div class="alert-actions">
+                <button class="alert-btn alert-btn-primary" id="closeSuccessBtn">OK</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(alertModal);
+    
+    document.getElementById('closeSuccessBtn').addEventListener('click', function() {
+        alertModal.remove();
+    }, { once: true });
+    
+    alertModal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.remove();
+        }
+    });
+    
+    document.addEventListener('keydown', function closeOnEscape(e) {
+        if (e.key === 'Escape') {
+            alertModal.remove();
+            document.removeEventListener('keydown', closeOnEscape);
+        }
+    }, { once: true });
+}}
 
 // ✅ Setup Mobile Menu
 function setupMobileMenu() {
@@ -1084,6 +916,9 @@ function setupMobileMenu() {
 // Make functions available globally
 window.auth = auth;
 window.loadClasses = loadClasses;
+window.showSignupAlert = showSignupAlert;
+
+
    </script>
 </body>
 </html>
