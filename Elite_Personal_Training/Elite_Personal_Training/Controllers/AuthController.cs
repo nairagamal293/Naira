@@ -139,88 +139,64 @@ namespace Elite_Personal_Training.Controllers
 
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
-                return Ok();
+                return Ok(); // Don't reveal whether the user exists
 
             try
             {
-                // Generate raw token
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                _logger.LogInformation("Generated raw token: {Token}", token);
-
-                // URL encode the token
                 var encodedToken = WebUtility.UrlEncode(token);
-                _logger.LogInformation("URL encoded token: {EncodedToken}", encodedToken);
+                var resetLink = $"{_configuration["ClientUrl"]}/reset-password.html?token={WebUtility.UrlEncode(token)}&email={WebUtility.UrlEncode(user.Email)}";
 
-                // URL decode to verify
-                var decodedToken = WebUtility.UrlDecode(encodedToken);
-                _logger.LogInformation("URL decoded token: {DecodedToken}", decodedToken);
+                await _emailService.SendPasswordResetEmailAsync(user.Email, resetLink);
 
-                // Verify token before returning
-                var isValid = await _userManager.VerifyUserTokenAsync(
-                    user,
-                    _userManager.Options.Tokens.PasswordResetTokenProvider,
-                    "ResetPassword",
-                    token);
-
-                _logger.LogInformation("Token verification result: {IsValid}", isValid);
-
-                var resetLink = $"{_configuration["ClientUrl"]}/reset-password?token={encodedToken}&email={user.Email}";
-
-                return Ok(new
-                {
-                    Message = "Development details",
-                    RawToken = token,
-                    EncodedToken = encodedToken,
-                    DecodedToken = decodedToken,
-                    IsValid = isValid,
-                    ResetLink = resetLink
-                });
+                return Ok(new { Message = "If your email is registered, you'll receive a password reset link." });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Token generation error");
-                return StatusCode(500, new { ex.Message });
+                _logger.LogError(ex, "Error in forgot password");
+                return StatusCode(500, "An error occurred while processing your request.");
             }
         }
+
+
 
 
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
         {
-            if (string.IsNullOrEmpty(request.Email) ||
-                string.IsNullOrEmpty(request.Token) ||
-                string.IsNullOrEmpty(request.NewPassword))
-            {
-                return BadRequest("All fields are required.");
-            }
+            if (string.IsNullOrEmpty(request.Email))
+                return BadRequest("Email is required.");
+
+            if (string.IsNullOrEmpty(request.Token))
+                return BadRequest("Token is required.");
+
+            if (string.IsNullOrEmpty(request.NewPassword))
+                return BadRequest("New password is required.");
 
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user == null)
-                return BadRequest("Invalid request.");
+                return BadRequest("Invalid email address.");
 
             try
             {
-                // Log the incoming token
-                _logger.LogInformation("Received token: {Token}", request.Token);
-
-                // Try both decoded and raw token
                 var result = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
 
-                if (!result.Succeeded)
-                {
-                    _logger.LogError("Password reset failed. Errors: {Errors}",
-                        string.Join(", ", result.Errors.Select(e => e.Description)));
-                    return BadRequest(result.Errors);
-                }
+                if (result.Succeeded)
+                    return Ok("Password has been reset successfully.");
 
-                return Ok("Password reset successfully!");
+                return BadRequest(new
+                {
+                    Message = "Password reset failed",
+                    Errors = result.Errors.Select(e => e.Description)
+                });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Password reset error");
-                return StatusCode(500, new { ex.Message });
+                _logger.LogError(ex, "Error resetting password");
+                return StatusCode(500, "An error occurred while resetting your password.");
             }
         }
+
 
 
         [HttpPost("test-sendgrid")]
