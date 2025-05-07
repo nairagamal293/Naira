@@ -74,6 +74,8 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.WriteIndented = true;
     });
 
+builder.Services.AddHttpClient<IZoomService, ZoomService>();
+
 // Add this with your other services
 // In Program.cs when setting up Identity
 builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>

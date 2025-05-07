@@ -1,6 +1,7 @@
 ﻿using Elite_Personal_Training.Data;
 using Elite_Personal_Training.DTOs;
 using Elite_Personal_Training.Models;
+using Elite_Personal_Training.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,11 +16,17 @@ namespace Elite_Personal_Training.Controllers
     public class OnlineSessionController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IZoomService _zoomService;
+        private readonly ILogger<OnlineSessionController> _logger;
 
-        public OnlineSessionController(ApplicationDbContext context)
+
+        public OnlineSessionController(ApplicationDbContext context, IZoomService zoomService, ILogger<OnlineSessionController> logger)
         {
             _context = context;
+            _zoomService = zoomService;
+            _logger = logger;
         }
+
 
         // ✅ Get all online sessions with Trainer names
         [HttpGet]
@@ -32,10 +39,12 @@ namespace Elite_Personal_Training.Controllers
                     s.Id,
                     s.Title,
                     s.Description,
-                    TrainerName = s.Trainer.Name, // Trainer Name
+                    TrainerName = s.Trainer.Name,
                     s.SessionDateTime,
                     s.MeetingLink,
-                    s.Price, // 💰 Include price
+                    s.SessionType,
+                    s.Capacity,
+                    s.Price,
                     s.CreatedAt,
                     s.UpdatedAt
                 })
@@ -59,7 +68,9 @@ namespace Elite_Personal_Training.Controllers
                     TrainerName = s.Trainer.Name,
                     s.SessionDateTime,
                     s.MeetingLink,
-                    s.Price, // 💰 Include price
+                    s.SessionType,
+                    s.Capacity,
+                    s.Price,
                     s.CreatedAt,
                     s.UpdatedAt
                 })
@@ -70,6 +81,7 @@ namespace Elite_Personal_Training.Controllers
             return Ok(session);
         }
 
+        // ✅ Update online session
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOnlineSession(int id, [FromBody] OnlineSessionUpdateDto updatedSession)
         {
@@ -83,6 +95,8 @@ namespace Elite_Personal_Training.Controllers
             session.TrainerId = updatedSession.TrainerId;
             session.SessionDateTime = updatedSession.SessionDateTime;
             session.MeetingLink = updatedSession.MeetingLink;
+            session.SessionType = (OnlineSessionType)updatedSession.SessionType;
+            session.Capacity = updatedSession.Capacity;
             session.Price = updatedSession.Price;
             session.UpdatedAt = DateTime.UtcNow;
 
@@ -94,35 +108,62 @@ namespace Elite_Personal_Training.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 if (!_context.OnlineSessions.Any(e => e.Id == id))
-                {
                     return NotFound();
-                }
                 throw;
             }
         }
 
+        // ✅ Create new online session (with Zoom)
         [HttpPost]
         public async Task<ActionResult<OnlineSession>> CreateOnlineSession([FromBody] OnlineSessionCreateDto newSession)
         {
-            var session = new OnlineSession
+            try
             {
-                Title = newSession.Title,
-                Description = newSession.Description,
-                TrainerId = newSession.TrainerId,
-                SessionDateTime = newSession.SessionDateTime,
-                MeetingLink = newSession.MeetingLink,
-                Price = newSession.Price,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
+                var session = new OnlineSession
+                {
+                    Title = newSession.Title,
+                    Description = newSession.Description,
+                    TrainerId = newSession.TrainerId,
+                    SessionDateTime = newSession.SessionDateTime,
+                    SessionType = (OnlineSessionType)newSession.SessionType,
+                    Capacity = newSession.Capacity,
+                    Price = newSession.Price,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                };
 
-            _context.OnlineSessions.Add(session);
-            await _context.SaveChangesAsync();
+                // 🔗 Generate Zoom link
+                try
+                {
+                    session.MeetingLink = await _zoomService.CreateMeetingAsync(session);
+                    session.ZoomMeetingCreated = true;
+                }
+                catch (Exception ex)
+                {
+                    // Log zoom error but continue
+                    _logger.LogError(ex, "Error creating Zoom meeting");
+                    session.MeetingLink = "Zoom link to be generated";
+                    session.ZoomMeetingCreated = false;
+                }
 
-            return CreatedAtAction(nameof(GetOnlineSession), new { id = session.Id }, session);
+                _context.OnlineSessions.Add(session);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetOnlineSession), new { id = session.Id }, session);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creating online session");
+                return StatusCode(500, new
+                {
+                    Title = "Error creating session",
+                    Message = ex.Message,
+                    Details = ex.InnerException?.Message
+                });
+            }
         }
 
-        // ✅ Delete an online session
+        // ✅ Delete session
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOnlineSession(int id)
         {

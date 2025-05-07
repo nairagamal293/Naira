@@ -794,7 +794,7 @@
         <div class="alert-icon">
             <i class="fas fa-exclamation-circle"></i>
         </div>
-        <h3 class="alert-title">Membership Required</h3>
+        <h3 class="alert-title">Sign Up Required</h3>
         <p class="alert-message">
             You need to be a member to book online sessions. Sign up now to access all our 
             virtual training programs and start your fitness journey.
@@ -853,6 +853,7 @@
                     </div>
                 </div>
 
+                
                 <!-- Newsletter -->
                 <div class="col-lg-3 col-md-6">
                     <div class="footer-section">
@@ -890,26 +891,26 @@
     
     <script>
         // Update the DOMContentLoaded event listener
-document.addEventListener("DOMContentLoaded", function () {
-    // Initialize all functionality
-    checkAuthStatus();
-    setupBookingButtons();
+        document.addEventListener("DOMContentLoaded", function () {
+            // Initialize all functionality
+            checkAuthStatus();
+            setupBookingButtons();
+            setupAlertModal(); // Add this line to initialize the alert modal
+            
+            // Add click handler for any dynamically added booking buttons
+            document.addEventListener('click', function(e) {
+                const button = e.target.closest('.booking-btn') || e.target.closest('.join-btn');
+                if (button) {
+                    e.preventDefault();
+                    if (auth.isLoggedIn()) {
+                        openBookingModal(button);
+                    } else {
+                        showSignupAlert();
+                    }
+                }
+            });
+        });
     
-    // Add click handler for any dynamically added booking buttons
-    document.addEventListener('click', function(e) {
-        const button = e.target.closest('.booking-btn') || e.target.closest('.join-btn');
-        if (button) {
-            e.preventDefault();
-            if (auth.isLoggedIn()) {
-                openBookingModal(button);
-            } else {
-                showSignupAlert();
-            }
-        }
-    });
-});
-
-        
         // Authentication State Management
         const auth = {
             isLoggedIn: () => localStorage.getItem("authToken") !== null,
@@ -966,61 +967,94 @@ document.addEventListener("DOMContentLoaded", function () {
         function setupBookingButtons() {
             const bookingButtons = document.querySelectorAll(".booking-btn, .join-btn");
             
-            bookingButtons.forEach(button => {
-                if (auth.isLoggedIn()) {
-                    button.classList.remove("disabled");
-                } else {
-                    button.classList.add("disabled");
+            
+        }
+        
+        // Setup Alert Modal
+        function setupAlertModal() {
+            const alertModal = document.getElementById('signupAlert');
+            
+            // Close modal when clicking outside content
+            alertModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+            
+            // Close with escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && alertModal.classList.contains('active')) {
+                    alertModal.classList.remove('active');
                 }
             });
         }
         
-        // Open Booking Modal for Online Sessions
-        // Update the openBookingModal function
-function openBookingModal(buttonElement = null) {
-    const bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
-    const bookingForm = document.getElementById("bookingForm");
-    const userData = auth.currentUser();
-    
-    // Reset form
-    bookingForm.reset();
-    document.getElementById("bookingType").value = "OnlineSession";
-    document.getElementById("bookingItem").innerHTML = '<option value="">Loading sessions...</option>';
-    document.getElementById("totalPrice").textContent = "--";
-    document.getElementById("sessionDetails").innerHTML = '<small>Select a session to view details</small>';
-    
-    // Set user data
-    if (userData) {
-        document.getElementById("name").value = userData.fullName || userData.username || userData.name || "";
-        document.getElementById("email").value = userData.email || "";
-        document.getElementById("phone").value = userData.phone || "";
-    }
-    
-    // Load available online sessions
-    loadOnlineSessionsForBooking().then(() => {
-        // If a specific session button was clicked, preselect that session
-        if (buttonElement && buttonElement.dataset.sessionId) {
-            const bookingItemSelect = document.getElementById("bookingItem");
-            for (let i = 0; i < bookingItemSelect.options.length; i++) {
-                if (bookingItemSelect.options[i].value === buttonElement.dataset.sessionId) {
-                    bookingItemSelect.selectedIndex = i;
-                    updateSessionDetails(buttonElement.dataset.sessionId);
-                    break;
-                }
-            }
+        // Show Signup Alert
+        function showSignupAlert() {
+            const alertModal = document.getElementById('signupAlert');
+            alertModal.classList.add('active');
+            
+            // Close button handler
+            document.getElementById('cancelAlertBtn').addEventListener('click', function() {
+                alertModal.classList.remove('active');
+            }, { once: true });
+            
+            // Signup button handler
+            document.getElementById('signupAlertBtn').addEventListener('click', function() {
+                redirectToSignup();
+            }, { once: true });
         }
-    });
+        
+        // Redirect to Signup
+        function redirectToSignup() {
+            window.location.href = `SignUp.html?redirect=${encodeURIComponent(window.location.href)}`;
+        }
     
-    // Setup event listeners
-    document.getElementById("bookingItem").addEventListener("change", function() {
-        updateSessionDetails(this.value);
-    });
-    
-    document.getElementById("confirmBookingBtn").onclick = handleOnlineBookingSubmit;
-    
-    // Show modal
-    bookingModal.show();
-}
+        // Open Booking Modal for Online Sessions
+        function openBookingModal(buttonElement = null) {
+            const bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
+            const bookingForm = document.getElementById("bookingForm");
+            const userData = auth.currentUser();
+            
+            // Reset form
+            bookingForm.reset();
+            document.getElementById("bookingType").value = "OnlineSession";
+            document.getElementById("bookingItem").innerHTML = '<option value="">Loading sessions...</option>';
+            document.getElementById("totalPrice").textContent = "--";
+            document.getElementById("sessionDetails").innerHTML = '<small>Select a session to view details</small>';
+            
+            // Set user data
+            if (userData) {
+                document.getElementById("name").value = userData.fullName || userData.username || userData.name || "";
+                document.getElementById("email").value = userData.email || "";
+                document.getElementById("phone").value = userData.phone || "";
+            }
+            
+            // Load available online sessions
+            loadOnlineSessionsForBooking().then(() => {
+                // If a specific session button was clicked, preselect that session
+                if (buttonElement && buttonElement.dataset.sessionId) {
+                    const bookingItemSelect = document.getElementById("bookingItem");
+                    for (let i = 0; i < bookingItemSelect.options.length; i++) {
+                        if (bookingItemSelect.options[i].value === buttonElement.dataset.sessionId) {
+                            bookingItemSelect.selectedIndex = i;
+                            updateSessionDetails(buttonElement.dataset.sessionId);
+                            break;
+                        }
+                    }
+                }
+            });
+            
+            // Setup event listeners
+            document.getElementById("bookingItem").addEventListener("change", function() {
+                updateSessionDetails(this.value);
+            });
+            
+            document.getElementById("confirmBookingBtn").onclick = handleOnlineBookingSubmit;
+            
+            // Show modal
+            bookingModal.show();
+        }
         
         // Load Available Online Sessions
         async function loadOnlineSessionsForBooking() {
@@ -1088,8 +1122,7 @@ function openBookingModal(buttonElement = null) {
             e.preventDefault();
             
             if (!auth.isLoggedIn()) {
-                alert("Please log in to make a booking");
-                window.location.href = "SignUp.html";
+                showSignupAlert();
                 return;
             }
         
@@ -1098,21 +1131,22 @@ function openBookingModal(buttonElement = null) {
             const selectedOption = document.getElementById("bookingItem").selectedOptions[0];
             
             if (!sessionId || sessionId === "") {
-                alert("Please select a session to book");
+                showErrorAlert("Please select a session to book");
                 return;
             }
         
             const bookingData = {
-                userId: userData.id,
-                onlineSessionId: sessionId,
-                name: document.getElementById("name").value.trim(),
-                email: document.getElementById("email").value.trim(),
-                phone: document.getElementById("phone").value.trim(),
-                paymentMethod: document.getElementById("paymentMethod").value,
-                amountPaid: parseFloat(selectedOption.dataset.price),
-                notes: document.getElementById("notes").value.trim(),
-                bookingDate: new Date().toISOString()
-            };
+                    userId: userData.id,
+                    onlineSessionId: sessionId,
+                    name: document.getElementById("name").value.trim(),
+                    email: document.getElementById("email").value.trim(),
+                    phone: document.getElementById("phone").value.trim(),
+                    paymentMethod: document.getElementById("paymentMethod").value,
+                    amountPaid: parseFloat(selectedOption.dataset.price),
+                    notes: document.getElementById("notes").value.trim(),
+                    bookingDate: new Date().toISOString(),
+                    bookingType: "OnlineSession" // Add this line
+                };
         
             try {
                 const response = await fetch("https://localhost:7020/api/Booking", {
@@ -1126,7 +1160,7 @@ function openBookingModal(buttonElement = null) {
         
                 if (response.ok) {
                     const result = await response.json();
-                    alert("Online session booked successfully! You'll receive a confirmation email with joining instructions.");
+                    showSuccessAlert("Online session booked successfully! You'll receive a confirmation email with joining instructions.");
                     
                     // Close modal
                     const bookingModal = bootstrap.Modal.getInstance(document.getElementById('bookingModal'));
@@ -1140,48 +1174,86 @@ function openBookingModal(buttonElement = null) {
                 }
             } catch (error) {
                 console.error("Booking error:", error);
-                alert(`Booking failed: ${error.message}`);
+                showErrorAlert(`Booking failed: ${error.message}`);
             }
         }
-
-
-        // Add this function to show the signup alert
-function showSignupAlert() {
-    const alertModal = document.getElementById('signupAlert');
-    alertModal.classList.add('active');
     
-    // Close button handler
-    document.getElementById('cancelAlertBtn').addEventListener('click', function() {
-        alertModal.classList.remove('active');
-    }, { once: true });
-    
-    // Signup button handler
-    document.getElementById('signupAlertBtn').addEventListener('click', function() {
-        redirectToSignup();
-    }, { once: true });
-    
-    // Close when clicking outside content
-    alertModal.addEventListener('click', function(e) {
-        if (e.target === this) {
-            this.classList.remove('active');
+        // Add these new alert functions to your script
+        function showErrorAlert(message) {
+            const alertModal = document.createElement('div');
+            alertModal.className = 'alert-modal active';
+            alertModal.innerHTML = `
+                <div class="alert-content">
+                    <div class="alert-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3 class="alert-title">Booking Error</h3>
+                    <p class="alert-message">${message}</p>
+                    <div class="alert-actions">
+                        <button class="alert-btn alert-btn-primary" id="closeErrorBtn">OK</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(alertModal);
+            
+            document.getElementById('closeErrorBtn').addEventListener('click', function() {
+                alertModal.remove();
+            }, { once: true });
+            
+            alertModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.remove();
+                }
+            });
+            
+            document.addEventListener('keydown', function closeOnEscape(e) {
+                if (e.key === 'Escape') {
+                    alertModal.remove();
+                    document.removeEventListener('keydown', closeOnEscape);
+                }
+            }, { once: true });
         }
-    });
     
-    // Close with escape key
-    document.addEventListener('keydown', function closeOnEscape(e) {
-        if (e.key === 'Escape') {
-            alertModal.classList.remove('active');
-            document.removeEventListener('keydown', closeOnEscape);
+        function showSuccessAlert(message) {
+            const alertModal = document.createElement('div');
+            alertModal.className = 'alert-modal active';
+            alertModal.innerHTML = `
+                <div class="alert-content">
+                    <div class="alert-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 class="alert-title">Booking Confirmed</h3>
+                    <p class="alert-message">${message}</p>
+                    <div class="alert-actions">
+                        <button class="alert-btn alert-btn-primary" id="closeSuccessBtn">OK</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(alertModal);
+            
+            document.getElementById('closeSuccessBtn').addEventListener('click', function() {
+                alertModal.remove();
+            }, { once: true });
+            
+            alertModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.remove();
+                }
+            });
+            
+            document.addEventListener('keydown', function closeOnEscape(e) {
+                if (e.key === 'Escape') {
+                    alertModal.remove();
+                    document.removeEventListener('keydown', closeOnEscape);
+                }
+            }, { once: true });
         }
-    }, { once: true });
-}
-
-        
-        // Redirect Unauthenticated Users
-        function redirectToSignup() {
-            window.location.href = `SignUp.html?redirect=${encodeURIComponent(window.location.href)}`;
-            return false;
-        }
-        </script>
+    
+        // Make functions available globally
+        window.auth = auth;
+        window.showSignupAlert = showSignupAlert;
+    </script>
 </body>
 </html>

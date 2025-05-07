@@ -953,66 +953,93 @@ async function deleteTrainer(trainerId) {
 ////
 
 // ✅ Load Online Sessions
+// ✅ Load Online Sessions
 async function loadOnlineSessions() {
     document.getElementById("dashboard-title").innerText = "Online Sessions Management";
     const content = document.getElementById("admin-content");
     content.innerHTML = "<h4>Loading online sessions...</h4>";
 
     try {
-        const response = await fetch("https://localhost:7020/api/OnlineSession", { 
-            headers: getAuthHeaders() 
-        });
+        // Load sessions and trainers in parallel
+        const [sessionsResponse, trainersResponse] = await Promise.all([
+            fetch("https://localhost:7020/api/OnlineSession", { 
+                headers: getAuthHeaders() 
+            }),
+            fetch("https://localhost:7020/api/Trainer", { 
+                headers: getAuthHeaders() 
+            })
+        ]);
 
-        if (response.status === 401) {
+        if (sessionsResponse.status === 401 || trainersResponse.status === 401) {
             alert("❌ Unauthorized! Please log in again.");
             window.location.href = "login.html";
             return;
         }
 
-        if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+        if (!sessionsResponse.ok) throw new Error(`HTTP Error ${sessionsResponse.status}`);
+        if (!trainersResponse.ok) throw new Error(`HTTP Error ${trainersResponse.status}`);
 
-        const sessions = await response.json();
+        const sessions = await sessionsResponse.json();
+        const trainers = await trainersResponse.json();
         
         content.innerHTML = `
             <button class="btn btn-success mb-3" onclick="showSessionModal()">
                 <i class="fas fa-plus"></i> Add New Session
             </button>
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table class="table table-striped table-hover">
                     <thead>
                         <tr>
                             <th>Title</th>
                             <th>Trainer</th>
+                            <th>Type</th>
                             <th>Date & Time</th>
+                            <th>Capacity</th>
+                            <th>Booked</th>
                             <th>Price</th>
-                            <th>Meeting Link</th>
+                            <th>Zoom Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${sessions.map(session => `
-                            <tr>
-                                <td>${session.title || 'N/A'}</td>
-                                <td>${session.trainerName || 'N/A'}</td>
-                                <td>${formatDateTime(session.sessionDateTime)}</td>
-                                <td>$${session.price?.toFixed(2) || '0.00'}</td>
-                                <td>
-                                    <a href="${session.meetingLink}" target="_blank" class="btn btn-sm btn-info">
-                                        <i class="fas fa-external-link-alt"></i> Join
-                                    </a>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm btn-warning me-2" onclick="showSessionModal(${session.id})">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" onclick="deleteSession(${session.id})">
-                                        <i class="fas fa-trash"></i> Delete
-                                    </button>
+                    ${sessions.map(session => `
+                        <tr>
+                            <td>${session.title || 'N/A'}</td>
+                            <td>${session.trainerName|| 'N/A'}</td>  
+                            <td>
+                                <span class="badge ${getSessionTypeBadgeClass(session.sessionType)}">
+                                    ${getSessionTypeName(session.sessionType)}
+                                </span>
+                            </td>
+                            <td>${formatDateTime(session.sessionDateTime)}</td>
+                            <td>${session.capacity}</td>
+                            <td>${session.sessionBookings?.length || 0}</td>
+                            <td>$${session.price?.toFixed(2) || '0.00'}</td>
+                            <td>
+                                <span class="badge ${session.zoomMeetingCreated ? 'bg-success' : 'bg-warning'}">
+                                    ${session.zoomMeetingCreated ? 'Created' : 'Pending'}
+                                </span>
+                            </td>
+                            <td>
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-sm btn-warning me-2" onclick="showSessionModal(${session.id})">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteSession(${session.id})">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                        ${!session.zoomMeetingCreated ? `
+                                        <button class="btn btn-sm btn-info ms-2" onclick="generateZoomLink(${session.id})">
+                                            <i class="fas fa-video"></i> Create Zoom
+                                        </button>
+                                        ` : ''}
+                                    </div>
                                 </td>
                             </tr>`).join('')}
                     </tbody>
                 </table>
             </div>
+            
             <!-- Session Modal -->
             <div class="modal fade" id="sessionModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
@@ -1033,16 +1060,23 @@ async function loadOnlineSessions() {
     }
 }
 
-// Format date and time for display
-function formatDateTime(dateTimeString) {
-    const date = new Date(dateTimeString);
-    return date.toLocaleString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
+// Helper functions for session types
+function getSessionTypeName(type) {
+    switch(type) {
+        case 0: return '1-on-1';
+        case 1: return 'Group';
+        case 2: return 'Small Group';
+        default: return 'Unknown';
+    }
+}
+
+function getSessionTypeBadgeClass(type) {
+    switch(type) {
+        case 0: return 'bg-primary';
+        case 1: return 'bg-info text-dark';
+        case 2: return 'bg-secondary';
+        default: return 'bg-light text-dark';
+    }
 }
 
 // Show modal for adding/editing session
@@ -1051,27 +1085,26 @@ async function showSessionModal(sessionId = null) {
     const modalBody = document.getElementById("sessionModalBody");
     const modal = new bootstrap.Modal(document.getElementById('sessionModal'));
     
-    // First load trainers for the dropdown
     try {
+        // Load trainers for dropdown
         const trainersResponse = await fetch("https://localhost:7020/api/Trainer", {
             headers: getAuthHeaders()
         });
+        
+        if (!trainersResponse.ok) throw new Error(`HTTP Error ${trainersResponse.status}`);
         const trainers = await trainersResponse.json();
 
         if (sessionId) {
             // Edit mode
             modalTitle.textContent = "Edit Session";
-            try {
-                const sessionResponse = await fetch(`https://localhost:7020/api/OnlineSession/${sessionId}`, {
-                    headers: getAuthHeaders()
-                });
-                const session = await sessionResponse.json();
-                
-                modalBody.innerHTML = getSessionForm(session, trainers);
-            } catch (error) {
-                console.error("Error loading session:", error);
-                modalBody.innerHTML = `<div class="alert alert-danger">Error loading session: ${error.message}</div>`;
-            }
+            const sessionResponse = await fetch(`https://localhost:7020/api/OnlineSession/${sessionId}`, {
+                headers: getAuthHeaders()
+            });
+            
+            if (!sessionResponse.ok) throw new Error(`HTTP Error ${sessionResponse.status}`);
+            const session = await sessionResponse.json();
+            
+            modalBody.innerHTML = getSessionForm(session, trainers);
         } else {
             // Add mode
             modalTitle.textContent = "Add New Session";
@@ -1080,10 +1113,11 @@ async function showSessionModal(sessionId = null) {
         
         modal.show();
     } catch (error) {
-        console.error("Error loading trainers:", error);
-        modalBody.innerHTML = `<div class="alert alert-danger">Error loading trainers: ${error.message}</div>`;
+        console.error("Error:", error);
+        modalBody.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
     }
 }
+
 
 // Return HTML form for session
 function getSessionForm(session = null, trainers = []) {
@@ -1092,7 +1126,7 @@ function getSessionForm(session = null, trainers = []) {
         : new Date().toISOString().slice(0, 16);
     
     return `
-        <form id="sessionForm" onsubmit="handleSessionFormSubmit(event)" novalidate>
+        <form id="sessionForm" onsubmit="handleSessionFormSubmit(event)">
             <input type="hidden" id="sessionId" value="${session?.id || ''}">
             <div class="row">
                 <div class="col-md-6">
@@ -1100,43 +1134,48 @@ function getSessionForm(session = null, trainers = []) {
                         <label for="sessionTitle" class="form-label">Title *</label>
                         <input type="text" class="form-control" id="sessionTitle" 
                                value="${session?.title || ''}" required minlength="3">
-                        <div class="invalid-feedback">Please provide a title (at least 3 characters)</div>
                     </div>
                     <div class="mb-3">
                         <label for="sessionDescription" class="form-label">Description</label>
                         <textarea class="form-control" id="sessionDescription" rows="3">${session?.description || ''}</textarea>
                     </div>
                     <div class="mb-3">
-            <label for="sessionTrainer" class="form-label">Trainer *</label>
-            <select class="form-select" id="sessionTrainer" required>
-                <option value="">-- Select Trainer --</option>
-                ${trainers.map(trainer => `
-                    <option value="${trainer.id}" ${session?.trainerId === trainer.id ? 'selected' : ''}>
-                        ${trainer.name}
-                    </option>
-                `).join('')}
-            </select>
-            <div class="invalid-feedback">Please select a trainer</div>
-        </div>
+                        <label for="sessionTrainer" class="form-label">Trainer *</label>
+                        <select class="form-select" id="sessionTrainer" required>
+                            <option value="">-- Select Trainer --</option>
+                            ${trainers.map(trainer => `
+                                <option value="${trainer.id}" 
+                                    ${session?.trainerId === trainer.id ? 'selected' : ''}>
+                                    ${trainer.name}
+                                </option>
+                            `).join('')}
+                        </select>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label for="sessionDateTime" class="form-label">Date & Time *</label>
                         <input type="datetime-local" class="form-control" id="sessionDateTime" 
                                value="${sessionDateTime}" required>
-                        <div class="invalid-feedback">Please select a valid date and time</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sessionType" class="form-label">Session Type *</label>
+                        <select class="form-select" id="sessionType" required>
+                            <option value="0" ${session?.sessionType === 0 ? 'selected' : ''}>One-on-One</option>
+                            <option value="1" ${session?.sessionType === 1 ? 'selected' : ''}>Group Class</option>
+                            <option value="2" ${session?.sessionType === 2 ? 'selected' : ''}>Small Group</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sessionCapacity" class="form-label">Capacity *</label>
+                        <input type="number" class="form-control" id="sessionCapacity" 
+                               value="${session?.capacity || 1}" min="1" max="50" required>
+                        <small class="text-muted">For One-on-One sessions, capacity is always 1</small>
                     </div>
                     <div class="mb-3">
                         <label for="sessionPrice" class="form-label">Price ($) *</label>
                         <input type="number" step="0.01" min="0" class="form-control" id="sessionPrice" 
                                value="${session?.price || 0}" required>
-                        <div class="invalid-feedback">Please enter a valid price</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="sessionLink" class="form-label">Meeting Link *</label>
-                        <input type="url" class="form-control" id="sessionLink" 
-                               value="${session?.meetingLink || ''}" required>
-                        <div class="invalid-feedback">Please enter a valid URL</div>
                     </div>
                 </div>
             </div>
@@ -1146,18 +1185,31 @@ function getSessionForm(session = null, trainers = []) {
             </div>
         </form>
         <script>
-            // Client-side form validation
-            document.getElementById('sessionForm').addEventListener('submit', function(event) {
-                const form = event.target;
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
+            // Update capacity based on session type
+            document.getElementById('sessionType').addEventListener('change', function() {
+                const capacityField = document.getElementById('sessionCapacity');
+                if (this.value === '0') {
+                    capacityField.value = 1;
+                    capacityField.readOnly = true;
+                } else {
+                    capacityField.readOnly = false;
+                    if (this.value === '2') { // Small group
+                        capacityField.min = 2;
+                        capacityField.max = 6;
+                    } else { // Group
+                        capacityField.min = 5;
+                        capacityField.max = 50;
+                    }
                 }
-                form.classList.add('was-validated');
             });
+            
+            // Initialize capacity field based on current type
+            const sessionType = document.getElementById('sessionType');
+            if (sessionType) {
+                sessionType.dispatchEvent(new Event('change'));
+            }
         </script>`;
 }
-
 
 // Handle form submission
 async function handleSessionFormSubmit(event) {
@@ -1166,16 +1218,23 @@ async function handleSessionFormSubmit(event) {
     const sessionId = document.getElementById("sessionId").value;
     const isEdit = !!sessionId;
     
-    // Prepare the session data object
     const sessionData = {
-        ...(isEdit && { id: parseInt(sessionId) }),
         title: document.getElementById("sessionTitle").value,
         description: document.getElementById("sessionDescription").value,
         trainerId: parseInt(document.getElementById("sessionTrainer").value),
         sessionDateTime: new Date(document.getElementById("sessionDateTime").value).toISOString(),
+        sessionType: parseInt(document.getElementById("sessionType").value),
+        capacity: parseInt(document.getElementById("sessionCapacity").value),
         price: parseFloat(document.getElementById("sessionPrice").value),
-        meetingLink: document.getElementById("sessionLink").value
+        zoomMeetingCreated: false // Will be set to true when Zoom link is generated
     };
+
+    // Add this for updates
+    if (isEdit) {
+        sessionData.id = parseInt(sessionId);
+    }
+
+    console.log("Sending data:", sessionData); // Debug log
 
     try {
         const url = isEdit 
@@ -1194,44 +1253,49 @@ async function handleSessionFormSubmit(event) {
         });
 
         if (!response.ok) {
-            const errorResponse = await response.json();
-            console.error("Validation errors:", errorResponse);
-            
-            let errorMessage = "Validation failed:";
-            if (errorResponse.errors) {
-                for (const [field, errors] of Object.entries(errorResponse.errors)) {
-                    errorMessage += `\n${field}: ${errors.join(', ')}`;
-                }
-            } else {
-                errorMessage = errorResponse.title || errorResponse.message || 'Failed to save session';
-            }
-            
-            throw new Error(errorMessage);
+            const errorData = await response.json();
+            console.error("Server error:", errorData); // More detailed error logging
+            throw new Error(errorData.title || errorData.message || 'Failed to save session');
         }
 
         // Close modal and refresh list
         bootstrap.Modal.getInstance(document.getElementById('sessionModal')).hide();
-        await loadOnlineSessions();
+        loadOnlineSessions();
         showToast('Session saved successfully!', 'success');
         
     } catch (error) {
         console.error("Error saving session:", error);
         showToast(`Error saving session: ${error.message}`, 'danger');
-        
-        // Highlight invalid fields
-        if (error.message.includes("Trainer")) {
-            const trainerField = document.getElementById("sessionTrainer");
-            trainerField.classList.add('is-invalid');
-            trainerField.nextElementSibling.textContent = "Please select a valid trainer";
-        }
     }
 }
 
 
+// Generate Zoom meeting link
+async function generateZoomLink(sessionId) {
+    if (!confirm("Generate a Zoom meeting link for this session?")) return;
+    
+    try {
+        const response = await fetch(`https://localhost:7020/api/OnlineSession/${sessionId}/generate-zoom`, {
+            method: 'POST',
+            headers: getAuthHeaders()
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.title || errorData.message || 'Failed to generate Zoom link');
+        }
+
+        loadOnlineSessions();
+        showToast('Zoom meeting created successfully!', 'success');
+    } catch (error) {
+        console.error("Error generating Zoom link:", error);
+        showToast(`Error generating Zoom link: ${error.message}`, 'danger');
+    }
+}
 
 // Delete session
 async function deleteSession(sessionId) {
-    if (!confirm("Are you sure you want to delete this session? This action cannot be undone.")) {
+    if (!confirm("Are you sure you want to delete this session? This will also cancel all bookings.")) {
         return;
     }
 
@@ -1246,14 +1310,26 @@ async function deleteSession(sessionId) {
             throw new Error(errorData.title || errorData.message || 'Failed to delete session');
         }
 
-        // Refresh the sessions list
-        await loadOnlineSessions();
+        loadOnlineSessions();
         showToast('Session deleted successfully!', 'success');
     } catch (error) {
         console.error("Error deleting session:", error);
         showToast(`Error deleting session: ${error.message}`, 'danger');
     }
 }
+// Format date and time for display
+function formatDateTime(dateTimeString) {
+    const date = new Date(dateTimeString);
+    return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// Show modal for adding/editing session
 
 // Helper function for toast notifications
 function showToast(message, type = 'info') {

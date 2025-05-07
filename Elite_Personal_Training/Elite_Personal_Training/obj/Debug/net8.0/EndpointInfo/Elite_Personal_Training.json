@@ -2488,8 +2488,8 @@
       },
       "OnlineSession": {
         "required": [
-          "meetingLink",
           "sessionDateTime",
+          "sessionType",
           "title"
         ],
         "type": "object",
@@ -2518,9 +2518,9 @@
             "format": "date-time"
           },
           "meetingLink": {
-            "minLength": 1,
             "type": "string",
-            "format": "uri"
+            "format": "uri",
+            "nullable": true
           },
           "capacity": {
             "type": "integer",
@@ -2529,6 +2529,12 @@
           "price": {
             "type": "number",
             "format": "double"
+          },
+          "sessionType": {
+            "$ref": "#/components/schemas/OnlineSessionType"
+          },
+          "zoomMeetingCreated": {
+            "type": "boolean"
           },
           "createdAt": {
             "type": "string",
@@ -2550,8 +2556,8 @@
       },
       "OnlineSessionCreateDto": {
         "required": [
-          "meetingLink",
           "sessionDateTime",
+          "sessionType",
           "title",
           "trainerId"
         ],
@@ -2578,24 +2584,45 @@
             "type": "string",
             "format": "date-time"
           },
-          "meetingLink": {
-            "minLength": 1,
-            "type": "string",
-            "format": "uri"
-          },
           "price": {
             "maximum": 1000,
             "minimum": 0,
             "type": "number",
             "format": "double"
+          },
+          "sessionType": {
+            "maximum": 2,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "capacity": {
+            "maximum": 50,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "meetingLink": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
           }
         },
         "additionalProperties": false
       },
+      "OnlineSessionType": {
+        "enum": [
+          0,
+          1,
+          2
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
       "OnlineSessionUpdateDto": {
         "required": [
-          "meetingLink",
           "sessionDateTime",
+          "sessionType",
           "title",
           "trainerId"
         ],
@@ -2626,16 +2653,28 @@
             "type": "string",
             "format": "date-time"
           },
-          "meetingLink": {
-            "minLength": 1,
-            "type": "string",
-            "format": "uri"
-          },
           "price": {
             "maximum": 1000,
             "minimum": 0,
             "type": "number",
             "format": "double"
+          },
+          "sessionType": {
+            "maximum": 2,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "capacity": {
+            "maximum": 50,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "meetingLink": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
           }
         },
         "additionalProperties": false

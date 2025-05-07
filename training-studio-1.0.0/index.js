@@ -725,9 +725,19 @@ function renderSchedules(day) {
         return;
     }
 
-    container.innerHTML = filteredSchedules.map(schedule => `
+    container.innerHTML = filteredSchedules.map(schedule => {
+        // Format the date to be more readable
+        const scheduleDate = new Date(schedule.scheduleDate);
+        const formattedDate = scheduleDate.toLocaleDateString('en-US', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric'
+        });
+
+        return `
         <div class="schedule-card" data-day="${schedule.day.toLowerCase()}">
             <div class="schedule-card-header">
+                <span class="schedule-date">${formattedDate}</span>
                 <span class="schedule-time">${schedule.startTime || '09:00'} - ${schedule.endTime || '10:00'}</span>
                 <span class="schedule-badge">${schedule.difficulty || 'All Levels'}</span>
             </div>
@@ -753,7 +763,8 @@ function renderSchedules(day) {
                 </div>
             </div>
         </div>
-    `).join("");
+        `;
+    }).join("");
 }
 
 function setupDayFilters() {

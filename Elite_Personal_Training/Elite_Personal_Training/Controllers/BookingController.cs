@@ -26,6 +26,7 @@ namespace Elite_Personal_Training.Controllers
                 .Include(b => b.Membership)
                 .Include(b => b.Schedule)
                 .Include(b => b.OnlineSession)
+                    .ThenInclude(os => os.Trainer)
                 .ToListAsync();
 
             return Ok(bookings);
@@ -42,12 +43,14 @@ namespace Elite_Personal_Training.Controllers
                 .Include(b => b.Schedule)
                     .ThenInclude(s => s.Trainer)
                 .Include(b => b.OnlineSession)
+                    .ThenInclude(os => os.Trainer)
                 .Include(b => b.User)
                 .FirstOrDefaultAsync(b => b.Id == id);
 
             if (booking == null) return NotFound();
             return Ok(booking);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateBooking([FromBody] BookingRequest request)
@@ -85,6 +88,41 @@ namespace Elite_Personal_Training.Controllers
                     return BadRequest("This schedule is fully booked.");
             }
 
+            // Check online session availability
+            if (request.OnlineSessionId != null)
+            {
+                var onlineSession = await _context.OnlineSessions
+                    .FirstOrDefaultAsync(os => os.Id == request.OnlineSessionId);
+
+                if (onlineSession == null)
+                    return BadRequest("Online session not found.");
+
+                if (onlineSession.SessionDateTime <= DateTime.UtcNow)
+                    return BadRequest("This session has already started or completed.");
+
+                var bookingsCount = await _context.Bookings
+                    .CountAsync(b => b.OnlineSessionId == request.OnlineSessionId && b.Status != "Cancelled");
+
+                // Handle different session types
+                switch (onlineSession.SessionType)
+                {
+                    case OnlineSessionType.OneToOne:
+                        if (bookingsCount >= 1)
+                            return BadRequest("This one-to-one session is already booked.");
+                        break;
+
+                    case OnlineSessionType.Group:
+                        if (bookingsCount >= onlineSession.Capacity)
+                            return BadRequest("This group session is fully booked.");
+                        break;
+
+                    case OnlineSessionType.MinGroup:
+                        if (bookingsCount >= onlineSession.Capacity)
+                            return BadRequest("This minimum group session is fully booked.");
+                        break;
+                }
+            }
+
             // Handle membership dates
             DateTime? membershipStart = null;
             DateTime? membershipEnd = null;
@@ -114,7 +152,8 @@ namespace Elite_Personal_Training.Controllers
                 Email = request.Email,
                 BookingType = request.BookingType,
                 MembershipStartDate = membershipStart,
-                MembershipEndDate = membershipEnd
+                MembershipEndDate = membershipEnd,
+                Status = "Pending"
             };
 
             _context.Bookings.Add(booking);
@@ -122,6 +161,8 @@ namespace Elite_Personal_Training.Controllers
 
             return CreatedAtAction(nameof(GetBooking), new { id = booking.Id }, booking);
         }
+
+
 
         // ... [Keep all other existing methods but update any references to ClassId to ScheduleId]
 
@@ -131,11 +172,34 @@ namespace Elite_Personal_Training.Controllers
             var now = DateTime.UtcNow;
 
             var availableSessions = await _context.OnlineSessions
+                .Include(os => os.Trainer)
                 .Where(s => s.SessionDateTime > now)
+                .Select(s => new
+                {
+                    s.Id,
+                    s.Title,
+                    s.Description,
+                    TrainerName = s.Trainer.Name,
+                    s.SessionDateTime,
+                    s.MeetingLink,
+                    s.SessionType,
+                    s.Capacity,
+                    s.Price,
+                    AvailableSpots = s.SessionType == OnlineSessionType.OneToOne
+                        ? (1 - _context.Bookings.Count(b => b.OnlineSessionId == s.Id && b.Status != "Cancelled"))
+                        : (s.Capacity - _context.Bookings.Count(b => b.OnlineSessionId == s.Id && b.Status != "Cancelled")),
+                    s.ZoomMeetingCreated
+                })
+                .Where(s => s.SessionType == OnlineSessionType.OneToOne
+                    ? s.AvailableSpots > 0
+                    : (s.SessionType == OnlineSessionType.Group || s.SessionType == OnlineSessionType.MinGroup)
+                        ? s.AvailableSpots > 0
+                        : true)
                 .ToListAsync();
 
             return Ok(availableSessions);
         }
+
 
 
         [HttpGet("next-session/{userId}")]
@@ -149,6 +213,10 @@ namespace Elite_Personal_Training.Controllers
             if (nextSession == null) return NotFound("No upcoming sessions found.");
             return Ok(nextSession);
         }
+
+
+
+
         // Update the FilterBookings method:
         [HttpGet("filter")]
         public async Task<IActionResult> FilterBookings(string status, string type)

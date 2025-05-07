@@ -196,6 +196,139 @@
     }
 }
 /* Schedule Filter Styles */
+/* Schedule Card Styles */
+.schedule-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.schedule-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.schedule-card-header {
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.schedule-date {
+    font-weight: bold;
+    color: #9c0d0d;
+    margin-right: 15px;
+}
+
+.schedule-time {
+    font-weight: 500;
+    color: #555;
+    flex-grow: 1;
+}
+
+.schedule-badge {
+    background: #9c0d0d;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.schedule-card-body {
+    padding: 20px;
+}
+
+.schedule-class-name {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.schedule-trainer {
+    display: flex;
+    align-items: center;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.schedule-trainer i {
+    margin-right: 8px;
+    color: #9c0d0d;
+}
+
+.schedule-description p {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.schedule-capacity {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.schedule-slots {
+    display: flex;
+    align-items: center;
+    color: #666;
+    font-size: 0.85rem;
+}
+
+.schedule-slots i {
+    margin-right: 5px;
+    color: #9c0d0d;
+}
+
+.schedule-book-btn {
+    background: #9c0d0d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.schedule-book-btn:hover {
+    background: #c21818;
+    transform: translateY(-2px);
+}
+
+.schedule-book-btn.disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .schedule-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .schedule-date, .schedule-time {
+        margin-right: 0;
+    }
+    
+    .schedule-badge {
+        align-self: flex-end;
+    }
+}
+
+
+
 .schedule-nav {
     margin-top: 20px;
     margin-bottom: 30px;

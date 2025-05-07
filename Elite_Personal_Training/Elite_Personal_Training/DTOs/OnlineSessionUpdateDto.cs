@@ -19,14 +19,20 @@ namespace Elite_Personal_Training.DTOs
         public int TrainerId { get; set; }
 
         [Required(ErrorMessage = "Session date/time is required")]
-        [FutureDate(ErrorMessage = "Session must be scheduled in the future")] // Custom attribute
+        [FutureDate(ErrorMessage = "Session must be scheduled in the future")]
         public DateTime SessionDateTime { get; set; }
-
-        [Required(ErrorMessage = "Meeting link is required")]
-        [Url(ErrorMessage = "Please enter a valid URL")]
-        public string MeetingLink { get; set; }
 
         [Range(0, 1000, ErrorMessage = "Price must be between $0 and $1000")]
         public decimal Price { get; set; }
+
+        [Required(ErrorMessage = "Session type is required")]
+        [Range(0, 2, ErrorMessage = "Invalid session type (0 = OneToOne, 1 = Group, 2 = MinGroup)")]
+        public int SessionType { get; set; }
+
+        [Range(0, 50, ErrorMessage = "Capacity must be between 0 and 50")]
+        public int Capacity { get; set; }
+
+        [Url(ErrorMessage = "Please enter a valid URL")]
+        public string? MeetingLink { get; set; } // Optional: can be generated
     }
 }
