@@ -1,5 +1,4 @@
 
-
 // ✅ TimeSpan Helper Function (NEW - add this right after constants)
 // Update the createTimeSpan function to match API expectations
 function createTimeSpan(hours, minutes, seconds = 0) {
@@ -50,6 +49,7 @@ function checkAdminAuth() {
 
 // ✅ Load Dashboard Analytics Data
 async function loadDashboard() {
+    cleanupCharts();
     document.getElementById("dashboard-title").innerText = "Dashboard Overview";
     document.getElementById("admin-content").innerHTML = "";
 
@@ -962,7 +962,7 @@ async function loadOnlineSessions() {
     try {
         // Load sessions and trainers in parallel
         const [sessionsResponse, trainersResponse] = await Promise.all([
-            fetch("https://localhost:7020/api/OnlineSession", { 
+            fetch("https://localhost:7020/api/OnlineSession?includeBookings=true", { 
                 headers: getAuthHeaders() 
             }),
             fetch("https://localhost:7020/api/Trainer", { 
@@ -1013,7 +1013,7 @@ async function loadOnlineSessions() {
                             </td>
                             <td>${formatDateTime(session.sessionDateTime)}</td>
                             <td>${session.capacity}</td>
-                            <td>${session.sessionBookings?.length || 0}</td>
+                            <td>${session.bookedCount || 0}</td>
                             <td>$${session.price?.toFixed(2) || '0.00'}</td>
                             <td>
                                 <span class="badge ${session.zoomMeetingCreated ? 'bg-success' : 'bg-warning'}">
@@ -1943,127 +1943,175 @@ async function deleteSchedule(scheduleId) {
     }
 }
 
+ ////
 // ✅ Load Reports
 async function loadReports() {
+    cleanupCharts();
     document.getElementById("dashboard-title").innerText = "Reports & Analytics";
     const content = document.getElementById("admin-content");
-    content.innerHTML = "<h4>Loading reports...</h4>";
     
-    try {
-        // Load all report data in parallel
-        const [bookingResponse, paymentResponse, memberResponse, financialResponse] = await Promise.all([
-            fetch("https://localhost:7020/api/Report/bookings/summary", { headers: getAuthHeaders() }),
-            fetch("https://localhost:7020/api/Report/payments/summary", { headers: getAuthHeaders() }),
-            fetch("https://localhost:7020/api/Report/member-activity", { headers: getAuthHeaders() }),
-            fetch("https://localhost:7020/api/Report/financial", { headers: getAuthHeaders() })
-        ]);
-
-        if (!bookingResponse.ok || !paymentResponse.ok || !memberResponse.ok || !financialResponse.ok) {
-            throw new Error("Failed to load report data");
-        }
-
-        const bookingData = await bookingResponse.json();
-        const paymentData = await paymentResponse.json();
-        const memberData = await memberResponse.json();
-        const financialData = await financialResponse.json();
-
-        // Safe number formatting function
-        const formatCurrency = (value) => {
-            if (value === undefined || value === null || isNaN(value)) return '$0.00';
-            return `$${parseFloat(value).toFixed(2)}`;
-        };
-
-        // Safe number display function
-        const formatNumber = (value) => {
-            if (value === undefined || value === null || isNaN(value)) return '0';
-            return value.toString();
-        };
-
-        // Render the reports page
-        content.innerHTML = `
-            <div class="report-filters mb-4">
-                <div class="row">
-                    <div class="col-md-3">
-                        <label for="reportStartDate" class="form-label">Start Date</label>
-                        <input type="date" class="form-control" id="reportStartDate">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="reportEndDate" class="form-label">End Date</label>
-                        <input type="date" class="form-control" id="reportEndDate" value="${new Date().toISOString().split('T')[0]}">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="reportType" class="form-label">Report Type</label>
-                        <select class="form-select" id="reportType">
-                            <option value="overview">Overview</option>
-                            <option value="bookings">Bookings</option>
-                            <option value="payments">Payments</option>
-                            <option value="members">Member Activity</option>
-                            <option value="financial">Financial</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 d-flex align-items-end">
-                        <button class="btn btn-primary" onclick="generateReport()">Generate Report</button>
-                        <button class="btn btn-success ms-2" onclick="exportReport()">
-                            <i class="fas fa-file-export"></i> Export
-                        </button>
-                    </div>
+    // Set default date range (last 30 days)
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - 30);
+    
+    content.innerHTML = `
+        <div class="report-filters">
+            <h4><i class="fas fa-filter me-2"></i> Filter Reports</h4>
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="reportStartDate" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" id="reportStartDate" 
+                           value="${startDate.toISOString().split('T')[0]}">
+                </div>
+                <div class="col-md-5">
+                    <label for="reportEndDate" class="form-label">End Date</label>
+                    <input type="date" class="form-control" id="reportEndDate" 
+                           value="${endDate.toISOString().split('T')[0]}">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-primary w-100" onclick="generateReports()">
+                        <i class="fas fa-sync-alt me-2"></i> Generate
+                    </button>
                 </div>
             </div>
+        </div>
+        
+        <div id="reportsContainer">
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading reports...</p>
+            </div>
+        </div>
+    `;
+    
+    // Load reports with default dates
+    generateReports();
+}
 
-            <div class="report-container">
-                <!-- Overview Section -->
-                <div class="report-section" id="overviewSection">
-                    <h3 class="mb-4"><i class="fas fa-chart-pie me-2"></i>Overview</h3>
+// ✅ Generate Reports with Selected Dates
+async function generateReports() {
+    const startDate = document.getElementById("reportStartDate").value;
+    const endDate = document.getElementById("reportEndDate").value;
+    
+    try {
+        // Load all reports in parallel
+        const [financialReport, bookingReport, attendanceReport] = await Promise.all([
+            fetchFinancialReport(startDate, endDate),
+            fetchBookingReport(startDate, endDate),
+            fetchAttendanceReport(startDate, endDate)
+        ]);
+        
+        renderReports(financialReport, bookingReport, attendanceReport);
+    } catch (error) {
+        console.error("Error generating reports:", error);
+        document.getElementById("reportsContainer").innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Error loading reports: ${error.message}
+            </div>
+        `;
+    }
+}
+
+// ✅ Cleanup existing charts before creating new ones
+function cleanupCharts() {
+    // Destroy any existing Chart.js instances to prevent memory leaks
+    if (window.revenueChart) {
+        window.revenueChart.destroy();
+    }
+    if (window.bookingTypeChart) {
+        window.bookingTypeChart.destroy();
+    }
+    if (window.attendanceChart) {
+        window.attendanceChart.destroy();
+    }
+}
+
+
+// ✅ Fetch Financial Report
+async function fetchFinancialReport(startDate, endDate) {
+    const response = await fetch(`https://localhost:7020/api/Report/financial?startDate=${startDate}&endDate=${endDate}`, {
+        headers: getAuthHeaders()
+    });
+    
+    if (!response.ok) {
+        throw new Error(`Failed to fetch financial report: ${response.status}`);
+    }
+    
+    return await response.json();
+}
+
+// ✅ Fetch Booking Summary Report
+async function fetchBookingReport(startDate, endDate) {
+    const response = await fetch(`https://localhost:7020/api/Report/bookings/summary?startDate=${startDate}&endDate=${endDate}`, {
+        headers: getAuthHeaders()
+    });
+    
+    if (!response.ok) {
+        throw new Error(`Failed to fetch booking report: ${response.status}`);
+    }
+    
+    return await response.json();
+}
+
+// ✅ Fetch Attendance Summary Report
+async function fetchAttendanceReport(startDate, endDate) {
+    const response = await fetch(`https://localhost:7020/api/Report/attendance/summary?startDate=${startDate}&endDate=${endDate}`, {
+        headers: getAuthHeaders()
+    });
+    
+    if (!response.ok) {
+        throw new Error(`Failed to fetch attendance report: ${response.status}`);
+    }
+    
+    return await response.json();
+}
+
+// ✅ Render All Reports
+function renderReports(financial, booking, attendance) {
+    const container = document.getElementById("reportsContainer");
+    
+    container.innerHTML = `
+        <div class="row">
+            <!-- Financial Overview -->
+            <div class="col-lg-6">
+                <div class="report-section">
+                    <h3><i class="fas fa-chart-line me-2"></i> Financial Overview</h3>
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="card mb-4">
-                                <div class="card-header bg-primary text-white">
-                                    <i class="fas fa-calendar-check me-2"></i> Booking Summary
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="bookingChart" height="250"></canvas>
-                                </div>
+                            <div class="stat-card">
+                                <h4>Total Revenue</h4>
+                                <p>$${financial.totalRevenue.toLocaleString()}</p>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="card mb-4">
-                                <div class="card-header bg-success text-white">
-                                    <i class="fas fa-dollar-sign me-2"></i> Revenue Breakdown
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="revenueChart" height="250"></canvas>
-                                </div>
+                            <div class="stat-card">
+                                <h4>Received Payments</h4>
+                                <p>$${financial.receivedPayments.toLocaleString()}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="stat-card">
+                                <h4>Outstanding Payments</h4>
+                                <p>$${financial.outstandingPayments.toLocaleString()}</p>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card mb-4">
-                                <div class="card-header bg-info text-white">
-                                    <i class="fas fa-users me-2"></i> Member Activity
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="memberChart" height="250"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card mb-4">
-                                <div class="card-header bg-warning text-dark">
-                                    <i class="fas fa-credit-card me-2"></i> Payment Methods
-                                </div>
-                                <div class="card-body">
-                                    <canvas id="paymentChart" height="250"></canvas>
-                                </div>
-                            </div>
-                        </div>
+                    <h4 class="mt-4">Revenue by Type</h4>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
                     </div>
                 </div>
-
-                <!-- Detailed Reports Sections -->
-                <div class="report-section d-none" id="bookingsSection">
-                    <h3 class="mb-4"><i class="fas fa-calendar-check me-2"></i>Booking Reports</h3>
+            </div>
+            
+            <!-- Booking Summary -->
+            <div class="col-lg-6">
+                <div class="report-section">
+                    <h3><i class="fas fa-calendar-check me-2"></i> Booking Summary</h3>
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
@@ -2071,291 +2119,368 @@ async function loadReports() {
                                     <th>Booking Type</th>
                                     <th>Total</th>
                                     <th>Revenue</th>
-                                    <th>Pending</th>
                                     <th>Confirmed</th>
                                     <th>Cancelled</th>
                                 </tr>
                             </thead>
-                            <tbody id="bookingsTableBody">
-                                ${bookingData.map(b => `
+                            <tbody>
+                                ${booking.map(item => `
                                     <tr>
-                                        <td>${b.BookingType || 'N/A'}</td>
-                                        <td>${formatNumber(b.TotalBookings)}</td>
-                                        <td>${formatCurrency(b.TotalRevenue)}</td>
-                                        <td>${formatNumber(b.Pending)}</td>
-                                        <td>${formatNumber(b.Confirmed)}</td>
-                                        <td>${formatNumber(b.Cancelled)}</td>
+                                        <td>${item.bookingType}</td>
+                                        <td>${item.totalBookings}</td>
+                                        <td>$${item.totalRevenue}</td>
+                                        <td>${item.confirmed}</td>
+                                        <td>${item.cancelled}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
                         </table>
                     </div>
-                </div>
-
-                <div class="report-section d-none" id="paymentsSection">
-                    <h3 class="mb-4"><i class="fas fa-money-bill-wave me-2"></i>Payment Reports</h3>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Status</th>
-                                    <th>Count</th>
-                                    <th>Total Amount</th>
-                                    <th>Payment Methods</th>
-                                </tr>
-                            </thead>
-                            <tbody id="paymentsTableBody">
-                                ${paymentData.map(p => `
-                                    <tr>
-                                        <td>${p.Status || 'N/A'}</td>
-                                        <td>${formatNumber(p.Count)}</td>
-                                        <td>${formatCurrency(p.TotalAmount)}</td>
-                                        <td>
-                                            ${(p.PaymentMethods || []).map(m => `
-                                                ${m.Method || 'N/A'}: ${formatCurrency(m.Amount)} (${formatNumber(m.Count)})
-                                            `).join('<br>')}
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="report-section d-none" id="membersSection">
-                    <h3 class="mb-4"><i class="fas fa-user-friends me-2"></i>Member Activity Reports</h3>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Member</th>
-                                    <th>Total Bookings</th>
-                                    <th>Classes</th>
-                                    <th>Online Sessions</th>
-                                    <th>Membership</th>
-                                    <th>Total Spent</th>
-                                </tr>
-                            </thead>
-                            <tbody id="membersTableBody">
-                                ${memberData.map(m => `
-                                    <tr>
-                                        <td>${m.MemberName || 'N/A'}</td>
-                                        <td>${formatNumber(m.TotalBookings)}</td>
-                                        <td>${formatNumber(m.ClassesAttended)}</td>
-                                        <td>${formatNumber(m.OnlineSessions)}</td>
-                                        <td>${m.CurrentMembership || 'None'}</td>
-                                        <td>${formatCurrency(m.TotalSpent)}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="report-section d-none" id="financialSection">
-                    <h3 class="mb-4"><i class="fas fa-chart-line me-2"></i>Financial Reports</h3>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Metric</th>
-                                    <th>Value</th>
-                                </tr>
-                            </thead>
-                            <tbody id="financialTableBody">
-                                <tr>
-                                    <td>Total Revenue</td>
-                                    <td>${formatCurrency(financialData.TotalRevenue)}</td>
-                                </tr>
-                                <tr>
-                                    <td>Received Payments</td>
-                                    <td>${formatCurrency(financialData.ReceivedPayments)}</td>
-                                </tr>
-                                <tr>
-                                    <td>Outstanding Payments</td>
-                                    <td>${formatCurrency(financialData.OutstandingPayments)}</td>
-                                </tr>
-                                ${(financialData.RevenueByType || []).map(r => `
-                                    <tr>
-                                        <td>${r.Type || 'N/A'} Revenue</td>
-                                        <td>${formatCurrency(r.Amount)} (${formatNumber(r.Count)})</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
+                    
+                    <h4 class="mt-4">Bookings by Type</h4>
+                    <div class="chart-container">
+                        <canvas id="bookingTypeChart"></canvas>
                     </div>
                 </div>
             </div>
-        `;
-
-        // Initialize charts with safe data
-        renderBookingChart(bookingData || []);
-        renderRevenueChart(financialData || { RevenueByType: [] });
-        renderMemberChart(memberData || []);
-        renderPaymentChart(paymentData || []);
-
-    } catch (error) {
-        console.error("Error loading reports:", error);
-        content.innerHTML = `
-            <div class="alert alert-danger">
-                Failed to load reports: ${error.message}
-                <button class="btn btn-sm btn-secondary mt-2" onclick="loadReports()">
-                    Try Again
-                </button>
+        </div>
+        
+        <!-- Attendance Summary -->
+        <div class="row mt-4">
+            <div class="col-lg-12">
+                <div class="report-section">
+                    <h3><i class="fas fa-user-check me-2"></i> Attendance Summary</h3>
+                    ${attendance.message ? `
+                        <div class="alert alert-info">
+                            ${attendance.message}
+                        </div>
+                    ` : ''}
+                    
+                    ${attendance.data ? `
+                        <div class="row">
+                            ${attendance.data.map(item => `
+                                <div class="col-md-4">
+                                    <div class="stat-card">
+                                        <h4>${item.bookingType}</h4>
+                                        <p>${item.attendanceRate}%</p>
+                                        <small>${item.totalSessions} sessions</small>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <h4 class="mt-4">Attendance Rates</h4>
+                        <div class="chart-container">
+                            <canvas id="attendanceChart"></canvas>
+                        </div>
+                    ` : `
+                        <div class="alert alert-warning">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Attendance tracking is not fully implemented
+                        </div>
+                    `}
+                </div>
             </div>
-        `;
-    }
-}
-
-// Update chart rendering functions to handle undefined data
-function renderBookingChart(data = []) {
-    const ctx = document.getElementById('bookingChart')?.getContext('2d');
-    if (!ctx) return;
-
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: data.map(b => b?.BookingType || 'Unknown'),
-            datasets: [
-                {
-                    label: 'Total Bookings',
-                    data: data.map(b => b?.TotalBookings || 0),
-                    backgroundColor: 'rgba(54, 162, 235, 0.7)'
-                },
-                {
-                    label: 'Confirmed',
-                    data: data.map(b => b?.Confirmed || 0),
-                    backgroundColor: 'rgba(75, 192, 192, 0.7)'
-                },
-                {
-                    label: 'Cancelled',
-                    data: data.map(b => b?.Cancelled || 0),
-                    backgroundColor: 'rgba(255, 99, 132, 0.7)'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Booking Summary'
-                }
-            }
-        }
-    });
-}
-
-function renderRevenueChart(data = { RevenueByType: [] }) {
-    const ctx = document.getElementById('revenueChart')?.getContext('2d');
-    if (!ctx) return;
-
-    new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: data.RevenueByType.map(r => r?.Type || 'Unknown'),
-            datasets: [{
-                data: data.RevenueByType.map(r => r?.Amount || 0),
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.7)',
-                    'rgba(54, 162, 235, 0.7)',
-                    'rgba(255, 206, 86, 0.7)'
-                ]
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Revenue Breakdown'
-                }
-            }
-        }
-    });
-}
-
-// ... keep the other chart functions with similar safe data handling ...
-
-function renderMemberChart(data) {
-    // Sort members by total spent and take top 10
-    const sortedData = [...data].sort((a, b) => b.TotalSpent - a.TotalSpent).slice(0, 10);
+        </div>
+        
+        <!-- Export Buttons -->
+        <div class="export-buttons mt-4">
+    <button class="btn btn-outline-primary me-2" onclick="exportAsPDF()">
+        <i class="fas fa-file-pdf me-2"></i> Export as PDF
+    </button>
+    <button class="btn btn-outline-success" onclick="exportAsExcel()">
+        <i class="fas fa-file-excel me-2"></i> Export as Excel
+    </button>
+</div>
+    `;
     
-    const ctx = document.getElementById('memberChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'horizontalBar',
-        data: {
-            labels: sortedData.map(m => m.MemberName),
-            datasets: [{
-                label: 'Total Spent ($)',
-                data: sortedData.map(m => m.TotalSpent),
-                backgroundColor: 'rgba(153, 102, 255, 0.7)'
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Top Members by Spending'
-                }
-            },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Amount Spent ($)'
-                    }
-                }
-            }
-        }
-    });
+    // Render charts
+    renderCharts(financial, booking, attendance);
 }
 
-function renderPaymentChart(data) {
-    const paymentMethods = [];
-    const amounts = [];
-    
-    data.forEach(p => {
-        p.PaymentMethods.forEach(m => {
-            paymentMethods.push(`${m.Method} (${p.Status})`);
-            amounts.push(m.Amount);
-        });
-    });
 
-    const ctx = document.getElementById('paymentChart').getContext('2d');
-    new Chart(ctx, {
+// ✅ Render Charts
+function renderCharts(financial, booking, attendance) {
+    // Revenue by Type Chart
+    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+    window.revenueChart = new Chart(revenueCtx, {
         type: 'doughnut',
         data: {
-            labels: paymentMethods,
+            labels: financial.revenueByType.map(item => item.type),
             datasets: [{
-                data: amounts,
+                data: financial.revenueByType.map(item => item.amount),
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.7)',
-                    'rgba(54, 162, 235, 0.7)',
-                    'rgba(255, 206, 86, 0.7)',
-                    'rgba(75, 192, 192, 0.7)',
-                    'rgba(153, 102, 255, 0.7)'
+                    '#9c0d0d', // Primary color
+                    '#d4a017', // Secondary color
+                    '#343a40', // Dark color
+                    '#6c757d', // Gray
+                    '#28a745'  // Success color
                 ],
                 borderWidth: 1
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             plugins: {
-                title: {
-                    display: true,
-                    text: 'Payment Methods Breakdown'
-                },
                 legend: {
-                    position: 'right'
+                    position: 'bottom'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `$${context.raw.toLocaleString()}`;
+                        }
+                    }
                 }
             }
         }
     });
+    
+    // Booking Type Chart
+    const bookingCtx = document.getElementById('bookingTypeChart').getContext('2d');
+    window.bookingTypeChart = new Chart(bookingCtx, {
+        type: 'bar',
+        data: {
+            labels: booking.map(item => item.bookingType),
+            datasets: [{
+                label: 'Total Bookings',
+                data: booking.map(item => item.totalBookings),
+                backgroundColor: '#9c0d0d',
+                borderColor: '#9c0d0d',
+                borderWidth: 1
+            }, {
+                label: 'Confirmed',
+                data: booking.map(item => item.confirmed),
+                backgroundColor: '#28a745',
+                borderColor: '#28a745',
+                borderWidth: 1
+            }, {
+                label: 'Cancelled',
+                data: booking.map(item => item.cancelled),
+                backgroundColor: '#dc3545',
+                borderColor: '#dc3545',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+    
+    // Attendance Chart (if data exists)
+    if (attendance.data) {
+        const attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
+        window.attendanceChart = new Chart(attendanceCtx, {
+            type: 'radar',
+            data: {
+                labels: attendance.data.map(item => item.bookingType),
+                datasets: [{
+                    label: 'Attendance Rate (%)',
+                    data: attendance.data.map(item => item.attendanceRate),
+                    backgroundColor: 'rgba(156, 13, 13, 0.2)',
+                    borderColor: '#9c0d0d',
+                    borderWidth: 2,
+                    pointBackgroundColor: '#9c0d0d',
+                    pointBorderColor: '#fff',
+                    pointHoverRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: true
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
 }
 
+// ✅ Export as PDF
+async function exportAsPDF() {
+    try {
+        // Show loading indicator
+        const exportBtn = document.querySelector('.export-buttons .btn-outline-primary');
+        const originalText = exportBtn.innerHTML;
+        exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Generating PDF...';
+        exportBtn.disabled = true;
+
+        // Get the reports container
+        const element = document.getElementById("reportsContainer");
+        
+        // Create a new jsPDF instance
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'pt', 'a4');
+        
+        // Use html2canvas to capture the content
+        const canvas = await html2canvas(element, {
+            scale: 2, // Higher quality
+            logging: false,
+            useCORS: true,
+            allowTaint: true
+        });
+        
+        // Convert canvas to image and add to PDF
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = pdf.internal.pageSize.getWidth() - 40; // Margin
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        pdf.addImage(imgData, 'PNG', 20, 20, imgWidth, imgHeight);
+        
+        // Add title and date
+        const dateStr = new Date().toLocaleDateString();
+        pdf.setFontSize(18);
+        pdf.text('Elite Studio Reports', 40, 30);
+        pdf.setFontSize(12);
+        pdf.text(`Generated on: ${dateStr}`, 40, 50);
+        
+        // Save the PDF
+        pdf.save(`elite-studio-reports-${dateStr.replace(/\//g, '-')}.pdf`);
+        
+    } catch (error) {
+        console.error("Error generating PDF:", error);
+        alert("Failed to generate PDF. Please try again.");
+    } finally {
+        // Restore button state
+        const exportBtn = document.querySelector('.export-buttons .btn-outline-primary');
+        exportBtn.innerHTML = '<i class="fas fa-file-pdf me-2"></i> Export as PDF';
+        exportBtn.disabled = false;
+    }
+}
+
+
+// ✅ Export as Excel
+async function exportAsExcel() {
+    try {
+        // Show loading indicator
+        const exportBtn = document.querySelector('.export-buttons .btn-outline-success');
+        const originalText = exportBtn.innerHTML;
+        exportBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Generating Excel...';
+        exportBtn.disabled = true;
+
+        // Get the current report data
+        const startDate = document.getElementById("reportStartDate").value;
+        const endDate = document.getElementById("reportEndDate").value;
+        
+        // Fetch all reports again to get fresh data
+        const [financialReport, bookingReport, attendanceReport] = await Promise.all([
+            fetchFinancialReport(startDate, endDate),
+            fetchBookingReport(startDate, endDate),
+            fetchAttendanceReport(startDate, endDate)
+        ]);
+
+        // Create a new workbook
+        const wb = XLSX.utils.book_new();
+        
+        // 1. Financial Report Sheet
+        const financialData = [
+            ["Financial Report", `From ${startDate} to ${endDate}`],
+            [],
+            ["Metric", "Value"],
+            ["Total Revenue", financialReport.totalRevenue],
+            ["Received Payments", financialReport.receivedPayments],
+            ["Outstanding Payments", financialReport.outstandingPayments],
+            [],
+            ["Revenue by Type", "Amount", "Count"]
+        ];
+        
+        financialReport.revenueByType.forEach(item => {
+            financialData.push([item.type, item.amount, item.count]);
+        });
+        
+        XLSX.utils.book_append_sheet(
+            wb,
+            XLSX.utils.aoa_to_sheet(financialData),
+            "Financial Report"
+        );
+        
+        // 2. Booking Report Sheet
+        const bookingData = [
+            ["Booking Report", `From ${startDate} to ${endDate}`],
+            [],
+            ["Booking Type", "Total Bookings", "Total Revenue", "Pending", "Confirmed", "Cancelled"]
+        ];
+        
+        bookingReport.forEach(item => {
+            bookingData.push([
+                item.bookingType,
+                item.totalBookings,
+                item.totalRevenue,
+                item.pending,
+                item.confirmed,
+                item.cancelled
+            ]);
+        });
+        
+        XLSX.utils.book_append_sheet(
+            wb,
+            XLSX.utils.aoa_to_sheet(bookingData),
+            "Booking Report"
+        );
+        
+        // 3. Attendance Report Sheet (if available)
+        if (attendanceReport.data) {
+            const attendanceData = [
+                ["Attendance Report", `From ${startDate} to ${endDate}`],
+                [],
+                ["Booking Type", "Total Sessions", "Attendance Rate (%)"]
+            ];
+            
+            attendanceReport.data.forEach(item => {
+                attendanceData.push([
+                    item.bookingType,
+                    item.totalSessions,
+                    item.attendanceRate
+                ]);
+            });
+            
+            XLSX.utils.book_append_sheet(
+                wb,
+                XLSX.utils.aoa_to_sheet(attendanceData),
+                "Attendance Report"
+            );
+        }
+        
+        // Generate Excel file and download
+        const dateStr = new Date().toLocaleDateString().replace(/\//g, '-');
+        XLSX.writeFile(wb, `elite-studio-reports-${dateStr}.xlsx`);
+        
+    } catch (error) {
+        console.error("Error generating Excel:", error);
+        alert("Failed to generate Excel file. Please try again.");
+    } finally {
+        // Restore button state
+        const exportBtn = document.querySelector('.export-buttons .btn-outline-success');
+        exportBtn.innerHTML = '<i class="fas fa-file-excel me-2"></i> Export as Excel';
+        exportBtn.disabled = false;
+    }
+}
+
+
+ /// 
 
 
 // ✅ Logout Function
@@ -2428,15 +2553,32 @@ function fetchBookings() {
             const tbody = document.querySelector("#bookingsTable tbody");
             tbody.innerHTML = "";
             bookings.forEach(b => {
-                const itemName = b.membership?.name || b.class?.title || b.onlineSession?.title || "-";
+                // Determine the item name based on booking type
+                let itemName = "-";
+                
+                if (b.bookingType === 1) { // Membership
+                    itemName = b.membership?.name || "-";
+                } 
+                else if (b.bookingType === 2) { // Class
+                    // Check both possible paths to class name
+                    itemName = b.schedule?.class?.name || b.class?.name || "-";
+
+                } 
+                else if (b.bookingType === 3) { // Online Session
+                    itemName = b.onlineSession?.title || "-";
+                }
+
+                // Format the booking type for display
+                const bookingTypeText = getBookingTypeName(b.bookingType);
+
                 tbody.innerHTML += `
                     <tr>
                         <td>${b.id}</td>
                         <td>${b.name}<br><small>${b.email}</small></td>
-                        <td>${b.bookingType}</td>
+                        <td>${bookingTypeText}</td>
                         <td>${itemName}</td>
                         <td>${b.status}</td>
-                        <td>${b.paymentStatus} (${b.paymentMethod})</td>
+                        <td>${b.paymentStatus} (${b.paymentMethod || 'N/A'})</td>
                         <td>${new Date(b.bookingDate).toLocaleString()}</td>
                         <td>
                             <button class="btn btn-success btn-sm" onclick="confirmBooking(${b.id})">Confirm</button>
@@ -2448,6 +2590,16 @@ function fetchBookings() {
             });
         })
         .catch(err => console.error("Error fetching bookings:", err));
+}
+
+// Helper function to convert booking type number to name
+function getBookingTypeName(type) {
+    const types = {
+        1: 'Membership',
+        2: 'Class',
+        3: 'Online Session'
+    };
+    return types[type] || 'Unknown';
 }
 
 
@@ -2467,14 +2619,51 @@ function cancelBooking(id) {
     .catch(err => alert("Failed to cancel booking"));
 }
 
-function deleteBooking(id) {
-    if (!confirm("Are you sure you want to delete this booking?")) return;
+function deleteBooking(id, event) {
+    if (!confirm("Are you sure you want to permanently delete this booking?")) return;
+
+    // Get the button that was clicked and show loading state
+    const deleteBtn = event.target;
+    const originalText = deleteBtn.innerHTML;
+    deleteBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...';
+    deleteBtn.disabled = true;
+
     fetch(`https://localhost:7020/api/Booking/${id}`, {
-        method: "DELETE"
+        method: "DELETE",
+        headers: getAuthHeaders()
     })
-    .then(() => fetchBookings())
-    .catch(err => alert("Failed to delete booking"));
+    .then(response => {
+        if (response.status === 204) {
+            // Successful deletion with no content (204)
+            return Promise.resolve(null);
+        }
+        if (!response.ok) {
+            // Try to parse error response if available
+            return response.json().then(err => {
+                throw new Error(err.message || 'Failed to delete booking');
+            }).catch(() => {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            });
+        }
+        return response.json();
+    })
+    .then(() => {
+        showToast('Booking deleted successfully!', 'success');
+        fetchBookings(); // Refresh the bookings list
+    })
+    .catch(err => {
+        console.error("Delete booking error:", err);
+        showToast(`Error: ${err.message}`, 'danger');
+    })
+    .finally(() => {
+        // Restore button state in all cases (success or error)
+        deleteBtn.innerHTML = originalText;
+        deleteBtn.disabled = false;
+    });
 }
+
+
+
 function setActiveSidebar(name) {
     document.querySelectorAll(".sidebar ul li a").forEach(link => {
         link.classList.remove("active");

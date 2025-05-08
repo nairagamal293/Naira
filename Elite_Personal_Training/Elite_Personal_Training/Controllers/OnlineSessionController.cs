@@ -28,11 +28,10 @@ namespace Elite_Personal_Training.Controllers
         }
 
 
-        // ✅ Get all online sessions with Trainer names
         [HttpGet]
         public async Task<ActionResult<IEnumerable<object>>> GetOnlineSessions()
         {
-            var sessions = await _context.OnlineSessions
+            return await _context.OnlineSessions
                 .Include(s => s.Trainer)
                 .Select(s => new
                 {
@@ -45,12 +44,13 @@ namespace Elite_Personal_Training.Controllers
                     s.SessionType,
                     s.Capacity,
                     s.Price,
+                    BookedCount = _context.Bookings
+                        .Count(b => b.OnlineSessionId == s.Id && b.Status != "Cancelled"),
+                    s.ZoomMeetingCreated,
                     s.CreatedAt,
                     s.UpdatedAt
                 })
                 .ToListAsync();
-
-            return Ok(sessions);
         }
 
         // ✅ Get a single online session by ID

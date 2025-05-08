@@ -199,6 +199,22 @@
   },
   {
     "ContainingType": "Elite_Personal_Training.Controllers.BookingController",
+    "Method": "DeleteBooking",
+    "RelativePath": "api/Booking/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Elite_Personal_Training.Controllers.BookingController",
     "Method": "UpdateBooking",
     "RelativePath": "api/Booking/{id}",
     "HttpMethod": "PUT",

@@ -1,6 +1,7 @@
 ﻿using Elite_Personal_Training.Data;
 using Elite_Personal_Training.DTOs;
 using Elite_Personal_Training.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -25,12 +26,14 @@ namespace Elite_Personal_Training.Controllers
             var bookings = await _context.Bookings
                 .Include(b => b.Membership)
                 .Include(b => b.Schedule)
+                    .ThenInclude(s => s.Class) // ✅ This is the key line missing
                 .Include(b => b.OnlineSession)
                     .ThenInclude(os => os.Trainer)
                 .ToListAsync();
 
             return Ok(bookings);
         }
+
 
 
         [HttpGet("{id}")]
@@ -295,6 +298,18 @@ namespace Elite_Personal_Training.Controllers
             return Ok(booking);
         }
 
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteBooking(int id)
+        {
+            var booking = await _context.Bookings.FindAsync(id);
+            if (booking == null) return NotFound();
+
+            _context.Bookings.Remove(booking);
+            await _context.SaveChangesAsync();
+
+            return NoContent(); // Returns HTTP 204
+        }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBooking(int id, [FromBody] BookingRequest request)
